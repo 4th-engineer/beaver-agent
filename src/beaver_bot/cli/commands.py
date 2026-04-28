@@ -45,6 +45,14 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
         console.print(f"[yellow]调试模式:[/yellow] {'开启' if config.app.debug else '关闭'}")
         return True
 
+    elif cmd == "/analyze":
+        from beaver_bot.tools.code_analyzer import analyze_repository
+        from pathlib import Path
+        root = Path(__file__).parent.parent.parent.parent
+        result = analyze_repository(str(root))
+        console.print(result)
+        return True
+
     else:
         console.print(f"[red]未知命令:[/red] {cmd}")
         console.print("输入 [green]/help[/green] 查看可用命令")
@@ -66,6 +74,7 @@ def print_help() -> None:
 | `/model <name>` | 切换模型 |
 | `/status` | 显示状态 |
 | `/debug` | 切换调试模式 |
+| `/analyze` | 分析代码仓库结构 |
 
 ## 功能
 - **代码生成**: 描述你想要的功能，我帮你写代码
