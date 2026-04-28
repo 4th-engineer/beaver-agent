@@ -72,7 +72,18 @@ class TerminalTool:
         return False
 
     def get_error_log(self, lines: int = 50) -> str:
-        """Get recent error log entries"""
+        """Get recent error log entries from common log files.
+
+        Searches standard system log locations and filters for error/exception
+        entries. Useful for debugging and diagnosing issues.
+
+        Args:
+            lines: Maximum number of recent lines to retrieve (default: 50)
+
+        Returns:
+            A string containing recent error log entries, or a message
+            indicating no errors were found or no log files exist.
+        """
         try:
             # Try common log locations
             log_files = [
@@ -100,7 +111,20 @@ class TerminalTool:
             return f"Error reading log: {e}"
 
     def run_tests(self, test_command: Optional[str] = None) -> str:
-        """Run tests (auto-detect test framework)"""
+        """Run tests using auto-detected test framework.
+
+        Automatically detects available test frameworks (pytest, npm, cargo, go)
+        by checking for their presence in the current working directory.
+
+        Args:
+            test_command: Optional explicit test command to run.
+                          If provided, uses this command directly instead of
+                          auto-detection.
+
+        Returns:
+            A string containing the test execution output, or an error
+            message if no test framework is detected.
+        """
         import os
 
         # Auto-detect test framework
