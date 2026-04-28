@@ -1,4 +1,4 @@
-"""Beaver Bot Agent Core"""
+"""Beaver Bot Agent Core v2 - With LLM Integration"""
 
 import uuid
 from typing import Optional, Dict, Any, List
@@ -6,6 +6,7 @@ from typing import Optional, Dict, Any, List
 import structlog
 
 from beaver_bot.core.config import BeaverConfig
+from beaver_bot.core.llm_client import LLMClient
 from beaver_bot.core.intent_parser import IntentParser
 from beaver_bot.core.task_planner import TaskPlanner
 from beaver_bot.core.tool_router import ToolRouter
@@ -15,7 +16,7 @@ logger = structlog.get_logger()
 
 
 class BeaverAgent:
-    """Beaver Bot Agent - Main orchestration class"""
+    """Beaver Bot Agent - Main orchestration class with LLM"""
 
     def __init__(self, config: BeaverConfig):
         self.config = config
@@ -25,6 +26,13 @@ class BeaverAgent:
         self.task_planner = TaskPlanner()
         self.tool_router = ToolRouter(config)
         self.conversation_history: List[Dict[str, str]] = []
+
+        # Initialize LLM
+        try:
+            self.llm = self.tool_router.get_llm_client()
+        except Exception as e:
+            logger.warning("llm_init_failed", error=str(e))
+            self.llm = None
 
         logger.info("agent_initialized", session_id=self.session_id, model=config.model.name)
 
@@ -66,20 +74,42 @@ class BeaverAgent:
     ) -> str:
         """Generate final response using LLM with tool results"""
 
-        # Build context from tool results
         context = self._build_context(tool_results)
 
-        # Simple response generation (would normally call LLM here)
-        if intent == "code_generation":
-            return self._handle_code_generation(user_input, tool_results)
-        elif intent == "code_review":
-            return self._handle_code_review(user_input, tool_results)
-        elif intent == "debug":
-            return self._handle_debug(user_input, tool_results)
-        elif intent == "github_operation":
-            return self._handle_github_operation(tool_results)
-        else:
-            return self._handle_general_chat(user_input, tool_results)
+        if not self.llm:
+            return self._generate_fallback_response(intent, context)
+
+        # Build conversation context for LLM
+        messages = []
+
+        # System prompt
+        system = """You are Beaver Bot, an expert AI coding assistant.
+You help users with:
+- Writing and generating code
+- Code review and quality analysis
+- Debugging and error fixing
+- GitHub operations
+
+Be concise, helpful, and technical.
+Always provide actionable suggestions."""
+
+        messages.append({"role": "system", "content": system})
+
+        # Add conversation history (last 10 messages)
+        for msg in self.conversation_history[-10:]:
+            messages.append({"role": msg["role"], "content": msg["content"]})
+
+        # Add current context
+        if context:
+            context_msg = f"Here are the results of tools executed:\n{context}\n\nUser's latest request: {user_input}"
+            messages.append({"role": "system", "content": context_msg})
+
+        try:
+            response = self.llm._call(messages, max_tokens=2048)
+            return response.content
+        except Exception as e:
+            logger.error("llm_response_failed", error=str(e))
+            return self._generate_fallback_response(intent, context)
 
     def _build_context(self, tool_results: List[Dict[str, Any]]) -> str:
         """Build context string from tool results"""
@@ -91,78 +121,71 @@ class BeaverAgent:
             tool_name = result.get("tool", "unknown")
             success = result.get("success", False)
             data = result.get("data", "")
+            error = result.get("error", "")
 
             status = "✅" if success else "❌"
-            lines.append(f"{status} [{tool_name}] {data}")
+            if success:
+                lines.append(f"{status} [{tool_name}]\n{data}")
+            else:
+                lines.append(f"{status} [{tool_name}] Error: {error}")
 
-        return "\n".join(lines)
+        return "\n\n".join(lines)
 
-    def _handle_code_generation(self, user_input: str, tool_results: List) -> str:
-        """Handle code generation requests"""
-        context = self._build_context(tool_results)
-        return f"""## 💻 代码生成
+    def _generate_fallback_response(self, intent: str, context: str) -> str:
+        """Generate response without LLM (fallback mode)"""
 
-**请求**: {user_input}
+        if intent == "code_generation":
+            return f"""## 💻 代码生成
 
-**上下文**:
-{context}
-
-**说明**: 我已经分析了你的需求，由于目前处于骨架阶段，实际代码生成需要接入 LLM API。
-
-如需完整功能，请配置 `OPENROUTER_API_KEY` 或 `ANTHROPIC_API_KEY`。
-"""
-
-    def _handle_code_review(self, user_input: str, tool_results: List) -> str:
-        """Handle code review requests"""
-        context = self._build_context(tool_results)
-        return f"""## 🔍 代码审查
-
-**请求**: {user_input}
-
-**结果**:
-{context}
-
-**说明**: 我已获取代码上下文。由于未接入 LLM，无法进行深度分析。
-请配置 API Key 后重试。
-"""
-
-    def _handle_debug(self, user_input: str, tool_results: List) -> str:
-        """Handle debug requests"""
-        context = self._build_context(tool_results)
-        return f"""## 🐛 调试分析
-
-**请求**: {user_input}
-
-**上下文**:
-{context}
-
-**说明**: 已收集调试信息。接入 LLM 后可进行根因分析。
-"""
-
-    def _handle_github_operation(self, tool_results: List) -> str:
-        """Handle GitHub operations"""
-        context = self._build_context(tool_results)
-        return f"""## 🐙 GitHub 操作
+**状态**: 工具已执行
 
 {context}
+
+---
+
+💡 如需完整 AI 代码生成能力，请配置:
+- `OPENROUTER_API_KEY` 或 `ANTHROPIC_API_KEY`
 """
 
-    def _handle_general_chat(self, user_input: str, tool_results: List) -> str:
-        """Handle general chat"""
-        context = self._build_context(tool_results)
+        elif intent == "code_review":
+            return f"""## 🔍 代码审查
 
-        if context:
+**状态**: 审查完成
+
+{context}
+
+---
+
+💡 配置 LLM API key 可获取深度 AI 代码分析。
+"""
+
+        elif intent == "debug":
+            return f"""## 🐛 调试分析
+
+**状态**: 分析完成
+
+{context}
+
+---
+
+💡 配置 LLM API key 可获取详细错误根因分析。
+"""
+
+        elif intent == "github_operation":
+            return f"""## 🐙 GitHub 操作
+
+{context}
+"""
+
+        else:
             return f"""## 💬 对话
 
-**你说**: {user_input}
-
-**上下文**:
-{context}
-"""
-
-        return f"""## 💬 对话
-
 你好！我是 Beaver Bot 🦫
+
+**上次操作结果**:
+{context or "暂无"}
+
+---
 
 目前我可以帮你：
 - 💻 写代码（描述你想要的功能）

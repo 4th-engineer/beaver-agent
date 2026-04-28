@@ -1,4 +1,4 @@
-"""Beaver Bot Task Planner"""
+"""Beaver Bot Task Planner v2 - With LLM tools"""
 
 from typing import List, Dict, Any
 
@@ -13,7 +13,6 @@ class TaskPlanner:
     # Task templates for different intents
     INTENT_TASKS = {
         "code_generation": [
-            {"tool": "file_tool", "action": "check_project_structure", "params": {}},
             {"tool": "code_gen", "action": "generate", "params": {}},
         ],
         "code_review": [
@@ -21,8 +20,6 @@ class TaskPlanner:
             {"tool": "code_review", "action": "review", "params": {}},
         ],
         "debug": [
-            {"tool": "file_tool", "action": "read_file", "params": {}},
-            {"tool": "terminal_tool", "action": "get_error_log", "params": {}},
             {"tool": "debugger", "action": "analyze", "params": {}},
         ],
         "github_operation": [
@@ -60,6 +57,10 @@ class TaskPlanner:
 
         params: Dict[str, Any] = {}
 
+        # For code generation, save the full description
+        if intent == "code_generation":
+            params["description"] = user_input
+
         # Extract file paths
         import re
         file_patterns = [
@@ -81,7 +82,25 @@ class TaskPlanner:
                 params["language"] = lang
                 break
 
-        # Extract GitHub references (owner/repo, issue #, PR #)
+        # Default to python if no language detected
+        if "language" not in params:
+            params["language"] = "python"
+
+        # Extract error messages
+        error_patterns = [
+            r"Error:\s*(.+?)(?:\n|$)",
+            r"Exception:\s*(.+?)(?:\n|$)",
+            r"Traceback\s*(.+?)(?:\n\n|$)",
+            r"报错[：:]\s*(.+?)(?:\n|$)",
+        ]
+
+        for pattern in error_patterns:
+            matches = re.findall(pattern, user_input, re.DOTALL)
+            if matches:
+                params["error"] = matches[0].strip()
+                break
+
+        # Extract GitHub references
         gh_patterns = [
             r"([\w-]+)/([\w-]+)",  # owner/repo
             r"#(\d+)",  # issue or PR number
