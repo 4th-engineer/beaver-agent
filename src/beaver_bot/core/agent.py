@@ -11,6 +11,7 @@ from beaver_bot.core.intent_parser import IntentParser
 from beaver_bot.core.task_planner import TaskPlanner
 from beaver_bot.core.tool_router import ToolRouter
 from beaver_bot.core.memory.session import SessionMemory
+from beaver_bot.core.conversation_logger import ConversationLogger
 
 logger = structlog.get_logger()
 
@@ -26,6 +27,7 @@ class BeaverAgent:
         self.task_planner = TaskPlanner()
         self.tool_router = ToolRouter(config)
         self.conversation_history: List[Dict[str, str]] = []
+        self.logger = ConversationLogger()
 
         # Initialize LLM
         try:
@@ -33,6 +35,9 @@ class BeaverAgent:
         except Exception as e:
             logger.warning("llm_init_failed", error=str(e))
             self.llm = None
+
+        # Start conversation logging
+        self.logger.start_session(self.session_id)
 
         logger.info("agent_initialized", session_id=self.session_id, model=config.model.name)
 
@@ -43,6 +48,9 @@ class BeaverAgent:
 
         # Add user message to history
         self.conversation_history.append({"role": "user", "content": user_input})
+
+        # Log user input
+        self.logger.log_user_input(user_input, intent=None)
 
         # Step 1: Parse intent
         intent = self.intent_parser.parse(user_input)
@@ -57,6 +65,15 @@ class BeaverAgent:
         for task in tasks:
             result = self.tool_router.route(task)
             tool_results.append(result)
+
+            # Log tool call
+            self.logger.log_tool_call(
+                tool_name=task.get("tool", "unknown"),
+                action=task.get("action", ""),
+                params=task.get("params", {}),
+                result=result,
+                success=result.get("success", False),
+            )
 
         # Step 4: Generate response using LLM
         response = self._generate_response(user_input, intent, tool_results)
@@ -104,11 +121,34 @@ Always provide actionable suggestions."""
             context_msg = f"Here are the results of tools executed:\n{context}\n\nUser's latest request: {user_input}"
             messages.append({"role": "system", "content": context_msg})
 
+        # Log LLM request
+        self.logger.log_llm_request(
+            messages=messages,
+            model=self.llm.model if self.llm else "unknown",
+            provider=self.llm.provider if self.llm else "unknown",
+        )
+
         try:
             response = self.llm._call(messages, max_tokens=2048)
+
+            # Log LLM response
+            self.logger.log_llm_response(
+                content=response.content,
+                model=response.model,
+                usage=response.usage,
+            )
+
             return response.content
         except Exception as e:
             logger.error("llm_response_failed", error=str(e))
+
+            # Log error
+            self.logger.log_llm_response(
+                content="",
+                model=self.llm.model if self.llm else "unknown",
+                error=str(e),
+            )
+
             return self._generate_fallback_response(intent, context)
 
     def _build_context(self, tool_results: List[Dict[str, Any]]) -> str:
@@ -198,7 +238,14 @@ Always provide actionable suggestions."""
 
     def reset(self) -> None:
         """Reset agent state"""
+        self.logger.end_session()
         self.conversation_history.clear()
         self.memory.clear()
         self.session_id = str(uuid.uuid4())[:8]
+        self.logger.start_session(self.session_id)
         logger.info("agent_reset", new_session_id=self.session_id)
+
+    def shutdown(self) -> None:
+        """Shutdown agent and close log files"""
+        self.logger.end_session()
+        logger.info("agent_shutdown", session_id=self.session_id)
