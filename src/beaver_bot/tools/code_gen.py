@@ -96,17 +96,17 @@ func main() {{
     ) -> str:
         """Complete partial code"""
 
-        prompt = f"""Complete the following {language} code.
+        prompt_text = f"""Complete the following {language} code.
 Fill in the TODO sections and complete any unfinished functions.
 
-{prompt}: {description}
+Description: {description}
 
 ```{language}
-{partial_code}
-```"""
+```
+"""
 
         try:
-            response = self.llm.chat(prompt)
+            response = self.llm.chat(prompt_text)
             return response.content
         except Exception as e:
             return f"❌ Code completion failed: {e}"
