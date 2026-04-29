@@ -6,6 +6,7 @@
 |------|--------------|--------|
 | 2026-04-28 | Fixed FileTool path security to use configurable root_path | Fixed 3 failing tests, all 37 passing |
 | 2026-04-29 | Added docstrings to TerminalTool.get_error_log and run_tests | Improved code documentation, 37 tests passing |
+| 2026-04-29 | Fixed UnboundLocalError in CodeGenTool.complete_code() | Bug fixed - prompt variable referenced inside own f-string |
 
 ## Strategy Notes
 - Focus on small, incremental improvements

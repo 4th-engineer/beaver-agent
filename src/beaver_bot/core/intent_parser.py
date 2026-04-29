@@ -1,14 +1,16 @@
-"""Beaver Bot Intent Parser"""
+"""Beaver Bot Intent Parser v2 - With Skill routing"""
 
-from typing import List
+from typing import List, Optional, Tuple
 
 import structlog
+
+from beaver_bot.core.skill_manager import SkillManager
 
 logger = structlog.get_logger()
 
 
 class IntentParser:
-    """Parse user input to determine intent"""
+    """Parse user input to determine intent, with skill support"""
 
     INTENT_PATTERNS = {
         "code_generation": [
@@ -33,37 +35,66 @@ class IntentParser:
         "terminal_operation": [
             "运行", "执行", "命令", "跑", "terminal", "run command", "执行命令"
         ],
+        "skill_invocation": [
+            "/skill"
+        ],
     }
+
+    def __init__(self, skill_manager: Optional[SkillManager] = None):
+        self.skill_manager = skill_manager
 
     def parse(self, user_input: str) -> str:
         """Parse user input and return intent"""
 
+        # Check for skill invocation first
+        if user_input.strip().startswith("/skill "):
+            return "skill_invocation"
+
+        # Check if any skill matches
+        if self.skill_manager:
+            matched_skill = self.skill_manager.find_matching_skill(user_input)
+            if matched_skill:
+                logger.debug("skill_triggered", skill=matched_skill.name)
+                return f"skill:{matched_skill.name}"
+
+        # Fall back to intent patterns
         user_input_lower = user_input.lower()
 
-        # Check each intent pattern
         for intent, keywords in self.INTENT_PATTERNS.items():
             for keyword in keywords:
                 if keyword.lower() in user_input_lower:
                     logger.debug("intent_matched", intent=intent, keyword=keyword)
                     return intent
 
-        # Default to general chat
         return "general_chat"
 
-    def parse_with_confidence(self, user_input: str) -> tuple[str, float]:
+    def parse_with_confidence(self, user_input: str) -> Tuple[str, float]:
         """Parse with confidence score"""
         intent = self.parse(user_input)
 
-        # Calculate simple confidence based on keyword match count
+        # Skill matches get high confidence
+        if intent.startswith("skill:"):
+            return intent, 0.95
+
+        # Calculate confidence based on keyword match count
         user_input_lower = user_input.lower()
         keywords = self.INTENT_PATTERNS.get(intent, [])
         match_count = sum(1 for kw in keywords if kw.lower() in user_input_lower)
 
-        # More matches = higher confidence
         confidence = min(0.5 + (match_count * 0.1), 1.0)
-
         return intent, confidence
 
     def get_supported_intents(self) -> List[str]:
         """Return list of supported intents"""
-        return list(self.INTENT_PATTERNS.keys())
+        intents = list(self.INTENT_PATTERNS.keys())
+
+        # Add skill names if skill_manager is available
+        if self.skill_manager:
+            for skill in self.skill_manager.list_skills():
+                intents.append(f"skill:{skill['name']}")
+
+        return intents
+
+    def set_skill_manager(self, skill_manager: SkillManager) -> None:
+        """Set the skill manager"""
+        self.skill_manager = skill_manager
