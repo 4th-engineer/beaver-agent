@@ -9,6 +9,7 @@
 || 2026-04-29 | Added skill system - SkillManager, IntentParser skill routing, 2 sample skills | 46 tests passing, user can now add custom skills |
 || 2026-04-29 | Add conversation logger - records user input, LLM requests/responses, tool calls | 62 tests passing, logs stored in logs/ directory |
 | 2026-04-29 | Clean up TODO placeholders in code_gen.py JavaScript and Go templates | 66 tests passing, improved generated code quality |
+| 2026-04-29 | Added docstrings to CLI commands (chat_command, model_command) | 66 tests passing, improved CLI documentation |
 
 ## Strategy Notes
 - Focus on small, incremental improvements
