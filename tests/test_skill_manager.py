@@ -8,14 +8,15 @@ import pytest
 from beaver_bot.core.skill_manager import SkillManager, Skill
 
 
+@pytest.fixture
+def temp_skills_dir():
+    """Create a temporary skills directory"""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        yield Path(tmpdir)
+
+
 class TestSkillManager:
     """Test SkillManager functionality"""
-
-    @pytest.fixture
-    def temp_skills_dir(self):
-        """Create a temporary skills directory"""
-        with tempfile.TemporaryDirectory() as tmpdir:
-            yield Path(tmpdir)
 
     @pytest.fixture
     def skill_manager(self, temp_skills_dir):
@@ -170,3 +171,140 @@ class TestSkill:
         assert d["category"] == "utils"
         assert d["description"] == "A useful skill"
         assert d["trigger"] == "do thing"
+
+
+class TestStructuredSkill:
+    """Test structured skill parsing (Matt Pocock style)"""
+
+    def test_parse_phases(self, temp_skills_dir):
+        """Test parsing a skill with phases"""
+        skill_dir = temp_skills_dir / "structured-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: structured-skill
+category: engineering
+description: A skill with phases and steps
+trigger: build
+when_to_use: When you need to build something
+phases:
+  - name: Plan
+    instruction: Plan the work
+    steps:
+      - instruction: Step 1
+        check: Verify step 1
+      - instruction: Step 2
+  - name: Execute
+    steps:
+      - instruction: Execute step
+checklist:
+  - Item 1
+  - Item 2
+examples:
+  - Example 1
+  - Example 2
+---
+
+# Skill Content
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent, skills_dir=str(temp_skills_dir))
+        skill = manager.get_skill("structured-skill")
+
+        assert skill is not None
+        assert skill.is_structured
+        assert len(skill.phases) == 2
+        assert skill.phases[0].name == "Plan"
+        assert len(skill.phases[0].steps) == 2
+        assert skill.phases[0].steps[0].check == "Verify step 1"
+        assert len(skill.checklist) == 2
+        assert len(skill.examples) == 2
+        assert skill.when_to_use == "When you need to build something"
+
+    def test_structured_skill_prompt(self, temp_skills_dir):
+        """Test generating a prompt from structured skill"""
+        skill_dir = temp_skills_dir / "prompt-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: prompt-skill
+category: test
+description: Test skill
+trigger: test
+when_to_use: For testing
+phases:
+  - name: Phase1
+    instruction: Do phase 1
+    steps:
+      - instruction: Step 1
+        check: Check 1
+---
+
+Content
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent, skills_dir=str(temp_skills_dir))
+        skill = manager.get_skill("prompt-skill")
+        prompt = skill.get_prompt()
+
+        assert "# prompt-skill" in prompt
+        assert "**When to use**: For testing" in prompt
+        assert "## Phase1" in prompt
+        assert "Step 1" in prompt
+        assert "Verify: Check 1" in prompt
+
+    def test_legacy_steps_backward_compat(self, temp_skills_dir):
+        """Test that legacy steps format still works"""
+        skill_dir = temp_skills_dir / "legacy-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: legacy-skill
+category: test
+description: Legacy format
+trigger: legacy
+steps:
+  - Do this
+  - Then do that
+  - instruction: Finally this
+    check: Check it works
+---
+
+Content
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent, skills_dir=str(temp_skills_dir))
+        skill = manager.get_skill("legacy-skill")
+
+        assert skill is not None
+        assert skill.is_structured
+        assert len(skill.phases) == 1
+        assert len(skill.phases[0].steps) == 3
+
+    def test_to_dict_includes_new_fields(self, temp_skills_dir):
+        """Test that to_dict includes new structured fields"""
+        skill_dir = temp_skills_dir / "dict-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: dict-skill
+category: test
+description: Test
+trigger: dict
+when_to_use: Testing
+phases:
+  - name: Phase
+    steps:
+      - instruction: Step
+checklist:
+  - Item
+examples:
+  - Example
+---
+
+Content
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent, skills_dir=str(temp_skills_dir))
+        d = manager.get_skill("dict-skill").to_dict()
+
+        assert d["when_to_use"] == "Testing"
+        assert len(d["phases"]) == 1
+        assert d["checklist"] == ["Item"]
+        assert d["examples"] == ["Example"]

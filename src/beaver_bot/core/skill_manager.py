@@ -1,31 +1,56 @@
-"""Beaver Bot Skill Manager - Load, parse, and execute user-defined skills"""
+"""Beaver Bot Skill Manager - Structured skill loading and execution"""
 
 import os
 import re
 import yaml
 from pathlib import Path
 from typing import Dict, Any, Optional, List
+from dataclasses import dataclass, field
 
 import structlog
 
 logger = structlog.get_logger()
 
 
+@dataclass
+class SkillStep:
+    """A single step in a skill phase"""
+    order: int
+    instruction: str
+    check: Optional[str] = None  # What to verify after this step
+
+
+@dataclass
+class SkillPhase:
+    """A phase in a skill (e.g., Requirements, Implementation, Review)"""
+    name: str
+    instruction: str
+    steps: List[SkillStep] = field(default_factory=list)
+
+
+@dataclass
 class Skill:
     """Represents a loaded skill"""
 
-    def __init__(self, name: str, category: str, description: str,
-                 trigger: str, content: str, file_path: Path,
-                 required_commands: List[str] = None,
-                 required_environment_variables: List[str] = None):
-        self.name = name
-        self.category = category
-        self.description = description
-        self.trigger = trigger  # keyword or pattern to match
-        self.content = content  # full SKILL.md content
-        self.file_path = file_path
-        self.required_commands = required_commands or []
-        self.required_environment_variables = required_environment_variables or []
+    name: str
+    category: str
+    description: str
+    trigger: str
+    content: str
+    file_path: Path
+    required_commands: List[str] = field(default_factory=list)
+    required_environment_variables: List[str] = field(default_factory=list)
+
+    # New structured fields (Matt Pocock style)
+    when_to_use: str = ""           # When to invoke this skill
+    phases: List[SkillPhase] = field(default_factory=list)
+    checklist: List[str] = field(default_factory=list)  # Final verification checklist
+    examples: List[str] = field(default_factory=list)     # Usage examples
+
+    # Backward compatibility: if no phases, use the whole content as one phase
+    @property
+    def is_structured(self) -> bool:
+        return len(self.phases) > 0
 
     def matches(self, user_input: str) -> bool:
         """Check if user input matches this skill's trigger"""
@@ -41,8 +66,52 @@ class Skill:
             "category": self.category,
             "description": self.description,
             "trigger": self.trigger,
+            "when_to_use": self.when_to_use,
+            "phases": [
+                {
+                    "name": p.name,
+                    "instruction": p.instruction,
+                    "steps": [{"order": s.order, "instruction": s.instruction, "check": s.check}
+                              for s in p.steps]
+                }
+                for p in self.phases
+            ],
+            "checklist": self.checklist,
+            "examples": self.examples,
             "file_path": str(self.file_path),
         }
+
+    def get_prompt(self) -> str:
+        """Get the full skill content as a prompt for the agent"""
+        if self.is_structured:
+            lines = [f"# {self.name}\n"]
+            if self.when_to_use:
+                lines.append(f"**When to use**: {self.when_to_use}\n")
+            lines.append(f"\n{self.description}\n")
+
+            for phase in self.phases:
+                lines.append(f"\n## {phase.name}\n")
+                if phase.instruction:
+                    lines.append(f"{phase.instruction}\n")
+                for step in phase.steps:
+                    lines.append(f"{step.order}. {step.instruction}")
+                    if step.check:
+                        lines.append(f"   - Verify: {step.check}")
+
+            if self.checklist:
+                lines.append("\n## Verification Checklist\n")
+                for item in self.checklist:
+                    lines.append(f"- [ ] {item}")
+
+            if self.examples:
+                lines.append("\n## Examples\n")
+                for ex in self.examples:
+                    lines.append(f"- {ex}")
+
+            return "\n".join(lines)
+        else:
+            # Fallback: strip frontmatter and return content
+            return self.content
 
 
 class SkillManager:
@@ -67,16 +136,15 @@ class SkillManager:
             skill = self._parse_skill_file(skill_path)
             if skill:
                 self._skills[skill.name] = skill
-                logger.info("skill_loaded", name=skill.name, category=skill.category)
+                logger.info("skill_loaded", name=skill.name, category=skill.category,
+                           structured=skill.is_structured)
 
         logger.info("skills_loaded_total", count=len(self._skills))
 
     def _parse_skill_file(self, file_path: Path) -> Optional[Skill]:
-        """Parse a SKILL.md file and extract metadata"""
+        """Parse a SKILL.md file and extract metadata and structured content"""
         try:
             content = file_path.read_text(encoding="utf-8")
-
-            # Extract YAML frontmatter
             frontmatter = self._extract_frontmatter(content)
 
             name = frontmatter.get("name", file_path.parent.name)
@@ -85,6 +153,12 @@ class SkillManager:
             trigger = frontmatter.get("trigger", "")
             required_commands = frontmatter.get("required_commands", [])
             required_env_vars = frontmatter.get("required_environment_variables", [])
+            when_to_use = frontmatter.get("when_to_use", "")
+            checklist = frontmatter.get("checklist", [])
+            examples = frontmatter.get("examples", [])
+
+            # Parse structured phases if present
+            phases = self._parse_phases(frontmatter)
 
             return Skill(
                 name=name,
@@ -95,14 +169,69 @@ class SkillManager:
                 file_path=file_path,
                 required_commands=required_commands,
                 required_environment_variables=required_env_vars,
+                when_to_use=when_to_use,
+                phases=phases,
+                checklist=checklist,
+                examples=examples,
             )
         except Exception as e:
             logger.error("skill_parse_failed", file=str(file_path), error=str(e))
             return None
 
+    def _parse_phases(self, frontmatter: Dict[str, Any]) -> List[SkillPhase]:
+        """Parse structured phases from frontmatter"""
+        phases = []
+        raw_phases = frontmatter.get("phases", [])
+
+        if not raw_phases:
+            # Try legacy format: steps as a list
+            raw_steps = frontmatter.get("steps", [])
+            if raw_steps and isinstance(raw_steps, list):
+                steps = []
+                for i, step_text in enumerate(raw_steps, 1):
+                    if isinstance(step_text, dict):
+                        steps.append(SkillStep(
+                            order=i,
+                            instruction=step_text.get("instruction", str(step_text)),
+                            check=step_text.get("check")
+                        ))
+                    else:
+                        steps.append(SkillStep(order=i, instruction=str(step_text)))
+                phases.append(SkillPhase(name="Steps", instruction="", steps=steps))
+
+            # Try new format: phases as list of {name, instruction, steps}
+            raw_phases = frontmatter.get("phases", [])
+
+        for phase_data in raw_phases:
+            if isinstance(phase_data, dict):
+                phase_name = phase_data.get("name", "Unnamed")
+                phase_instruction = phase_data.get("instruction", "")
+                raw_steps = phase_data.get("steps", [])
+
+                steps = []
+                for i, step_text in enumerate(raw_steps, 1):
+                    if isinstance(step_text, dict):
+                        steps.append(SkillStep(
+                            order=i,
+                            instruction=step_text.get("instruction", str(step_text)),
+                            check=step_text.get("check")
+                        ))
+                    elif isinstance(step_text, str):
+                        steps.append(SkillStep(order=i, instruction=step_text))
+                    else:
+                        steps.append(SkillStep(order=i, instruction=str(step_text)))
+
+                phases.append(SkillPhase(
+                    name=phase_name,
+                    instruction=phase_instruction,
+                    steps=steps
+                ))
+
+        return phases
+
     def _extract_frontmatter(self, content: str) -> Dict[str, Any]:
         """Extract YAML frontmatter from skill content"""
-        match = re.match(r"^---\n(.*?)\n---", content, re.DOTALL)
+        match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
         if match:
             try:
                 return yaml.safe_load(match.group(1)) or {}
