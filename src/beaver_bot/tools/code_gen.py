@@ -69,7 +69,7 @@ if __name__ == "__main__":
 // This is a placeholder - configure LLM API key for full generation
 
 function main() {{
-    // TODO: implement
+    // Your implementation here
 }}
 
 module.exports = {{ main }};
@@ -81,7 +81,7 @@ module.exports = {{ main }};
 package main
 
 func main() {{
-    // TODO: implement
+    // Your implementation here
 }}
 ''',
         }

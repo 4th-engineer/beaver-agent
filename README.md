@@ -64,7 +64,7 @@ beaver-bot/
 
 ## 测试状态
 
-- **37 tests** - 全部通过
+- **66 tests** - 全部通过
 - 运行测试: `PYTHONPATH=src pytest tests/ -v`
 
 ## 技术栈
