@@ -15,6 +15,7 @@
 | 2026-04-30 18:00 | Added docstring to DebuggerTool.__init__ | 70 tests passing |
 | 2026-04-30 20:00 | beaver-agent | Added error handling to LLMClient._call_minimax | 70 tests passing |
 | 2026-04-30 19:00 | beaver-agent | Added logging and improved docstrings to CodeGenTool.complete_code and refactor methods | 70 tests passing |
+| 2026-05-01 01:00 | beaver-agent | Move inline import + regex patterns to class-level in TaskPlanner (performance) | 70 tests passing |
 | 2026-05-01 00:00 | beaver-agent | Fixed test_version_command expecting old name 'Beaver Bot' → 'Beaver Agent' | 70 tests passing |
 
 ## Current Stage
