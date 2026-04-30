@@ -17,7 +17,7 @@
 
 ## Current Project Stage
 - Week 3: Basic integration testing complete
-- 37 tests passing
+- 70 tests passing
 - MiniMax LLM integrated
 - TerminalTool documented
 - Needs: more robust error handling, better CLI help

@@ -25,7 +25,15 @@ class MCPTool:
         self.mcp_manager = mcp_manager
 
     def to_dict(self) -> dict:
-        # Normalize name for LLM API compatibility
+        """Convert MCP tool to dict format for LLM API compatibility.
+
+        Normalizes the tool name by replacing non-alphanumeric characters
+        with underscores, then prefixes with 'mcp_{server_name}_'.
+
+        Returns:
+            dict: Tool representation with name, description, input_schema,
+                  server info, and original_name fields.
+        """
         normalized_name = re.sub(r"[^a-zA-Z0-9_]", "_", self.name)
         return {
             "name": f"mcp_{self.server_name}_{normalized_name}",
