@@ -210,7 +210,7 @@ def take_screenshot(url: str, output_path: str = None, full_page: bool = False, 
 
 # Convenience class for unified interface
 class BrowserTool:
-    """Browser automation tool for beaver-bot"""
+    """Browser automation tool for beaver-agent"""
 
     def __init__(self):
         self.current_url: Optional[str] = None

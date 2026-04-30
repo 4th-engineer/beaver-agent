@@ -2,7 +2,7 @@
 
 import pytest
 
-from beaver_bot.core.task_planner import TaskPlanner
+from beaver_agent.core.task_planner import TaskPlanner
 
 
 @pytest.fixture

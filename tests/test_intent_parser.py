@@ -2,7 +2,7 @@
 
 import pytest
 
-from beaver_bot.core.intent_parser import IntentParser
+from beaver_agent.core.intent_parser import IntentParser
 
 
 @pytest.fixture

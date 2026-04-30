@@ -5,7 +5,7 @@ from typing import Optional, List, Dict, Any, Union
 
 import structlog
 
-from beaver_bot.core.config import ModelConfig
+from beaver_agent.core.config import ModelConfig
 
 logger = structlog.get_logger()
 

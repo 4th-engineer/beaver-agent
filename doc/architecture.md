@@ -77,7 +77,7 @@
 ## 四、项目目录结构
 
 ```
-beaver-bot/
+beaver-agent/
 ├── config/
 │   ├── settings.yaml          # 主配置（模型、API、限流）
 │   └── .env.example           # 环境变量模板
@@ -266,14 +266,14 @@ github_operation →  github_tool.py
 
 | 模块 | 文件 | 说明 |
 |------|------|------|
-| Intent Parser | `src/beaver_bot/core/intent_parser.py` | 用户意图识别 |
-| Task Planner | `src/beaver_bot/core/task_planner.py` | 任务分解 |
-| LLM Client | `src/beaver_bot/core/llm_client.py` | MiniMax/Anthropic/OpenAI |
-| File Tool | `src/beaver_bot/tools/file_tool.py` | 文件操作 |
-| GitHub Tool | `src/beaver_bot/tools/github_tool.py` | GitHub API |
-| Code Review | `src/beaver_bot/tools/code_review.py` | 代码审查 |
-| Debugger | `src/beaver_bot/tools/debugger.py` | 错误调试 |
-| Terminal | `src/beaver_bot/tools/terminal_tool.py` | 命令执行 |
+| Intent Parser | `src/beaver_agent/core/intent_parser.py` | 用户意图识别 |
+| Task Planner | `src/beaver_agent/core/task_planner.py` | 任务分解 |
+| LLM Client | `src/beaver_agent/core/llm_client.py` | MiniMax/Anthropic/OpenAI |
+| File Tool | `src/beaver_agent/tools/file_tool.py` | 文件操作 |
+| GitHub Tool | `src/beaver_agent/tools/github_tool.py` | GitHub API |
+| Code Review | `src/beaver_agent/tools/code_review.py` | 代码审查 |
+| Debugger | `src/beaver_agent/tools/debugger.py` | 错误调试 |
+| Terminal | `src/beaver_agent/tools/terminal_tool.py` | 命令执行 |
 
 ### 自我进化
 

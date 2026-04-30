@@ -5,14 +5,14 @@ from typing import Optional, Dict, Any, List
 
 import structlog
 
-from beaver_bot.core.config import BeaverConfig
-from beaver_bot.core.llm_client import LLMClient
-from beaver_bot.core.intent_parser import IntentParser
-from beaver_bot.core.task_planner import TaskPlanner
-from beaver_bot.core.tool_router import ToolRouter
-from beaver_bot.core.memory.session import SessionMemory
-from beaver_bot.core.conversation_logger import ConversationLogger
-from beaver_bot.core.data_store import init_data_store
+from beaver_agent.core.config import BeaverConfig
+from beaver_agent.core.llm_client import LLMClient
+from beaver_agent.core.intent_parser import IntentParser
+from beaver_agent.core.task_planner import TaskPlanner
+from beaver_agent.core.tool_router import ToolRouter
+from beaver_agent.core.memory.session import SessionMemory
+from beaver_agent.core.conversation_logger import ConversationLogger
+from beaver_agent.core.data_store import init_data_store
 
 logger = structlog.get_logger()
 

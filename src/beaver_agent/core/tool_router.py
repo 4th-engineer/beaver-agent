@@ -4,8 +4,8 @@ from typing import Dict, Any, Optional
 
 import structlog
 
-from beaver_bot.core.config import BeaverConfig
-from beaver_bot.core.llm_client import LLMClient
+from beaver_agent.core.config import BeaverConfig
+from beaver_agent.core.llm_client import LLMClient
 
 logger = structlog.get_logger()
 
@@ -30,12 +30,12 @@ class ToolRouter:
 
     def _register_tools(self) -> None:
         """Register all available tools"""
-        from beaver_bot.tools.file_tool import FileTool
-        from beaver_bot.tools.terminal_tool import TerminalTool
-        from beaver_bot.tools.github_tool import GitHubTool
-        from beaver_bot.tools.code_gen import CodeGenTool
-        from beaver_bot.tools.code_review import CodeReviewTool
-        from beaver_bot.tools.debugger import DebuggerTool
+        from beaver_agent.tools.file_tool import FileTool
+        from beaver_agent.tools.terminal_tool import TerminalTool
+        from beaver_agent.tools.github_tool import GitHubTool
+        from beaver_agent.tools.code_gen import CodeGenTool
+        from beaver_agent.tools.code_review import CodeReviewTool
+        from beaver_agent.tools.debugger import DebuggerTool
 
         self._tool_registry = {
             "file_tool": FileTool(self.config),

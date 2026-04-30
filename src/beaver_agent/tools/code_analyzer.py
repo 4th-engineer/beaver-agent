@@ -47,7 +47,7 @@ class CodeAnalyzer:
 
     def analyze(self) -> None:
         """Scan and analyze all Python files"""
-        src_path = self.root_path / "src" / "beaver_bot"
+        src_path = self.root_path / "src" / "beaver_agent"
         if not src_path.exists():
             print(f"Warning: {src_path} does not exist")
             return
@@ -103,7 +103,7 @@ class CodeAnalyzer:
 
     def _file_to_module(self, path: Path) -> str:
         """Convert file path to module name"""
-        parts = list(path.relative_to(self.root_path / "src" / "beaver_bot").parts)
+        parts = list(path.relative_to(self.root_path / "src" / "beaver_agent").parts)
         if parts[-1] == "__init__.py":
             parts = parts[:-1]
         else:
@@ -445,5 +445,5 @@ def analyze_repository(root_path: str) -> str:
 
 if __name__ == "__main__":
     # Test
-    result = analyze_repository("/home/agentuser/beaver-bot")
+    result = analyze_repository("/home/agentuser/beaver-agent")
     print(result)

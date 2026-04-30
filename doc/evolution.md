@@ -1,4 +1,4 @@
-# Beaver-Bot Self-Evolution Log
+# beaver-agent Self-Evolution Log
 
 ## History
 

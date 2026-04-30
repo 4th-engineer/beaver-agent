@@ -8,7 +8,7 @@ from typing import Any, Optional
 
 import structlog
 
-from beaver_bot.core.config import BeaverConfig, MCPServerConfig
+from beaver_agent.core.config import BeaverConfig, MCPServerConfig
 
 logger = structlog.get_logger()
 
@@ -71,7 +71,7 @@ class MCPManager:
         mcp_configs_path = project_root / "mcp_configs"
 
         if not hasattr(self.config, 'mcp') or not self.config.mcp:
-            from beaver_bot.core.config import MCPConfig
+            from beaver_agent.core.config import MCPConfig
             self.config.mcp = MCPConfig()
 
         if mcp_configs_path.exists() and mcp_configs_path.is_dir():
@@ -152,7 +152,7 @@ class MCPManager:
                     "protocolVersion": "2024-11-05",
                     "capabilities": {},
                     "clientInfo": {
-                        "name": "beaver-bot",
+                        "name": "beaver-agent",
                         "version": "0.1.0"
                     }
                 }

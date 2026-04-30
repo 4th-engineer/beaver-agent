@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from beaver_bot.core.conversation_logger import ConversationLogger
+from beaver_agent.core.conversation_logger import ConversationLogger
 
 
 class TestConversationLogger:

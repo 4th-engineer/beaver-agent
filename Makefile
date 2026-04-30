@@ -47,7 +47,7 @@ init: install
 	else \
 		echo "✅ .env 已存在"; \
 	fi
-	@PYTHONPATH=$(PROJECT_ROOT)/src $(PYTHON) -c "import beaver_bot" 2>/dev/null || { \
+	@PYTHONPATH=$(PROJECT_ROOT)/src $(PYTHON) -c "import beaver_agent" 2>/dev/null || { \
 		echo ""; \
 		echo "❌ 安装失败"; exit 1; \
 	}
@@ -56,7 +56,7 @@ init: install
 # ── 运行 ─────────────────────────────────────────────
 
 run:
-	@PYTHONPATH=$(PROJECT_ROOT)/src $(PYTHON) -m beaver_bot.main run $(ARGS)
+	@PYTHONPATH=$(PROJECT_ROOT)/src $(PYTHON) -m beaver_agent.main run $(ARGS)
 
 # ── 测试 ─────────────────────────────────────────────
 

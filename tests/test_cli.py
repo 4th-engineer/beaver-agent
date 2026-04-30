@@ -3,7 +3,7 @@
 import pytest
 from typer.testing import CliRunner
 
-from beaver_bot.main import app
+from beaver_agent.main import app
 
 
 @pytest.fixture

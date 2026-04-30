@@ -4,7 +4,7 @@ from typing import List, Optional, Tuple
 
 import structlog
 
-from beaver_bot.core.skill_manager import SkillManager
+from beaver_agent.core.skill_manager import SkillManager
 
 logger = structlog.get_logger()
 

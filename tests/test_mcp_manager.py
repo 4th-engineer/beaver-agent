@@ -6,10 +6,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from beaver_bot.core.config import (
+from beaver_agent.core.config import (
     BeaverConfig, MCPServerConfig, MCPConfig, MCPConfig
 )
-from beaver_bot.core.mcp_manager import MCPManager, MCPTool
+from beaver_agent.core.mcp_manager import MCPManager, MCPTool
 
 
 class TestMCPServerConfig:
@@ -137,7 +137,7 @@ mcp_servers:
             temp_path = f.name
 
         # Patch the config path to use our temp file
-        from beaver_bot.core import config as config_module
+        from beaver_agent.core import config as config_module
         original_find = config_module.load_config
 
         def patched_load():

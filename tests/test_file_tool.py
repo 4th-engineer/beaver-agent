@@ -5,8 +5,8 @@ import tempfile
 import os
 from pathlib import Path
 
-from beaver_bot.tools.file_tool import FileTool
-from beaver_bot.core.config import BeaverConfig, AppConfig, FileToolConfig
+from beaver_agent.tools.file_tool import FileTool
+from beaver_agent.core.config import BeaverConfig, AppConfig, FileToolConfig
 
 
 @pytest.fixture
@@ -77,7 +77,7 @@ def test_list_directory(file_tool):
     """Test listing directory contents"""
     result = file_tool.list_directory(".")
     assert "📂" in result
-    assert "beaver_bot" in result.lower() or "src" in result.lower()
+    assert "beaver_agent" in result.lower() or "src" in result.lower()
 
 
 def test_list_nonexistent_directory(file_tool):
@@ -94,7 +94,7 @@ def test_search_files(file_tool):
 
 def test_search_content(file_tool):
     """Test searching for content in files"""
-    result = file_tool.search_content("def ", path="src/beaver_bot")
+    result = file_tool.search_content("def ", path="src/beaver_agent")
     # Should find Python function definitions
     assert result  # Just verify it runs without error
 

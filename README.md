@@ -2,7 +2,7 @@
 
 > A self-evolving AI coding agent — built for developers who want an assistant that grows with their projects.
 
-[![Tests](https://img.shields.io/badge/tests-70%20passing-brightgreen)](https://github.com/4th-engineer/beaver-bot)
+[![Tests](https://img.shields.io/badge/tests-70%20passing-brightgreen)](https://github.com/4th-engineer/beaver-agent)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
@@ -11,8 +11,8 @@
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/4th-engineer/beaver-bot.git
-cd beaver-bot
+git clone https://github.com/4th-engineer/beaver-agent.git
+cd beaver-agent
 make init
 # 编辑 .env 填入 API Key
 make run
@@ -83,8 +83,8 @@ GITHUB_TOKEN=your_token_here
 ## 📁 Project Structure
 
 ```
-beaver-bot/
-├── src/beaver_bot/
+beaver-agent/
+├── src/beaver_agent/
 │   ├── core/
 │   │   ├── agent.py              # Agent 主循环
 │   │   ├── intent_parser.py     # 意图识别

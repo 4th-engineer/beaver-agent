@@ -17,5 +17,5 @@ When user says something containing "hello", this skill responds with a greeting
 
 ```python
 def execute(user_input: str) -> str:
-    return "👋 你好！我是 beaver-bot，有什么可以帮你的吗？"
+    return "👋 你好！我是 beaver-agent，有什么可以帮你的吗？"
 ```

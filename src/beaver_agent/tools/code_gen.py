@@ -37,7 +37,7 @@ class CodeGenTool:
 
             # If file_path provided, offer to save
             if file_path:
-                from beaver_bot.tools.file_tool import FileTool
+                from beaver_agent.tools.file_tool import FileTool
                 file_tool = FileTool(self.config)
                 save_result = file_tool.write_file(file_path, response.content)
                 return f"{response.content}\n\n---\n{save_result}"
@@ -102,8 +102,8 @@ Fill in the TODO sections and complete any unfinished functions.
 Description: {description}
 
 ```{language}
-```
-"""
+{partial_code}
+```"""
 
         try:
             response = self.llm.chat(prompt_text)

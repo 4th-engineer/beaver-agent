@@ -4,10 +4,10 @@ import typer
 from rich.console import Console
 from typing import Optional
 
-from beaver_bot.cli.interactive import run_repl
-from beaver_bot.cli.commands import chat_command, model_command
-from beaver_bot.core.agent import BeaverAgent
-from beaver_bot.core.config import load_config
+from beaver_agent.cli.interactive import run_repl
+from beaver_agent.cli.commands import chat_command, model_command
+from beaver_agent.core.agent import BeaverAgent
+from beaver_agent.core.config import load_config
 
 app = typer.Typer(
     name="beaver",
@@ -53,7 +53,7 @@ def model(
 @app.command()
 def version():
     """显示版本信息"""
-    from beaver_bot import __version__
+    from beaver_agent import __version__
     console.print(f"[green]Beaver Bot[/green] v{__version__}")
 
 

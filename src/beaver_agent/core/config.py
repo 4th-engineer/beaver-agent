@@ -28,7 +28,7 @@ class ModelConfig(BaseModel):
 class GitHubConfig(BaseModel):
     token: Optional[str] = None
     owner: str = "user-YeLei"
-    repo: str = "beaver-bot"
+    repo: str = "beaver-agent"
 
 
 class CLIConfig(BaseModel):

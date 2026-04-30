@@ -2,8 +2,8 @@
 
 from rich.console import Console
 
-from beaver_bot.core.config import BeaverConfig, load_config
-from beaver_bot.core.agent import BeaverAgent
+from beaver_agent.core.config import BeaverConfig, load_config
+from beaver_agent.core.agent import BeaverAgent
 
 
 console = Console()
@@ -46,7 +46,7 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
         return True
 
     elif cmd == "/analyze":
-        from beaver_bot.tools.code_analyzer import analyze_repository
+        from beaver_agent.tools.code_analyzer import analyze_repository
         from pathlib import Path
         root = Path(__file__).parent.parent.parent.parent
         result = analyze_repository(str(root))
@@ -54,7 +54,7 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
         return True
 
     elif cmd.startswith("/browse "):
-        from beaver_bot.tools.browser_tool import BrowserTool
+        from beaver_agent.tools.browser_tool import BrowserTool
         url = cmd.split(" ", 1)[1].strip()
         if not url.startswith("http"):
             url = "https://" + url
@@ -65,7 +65,7 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
         return True
 
     elif cmd == "/screenshot":
-        from beaver_bot.tools.browser_tool import BrowserTool
+        from beaver_agent.tools.browser_tool import BrowserTool
         import tempfile
         bt = BrowserTool()
         bt.open("https://example.com")
