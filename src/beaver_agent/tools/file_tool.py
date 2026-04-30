@@ -76,6 +76,7 @@ class FileTool:
             return f"📂 {path}:\n" + "\n".join(items)
 
         except Exception as e:
+            logger.error("list_directory_failed", path=dir_path, error=str(e))
             return f"Error listing directory: {e}"
 
     def search_files(self, pattern: str, path: str = ".") -> str:
@@ -95,6 +96,7 @@ class FileTool:
                 return f"No files matching '{pattern}' found"
 
         except Exception as e:
+            logger.error("search_files_failed", pattern=pattern, path=path, error=str(e))
             return f"Error searching files: {e}"
 
     def search_content(self, query: str, path: str = ".", file_pattern: str = "*") -> str:
@@ -151,4 +153,5 @@ class FileTool:
             return "\n".join(result)
 
         except Exception as e:
+            logger.error("check_project_structure_failed", path=path, error=str(e))
             return f"Error checking project: {e}"
