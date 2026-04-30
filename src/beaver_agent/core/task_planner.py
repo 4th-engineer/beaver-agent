@@ -1,5 +1,6 @@
 """Beaver Agent Task Planner v2 - With LLM tools"""
 
+import re
 from typing import List, Dict, Any
 
 import structlog
@@ -33,6 +34,25 @@ class TaskPlanner:
         ],
     }
 
+    # Compiled regex patterns for _extract_params (class-level, compiled once)
+    _FILE_PATTERNS = [
+        r"/[\w/.-]+\.(py|js|ts|go|rs|java|cpp|c|h)",  # Unix paths
+        r"[A-Za-z]:\\[\w\\.-]+\.(py|js|ts|go|rs|java)",  # Windows paths
+        r"[\w-]+/[\w/-]+\.(py|js|ts|go|rs|java)",  # Relative paths
+    ]
+    _ERROR_PATTERNS = [
+        r"Error:\s*(.+?)(?:\n|$)",
+        r"Exception:\s*(.+?)(?:\n|$)",
+        r"Traceback\s*(.+?)(?:\n\n|$)",
+        r"报错[：:]\s*(.+?)(?:\n|$)",
+    ]
+    _GH_PATTERNS = [
+        r"([\w-]+)/([\w-]+)",  # owner/repo
+        r"#(\d+)",  # issue or PR number
+        r"issue\s*#?(\d+)",  # explicit issue
+        r"pr\s*#?(\d+)",  # explicit PR
+    ]
+
     def plan(self, user_input: str, intent: str) -> List[Dict[str, Any]]:
         """Plan tasks for given intent and user input"""
 
@@ -62,14 +82,7 @@ class TaskPlanner:
             params["description"] = user_input
 
         # Extract file paths
-        import re
-        file_patterns = [
-            r"/[\w/.-]+\.(py|js|ts|go|rs|java|cpp|c|h)",  # Unix paths
-            r"[A-Za-z]:\\[\w\\.-]+\.(py|js|ts|go|rs|java)",  # Windows paths
-            r"[\w-]+/[\w/-]+\.(py|js|ts|go|rs|java)",  # Relative paths
-        ]
-
-        for pattern in file_patterns:
+        for pattern in self._FILE_PATTERNS:
             matches = re.findall(pattern, user_input)
             if matches:
                 params["file_path"] = matches[0]
@@ -87,28 +100,14 @@ class TaskPlanner:
             params["language"] = "python"
 
         # Extract error messages
-        error_patterns = [
-            r"Error:\s*(.+?)(?:\n|$)",
-            r"Exception:\s*(.+?)(?:\n|$)",
-            r"Traceback\s*(.+?)(?:\n\n|$)",
-            r"报错[：:]\s*(.+?)(?:\n|$)",
-        ]
-
-        for pattern in error_patterns:
+        for pattern in self._ERROR_PATTERNS:
             matches = re.findall(pattern, user_input, re.DOTALL)
             if matches:
                 params["error"] = matches[0].strip()
                 break
 
         # Extract GitHub references
-        gh_patterns = [
-            r"([\w-]+)/([\w-]+)",  # owner/repo
-            r"#(\d+)",  # issue or PR number
-            r"issue\s*#?(\d+)",  # explicit issue
-            r"pr\s*#?(\d+)",  # explicit PR
-        ]
-
-        for pattern in gh_patterns:
+        for pattern in self._GH_PATTERNS:
             matches = re.findall(pattern, user_input, re.IGNORECASE)
             if matches:
                 if "/" in pattern and isinstance(matches[0], tuple):
