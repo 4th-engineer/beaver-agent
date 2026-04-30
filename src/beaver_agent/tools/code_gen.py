@@ -94,7 +94,8 @@ func main() {{
         description: str,
         language: str = "python"
     ) -> str:
-        """Complete partial code"""
+        """Complete partial code using LLM to fill in TODO sections."""
+        logger.info("completing_code", language=language, description=description[:50])
 
         prompt_text = f"""Complete the following {language} code.
 Fill in the TODO sections and complete any unfinished functions.
@@ -117,7 +118,8 @@ Description: {description}
         style: str = "clean",
         language: str = "python"
     ) -> str:
-        """Refactor code to follow best practices"""
+        """Refactor code to follow best practices using LLM."""
+        logger.info("refactoring_code", language=language, style=style)
 
         prompt = f"""Refactor the following {language} code to be more {style}.
 
