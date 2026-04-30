@@ -11,6 +11,12 @@ class DebuggerTool:
     """Tool for debugging code and analyzing errors"""
 
     def __init__(self, config, llm_client):
+        """Initialize the DebuggerTool.
+
+        Args:
+            config: Application configuration object.
+            llm_client: LLM client for advanced code analysis.
+        """
         self.config = config
         self.llm = llm_client
 
