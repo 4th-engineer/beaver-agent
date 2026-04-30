@@ -1,4 +1,4 @@
-"""Tests for Beaver Bot CLI"""
+"""Tests for Beaver Agent CLI"""
 
 import pytest
 from typer.testing import CliRunner
@@ -24,7 +24,7 @@ def test_version_command(runner):
     """Test version command"""
     result = runner.invoke(app, ["version"])
     assert result.exit_code == 0
-    assert "Beaver Bot" in result.output
+    assert "Beaver Agent" in result.output
 
 
 def test_model_command_show(runner):
