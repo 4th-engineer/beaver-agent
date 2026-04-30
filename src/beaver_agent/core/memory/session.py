@@ -1,4 +1,4 @@
-"""Beaver Bot Session Memory"""
+"""Beaver Agent Session Memory"""
 
 from typing import List, Dict, Any, Optional
 import time

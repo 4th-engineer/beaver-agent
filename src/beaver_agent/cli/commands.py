@@ -1,4 +1,4 @@
-"""Beaver Bot CLI Commands"""
+"""Beaver Agent CLI Commands"""
 
 from rich.console import Console
 
@@ -84,7 +84,7 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
 def print_help() -> None:
     """Print help message"""
     help_text = """
-# 🦫 Beaver Bot 帮助
+# 🦫 Beaver Agent 帮助
 
 ## 命令
 | 命令 | 说明 |

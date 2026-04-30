@@ -1,4 +1,4 @@
-"""Beaver Bot Debugger Tool"""
+"""Beaver Agent Debugger Tool"""
 
 from typing import Optional, Dict, Any
 

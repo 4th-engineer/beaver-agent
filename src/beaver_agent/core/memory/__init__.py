@@ -1,4 +1,4 @@
-"""Beaver Bot Memory Module"""
+"""Beaver Agent Memory Module"""
 
 from beaver_agent.core.memory.session import SessionMemory
 

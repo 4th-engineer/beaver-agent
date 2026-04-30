@@ -1,4 +1,4 @@
-"""Beaver Bot GitHub Tool"""
+"""Beaver Agent GitHub Tool"""
 
 from typing import Optional
 

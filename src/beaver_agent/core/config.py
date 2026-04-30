@@ -1,4 +1,4 @@
-"""Beaver Bot Configuration Management"""
+"""Beaver Agent Configuration Management"""
 
 import os
 from pathlib import Path
@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 
 
 class AppConfig(BaseModel):
-    name: str = "Beaver Bot"
+    name: str = "Beaver Agent"
     version: str = "0.1.0"
     debug: bool = False
 

@@ -1,4 +1,4 @@
-"""Beaver Bot Agent Core v2 - With LLM Integration"""
+"""Beaver Agent Agent Core v2 - With LLM Integration"""
 
 import uuid
 from typing import Optional, Dict, Any, List
@@ -18,7 +18,7 @@ logger = structlog.get_logger()
 
 
 class BeaverAgent:
-    """Beaver Bot Agent - Main orchestration class with LLM"""
+    """Beaver Agent Agent - Main orchestration class with LLM"""
 
     def __init__(self, config: BeaverConfig):
         self.config = config
@@ -112,7 +112,7 @@ class BeaverAgent:
         messages = []
 
         # System prompt
-        system = """You are Beaver Bot, an expert AI coding assistant.
+        system = """You are Beaver Agent, an expert AI coding assistant.
 You help users with:
 - Writing and generating code
 - Code review and quality analysis
@@ -232,7 +232,7 @@ Always provide actionable suggestions."""
         else:
             return f"""## 💬 对话
 
-你好！我是 Beaver Bot 🦫
+你好！我是 Beaver Agent 🦫
 
 **上次操作结果**:
 {context or "暂无"}

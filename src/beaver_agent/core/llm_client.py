@@ -1,4 +1,4 @@
-"""Beaver Bot LLM Client - Unified interface for OpenRouter/Claude/OpenAI"""
+"""Beaver Agent LLM Client - Unified interface for OpenRouter/Claude/OpenAI"""
 
 import os
 from typing import Optional, List, Dict, Any, Union
@@ -197,7 +197,7 @@ class LLMClient:
     ) -> LLMResponse:
         """Generate code from description"""
 
-        system = f"""You are Beaver Bot, an expert coding assistant.
+        system = f"""You are Beaver Agent, an expert coding assistant.
 Generate clean, well-documented code based on the user's request.
 Always wrap code blocks with triple backticks and specify the language.
 If you need more context, ask clarifying questions."""
@@ -217,7 +217,7 @@ If you need more context, ask clarifying questions."""
     ) -> LLMResponse:
         """Review code and provide suggestions"""
 
-        system = """You are Beaver Bot, an expert code reviewer.
+        system = """You are Beaver Agent, an expert code reviewer.
 Analyze the code and provide:
 1. Potential bugs or issues
 2. Code quality improvements
@@ -239,7 +239,7 @@ Format your review with clear sections and line numbers if provided."""
     ) -> LLMResponse:
         """Debug code with error message"""
 
-        system = """You are Beaver Bot, an expert debugging assistant.
+        system = """You are Beaver Agent, an expert debugging assistant.
 Analyze the error and provide:
 1. Root cause analysis
 2. The exact fix
@@ -264,7 +264,7 @@ Code:
     def explain_code(self, code: str, language: str = "python") -> LLMResponse:
         """Explain what code does"""
 
-        system = """You are Beaver Bot, an expert programming tutor.
+        system = """You are Beaver Agent, an expert programming tutor.
 Explain code clearly, breaking down complex parts.
 Use simple language and provide examples where helpful."""
 

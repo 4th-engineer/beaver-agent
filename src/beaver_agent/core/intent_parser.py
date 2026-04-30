@@ -1,4 +1,4 @@
-"""Beaver Bot Intent Parser v2 - With Skill routing"""
+"""Beaver Agent Intent Parser v2 - With Skill routing"""
 
 from typing import List, Optional, Tuple
 

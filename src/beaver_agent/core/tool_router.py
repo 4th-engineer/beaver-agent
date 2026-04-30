@@ -1,4 +1,4 @@
-"""Beaver Bot Tool Router v2 - With LLM integration"""
+"""Beaver Agent Tool Router v2 - With LLM integration"""
 
 from typing import Dict, Any, Optional
 

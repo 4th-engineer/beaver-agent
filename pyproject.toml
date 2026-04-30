@@ -5,12 +5,12 @@ build-backend = "hatchling.build"
 [project]
 name = "beaver-agent"
 version = "0.1.0"
-description = "🦫 Beaver Bot - AI Coding Assistant"
+description = "🦫 Beaver Agent - Self-Evolving AI Coding Assistant"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.11"
 authors = [
-    { name = "Beaver Bot Team", email = "beaver@bot.com" }
+    { name = "Beaver Agent Team", email = "beaver@agent.com" }
 ]
 keywords = ["ai", "agent", "coding", "assistant", "cli"]
 classifiers = [
@@ -26,6 +26,7 @@ dependencies = [
     "rich>=13.7.0",
     "pydantic>=2.6.0",
     "pydantic-settings>=2.2.0",
+    "python-dotenv>=1.0.0",
     "pyyaml>=6.0.1",
     "structlog>=24.1.0",
     "github3.py>=3.3.0",

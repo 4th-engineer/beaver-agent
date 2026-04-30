@@ -1,4 +1,4 @@
-"""Beaver Bot Data Store - User/System data separation and migration"""
+"""Beaver Agent Data Store - User/System data separation and migration"""
 
 import json
 import shutil

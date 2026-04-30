@@ -1,4 +1,4 @@
-"""Beaver Bot MCP Manager - Connect to MCP servers and expose their tools"""
+"""Beaver Agent MCP Manager - Connect to MCP servers and expose their tools"""
 
 import asyncio
 import json

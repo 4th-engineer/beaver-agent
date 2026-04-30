@@ -1,18 +1,13 @@
-.PHONY: help install init run test lint fmt type-check clean doctor
+.PHONY: help setup run test lint fmt type-check clean doctor
 
 # 自动检测项目根目录
 SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 PROJECT_ROOT := $(SCRIPT_DIR)
-export PYTHONPATH := $(PROJECT_ROOT)/src
 
-PYTHON := $(PROJECT_ROOT)/.venv/bin/python
-
-# 默认目标
 help:
-	@echo "🦫 Beaver Bot"
+	@echo "🦫 Beaver Agent"
 	@echo ""
-	@echo "  make init        首次安装 (创建 .env + 安装依赖)"
-	@echo "  make install     安装依赖"
+	@echo "  make setup       首次安装 (创建 venv + 安装 + .env)"
 	@echo "  make run         启动 CLI"
 	@echo "  make run ARGS='-q \"问题\"'  单次查询"
 	@echo "  make test        运行测试"
@@ -24,8 +19,8 @@ help:
 
 # ── 安装 ─────────────────────────────────────────────
 
-install:
-	@echo "📦 安装依赖..."
+setup:
+	@echo "📦 初始化 Beaver Agent..."
 	@if [ ! -f "$(PROJECT_ROOT)/pyproject.toml" ]; then \
 		echo "❌ pyproject.toml not found"; exit 1; \
 	fi
@@ -33,64 +28,50 @@ install:
 		echo "  创建虚拟环境..."; \
 		python3 -m venv .venv; \
 	fi
-	@uv pip install -r requirements.txt --python $(PYTHON)
-	@uv pip install -e . --python $(PYTHON)
-
-# 首次设置
-init: install
+	@.venv/bin/python -m pip install -e ".[dev]"
 	@if [ ! -f "$(PROJECT_ROOT)/.env" ]; then \
-		echo "⚙️  创建 .env 配置文件..."; \
+		echo "  创建 .env 配置文件..."; \
 		cp .env.example .env; \
-		echo ""; \
-		echo "⚠️  请编辑 .env 填入你的 API Key:"; \
-		echo "   nano .env"; \
+		echo "  ⚠️  请编辑 .env 填入你的 API Key"; \
 	else \
-		echo "✅ .env 已存在"; \
+		echo "  ✅ .env 已存在"; \
 	fi
-	@PYTHONPATH=$(PROJECT_ROOT)/src $(PYTHON) -c "import beaver_agent" 2>/dev/null || { \
-		echo ""; \
-		echo "❌ 安装失败"; exit 1; \
-	}
-	@echo "✅ 安装完成"
+	@echo "✅ 安装完成 — 运行 'beaver run' 开始"
 
 # ── 运行 ─────────────────────────────────────────────
 
 run:
-	@PYTHONPATH=$(PROJECT_ROOT)/src $(PYTHON) -m beaver_agent.main run $(ARGS)
+	@beaver run $(ARGS)
 
 # ── 测试 ─────────────────────────────────────────────
 
 test:
-	@PYTHONPATH=$(PROJECT_ROOT)/src $(PYTHON) -m pytest tests/ -v --ignore=tests/test_cli.py
+	@.venv/bin/python -m pytest tests/ -v --ignore=tests/test_cli.py
 
 # ── 代码质量 ─────────────────────────────────────────
 
 lint:
-	@$(PYTHON) -m ruff check src/
+	@.venv/bin/python -m ruff check src/
 
 fmt:
-	@$(PYTHON) -m ruff format src/ tests/
+	@.venv/bin/python -m ruff format src/ tests/
 
 type-check:
-	@$(PYTHON) -m mypy src/
+	@.venv/bin/python -m mypy src/
 
 # ── 环境检查 ─────────────────────────────────────────
 
 doctor:
 	@echo "🔍 环境检查..."
 	@echo ""
-	@echo "Python: $$($(PYTHON) --version)"
+	@echo "Python: $$('.venv/bin/python' --version 2>/dev/null || python3 --version)"
 	@echo ""
 	@echo "已安装:"
-	@uv pip list --python $(PYTHON) 2>/dev/null | grep -E "beaver|typer|rich|pydantic" || $(PYTHON) -m pip list 2>/dev/null | grep -E "beaver|typer|rich|pydantic" || echo "  (use 'make install' first)"
+	@.venv/bin/python -m pip list 2>/dev/null | grep -E "beaver|typer|rich|pydantic" || echo "  (use 'make setup' first)"
 	@echo ""
 	@echo "配置文件:"
-	@if [ -f .env ]; then echo "  ✅ .env"; else echo "  ⚠️  .env 不存在 (make init)"; fi
+	@if [ -f .env ]; then echo "  ✅ .env"; else echo "  ⚠️  .env 不存在 (make setup)"; fi
 	@if [ -f config/settings.yaml ]; then echo "  ✅ config/settings.yaml"; else echo "  ❌ config/settings.yaml 缺失"; fi
-	@echo ""
-	@echo "API Key:"
-	@grep -q "MINIMAX_API_KEY=your_" .env 2>/dev/null && echo "  ⚠️  请编辑 .env 填入真实 API Key" || \
-		(grep -q "MINIMAX_API_KEY=" .env && echo "  ✅ MINIMAX_API_KEY 已配置" || echo "  ⚠️  MINIMAX_API_KEY 未设置")
 
 # ── 清理 ─────────────────────────────────────────────
 

@@ -1,4 +1,4 @@
-"""Beaver Bot Interactive REPL"""
+"""Beaver Agent Interactive REPL"""
 
 import sys
 from typing import Optional
@@ -70,7 +70,7 @@ def run_repl(config: BeaverConfig) -> None:
 def print_welcome(config: BeaverConfig) -> None:
     """Print welcome message"""
     console.print(Panel(
-        f"[bold cyan]🦫 Beaver Bot[/bold cyan] v{config.app.version}\n\n"
+        f"[bold cyan]🦫 Beaver Agent[/bold cyan] v{config.app.version}\n\n"
         f"[dim]输入 [green]/help[/green] 查看帮助[/dim]\n"
         f"[dim]输入 [red]/exit[/red] 退出[/dim]",
         title="Welcome",

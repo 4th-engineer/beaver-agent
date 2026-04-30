@@ -1,4 +1,4 @@
-"""Beaver Bot Task Planner v2 - With LLM tools"""
+"""Beaver Agent Task Planner v2 - With LLM tools"""
 
 from typing import List, Dict, Any
 

@@ -1,4 +1,4 @@
-"""Beaver Bot Terminal Tool"""
+"""Beaver Agent Terminal Tool"""
 
 import subprocess
 from typing import Optional, Dict, Any

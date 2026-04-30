@@ -1,4 +1,4 @@
-"""Beaver Bot Code Generation Tool"""
+"""Beaver Agent Code Generation Tool"""
 
 from typing import Optional, Dict, Any
 

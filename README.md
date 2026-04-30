@@ -1,6 +1,6 @@
-# 🦫 Beaver Bot
+# 🦫 Beaver Agent
 
-> A self-evolving AI coding agent — built for developers who want an assistant that grows with their projects.
+> A self-evolving AI coding assistant — built for developers who want an agent that grows with their projects.
 
 [![Tests](https://img.shields.io/badge/tests-70%20passing-brightgreen)](https://github.com/4th-engineer/beaver-agent)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
@@ -13,9 +13,20 @@
 ```bash
 git clone https://github.com/4th-engineer/beaver-agent.git
 cd beaver-agent
-make init
-# 编辑 .env 填入 API Key
-make run
+
+# 创建虚拟环境
+python3 -m venv .venv
+source .venv/bin/activate
+
+# 安装依赖
+pip install -e ".[dev]"
+
+# 首次配置
+cp .env.example .env
+# 编辑 .env 填入你的 API Key
+
+# 运行
+beaver run
 ```
 
 ---
@@ -24,22 +35,19 @@ make run
 
 | Command | Description |
 |---------|-------------|
-| `make init` | 首次设置（安装依赖 + 创建 .env） |
-| `make install` | 安装依赖 |
-| `make run` | 启动交互式 CLI |
-| `make run ARGS='-q "问题"'` | 单次查询 |
-| `make test` | 运行测试 |
-| `make lint` | 代码检查 |
-| `make fmt` | 格式化代码 |
-| `make type-check` | 类型检查 |
-| `make doctor` | 环境检查 |
-| `make clean` | 清理缓存 |
+| `beaver run` | 启动交互式 CLI |
+| `beaver chat -q "问题"` | 单次查询 |
+| `beaver model` | 查看/切换模型 |
+| `pytest` | 运行测试 |
+| `ruff check .` | 代码检查 |
+| `ruff format .` | 格式化代码 |
+| `mypy src/` | 类型检查 |
 
 ---
 
 ## ⚙️ Configuration
 
-创建 `config/settings.yaml` 或复制 `.env.example` 为 `.env`，填入：
+创建 `.env` 文件（复制 `.env.example`），填入：
 
 ```bash
 MINIMAX_API_KEY=your_key_here
@@ -68,7 +76,7 @@ GITHUB_TOKEN=your_token_here
 |-----------|------|
 | **Skills** (`skills/`) | 可插拔技能模块，关键词触发 |
 | **MCP Servers** (`mcp_configs/`) | YAML 配置 MCP 服务器 |
-| **Tools** (`src/tools/`) | 模块化工具系统 |
+| **Tools** (`src/beaver_agent/tools/`) | 模块化工具系统 |
 
 ### 🦫 Self-Evolution
 
@@ -87,11 +95,11 @@ beaver-agent/
 ├── src/beaver_agent/
 │   ├── core/
 │   │   ├── agent.py              # Agent 主循环
-│   │   ├── intent_parser.py     # 意图识别
+│   │   ├── intent_parser.py      # 意图识别
 │   │   ├── task_planner.py       # 任务规划
 │   │   ├── tool_router.py        # 工具路由
 │   │   ├── skill_manager.py      # Skill 管理
-│   │   ├── mcp_manager.py       # MCP 服务器管理
+│   │   ├── mcp_manager.py        # MCP 服务器管理
 │   │   ├── llm_client.py         # LLM 客户端
 │   │   └── conversation_logger.py # 调试日志
 │   ├── tools/
@@ -114,7 +122,7 @@ beaver-agent/
 ## 🧪 Test Suite
 
 ```bash
-make test
+pytest
 ```
 
 ---

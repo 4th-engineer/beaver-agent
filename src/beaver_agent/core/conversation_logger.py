@@ -1,4 +1,4 @@
-"""Beaver Bot Conversation Logger - Records user input and LLM interactions"""
+"""Beaver Agent Conversation Logger - Records user input and LLM interactions"""
 
 import json
 import os

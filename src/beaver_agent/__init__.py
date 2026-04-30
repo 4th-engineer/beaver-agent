@@ -1,3 +1,3 @@
-"""Beaver Bot - AI Coding Assistant"""
+"""Beaver Agent - AI Coding Assistant"""
 
 __version__ = "0.1.0"

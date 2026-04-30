@@ -1,4 +1,4 @@
-"""Beaver Bot Skill Manager - Structured skill loading and execution"""
+"""Beaver Agent Skill Manager - Structured skill loading and execution"""
 
 import os
 import re

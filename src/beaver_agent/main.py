@@ -1,4 +1,4 @@
-"""Beaver Bot CLI - Main Entry Point"""
+"""Beaver Agent CLI - Main Entry Point"""
 
 import typer
 from rich.console import Console
@@ -11,7 +11,7 @@ from beaver_agent.core.config import load_config
 
 app = typer.Typer(
     name="beaver",
-    help="🦫 Beaver Bot - AI Coding Assistant",
+    help="🦫 Beaver Agent - AI Coding Assistant",
     add_completion=False,
 )
 
@@ -54,7 +54,7 @@ def model(
 def version():
     """显示版本信息"""
     from beaver_agent import __version__
-    console.print(f"[green]Beaver Bot[/green] v{__version__}")
+    console.print(f"[green]Beaver Agent[/green] v{__version__}")
 
 
 if __name__ == "__main__":

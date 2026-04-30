@@ -309,7 +309,7 @@ class CodeAnalyzer:
     def generate_tree(self) -> str:
         """Generate text tree of the codebase"""
         lines = []
-        lines.append("🦫 Beaver Bot - Code Repository Map")
+        lines.append("🦫 Beaver Agent - Code Repository Map")
         lines.append("=" * 60)
         lines.append("")
 
