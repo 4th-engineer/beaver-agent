@@ -48,6 +48,12 @@ class ToolRouter:
 
         logger.info("tools_registered", count=len(self._tool_registry))
 
+    # Error codes for programmatic error handling
+    ERR_NO_TOOL = "ERR_NO_TOOL"
+    ERR_UNKNOWN_TOOL = "ERR_UNKNOWN_TOOL"
+    ERR_NO_ACTION = "ERR_NO_ACTION"
+    ERR_TOOL_EXECUTION = "ERR_TOOL_EXECUTION"
+
     def route(self, task: Dict[str, Any]) -> Dict[str, Any]:
         """Route a task to the appropriate tool"""
 
@@ -56,10 +62,10 @@ class ToolRouter:
         params = task.get("params", {})
 
         if not tool_name:
-            return {"success": False, "error": "No tool specified"}
+            return {"success": False, "error": "No tool specified", "error_code": self.ERR_NO_TOOL}
 
         if tool_name not in self._tool_registry:
-            return {"success": False, "error": f"Unknown tool: {tool_name}"}
+            return {"success": False, "error": f"Unknown tool: {tool_name}", "error_code": self.ERR_UNKNOWN_TOOL}
 
         tool = self._tool_registry[tool_name]
 
@@ -69,10 +75,12 @@ class ToolRouter:
                 result = getattr(tool, action)(**params)
                 return {"success": True, "tool": tool_name, "action": action, "data": result}
             else:
-                return {"success": False, "error": f"Tool {tool_name} has no action: {action}"}
+                return {"success": False, "error": f"Tool {tool_name} has no action: {action}",
+                        "error_code": self.ERR_NO_ACTION, "tool": tool_name, "action": action}
         except Exception as e:
             logger.error("tool_execution_failed", tool=tool_name, action=action, error=str(e))
-            return {"success": False, "error": str(e), "tool": tool_name, "action": action}
+            return {"success": False, "error": str(e), "error_code": self.ERR_TOOL_EXECUTION,
+                    "tool": tool_name, "action": action}
 
     def list_tools(self) -> list:
         """List all registered tools"""
