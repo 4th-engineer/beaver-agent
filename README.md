@@ -22,8 +22,7 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 
 # 首次配置
-cp .env.example .env
-# 编辑 .env 填入你的 API Key
+beaver setup
 
 # 运行
 beaver run
@@ -35,6 +34,7 @@ beaver run
 
 | Command | Description |
 |---------|-------------|
+| `beaver setup` | 首次配置（创建 .env） |
 | `beaver run` | 启动交互式 CLI |
 | `beaver chat -q "问题"` | 单次查询 |
 | `beaver model` | 查看/切换模型 |

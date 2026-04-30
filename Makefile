@@ -1,4 +1,4 @@
-.PHONY: help setup run test lint fmt type-check clean doctor
+.PHONY: help setup init run test lint fmt type-check clean doctor
 
 # 自动检测项目根目录
 SCRIPT_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
@@ -29,13 +29,7 @@ setup:
 		python3 -m venv .venv; \
 	fi
 	@.venv/bin/python -m pip install -e ".[dev]"
-	@if [ ! -f "$(PROJECT_ROOT)/.env" ]; then \
-		echo "  创建 .env 配置文件..."; \
-		cp .env.example .env; \
-		echo "  ⚠️  请编辑 .env 填入你的 API Key"; \
-	else \
-		echo "  ✅ .env 已存在"; \
-	fi
+	@beaver setup --force
 	@echo "✅ 安装完成 — 运行 'beaver run' 开始"
 
 # ── 运行 ─────────────────────────────────────────────
