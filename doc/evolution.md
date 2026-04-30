@@ -10,7 +10,7 @@
 | 2026-04-29 | Add conversation logger - records user input, LLM requests/responses, tool calls | 62 tests passing, logs stored in logs/ directory |
 | 2026-04-29 | Clean up TODO placeholders in code_gen.py JavaScript and Go templates | 66 tests passing, improved generated code quality |
 | 2026-04-29 | Added docstrings to CLI commands (chat_command, model_command) | 66 tests passing, improved CLI documentation |
-| 2026-04-30 | Added docstring to MCPTool.to_dict() for LLM API compatibility | 70 tests passing, improved code documentation |
+| 2026-04-30 | Fixed code_gen.py complete_code - partial_code was never passed to LLM prompt template | 70 tests passing |
 
 ## Strategy Notes
 - Focus on small, incremental improvements

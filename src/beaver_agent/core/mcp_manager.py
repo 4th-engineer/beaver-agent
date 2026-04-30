@@ -51,12 +51,23 @@ class MCPTool:
 
 
 class MCPManager:
-    """Manages MCP server connections and tool discovery
+    """Manages MCP server connections and tool discovery.
 
-    Supports both stdio (command-based) and HTTP (url-based) transports.
+    Supports both stdio (command-based) and HTTP (URL-based) transports.
+    Each server can have multiple tools exposed via the MCP protocol.
+
+    Attributes:
+        config: BeaverConfig instance with MCP server definitions.
+        mcp_configs_dir: Optional directory path to load additional MCP configs.
     """
 
     def __init__(self, config: BeaverConfig, mcp_configs_dir: str = None):
+        """Initialize MCP manager and load server configurations.
+
+        Args:
+            config: BeaverConfig with mcp.servers definitions.
+            mcp_configs_dir: Optional directory containing MCP config YAML files.
+        """
         self.config = config
         self.config_root = config.model_fields['mcp'].default if hasattr(config, 'mcp') else None
         self._mcp_configs_dir = mcp_configs_dir

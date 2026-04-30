@@ -36,17 +36,24 @@ from typing import Optional, Dict, Any
 _enabled = False
 _viewer_url = "http://localhost:7777"
 _initialized = False
-_tool_names: Dict[str, str] = {}  # tool_name -> display_name
 _lock = Lock()
 
-# 工具名映射（ToolRouter 内部工具名 -> 人类可读名称）
-TOOL_NAME_MAP = {
-    "file_tool": "Read",
-    "terminal_tool": "Bash",
-    "github_tool": "GitHub",
-    "code_gen": "CodeGen",
-    "code_review": "Review",
-    "debugger": "Debug",
+# 工具名映射（tool_name + action -> 人类可读名称）
+TOOL_ACTION_MAP = {
+    ("file_tool", "read_file"): "Read",
+    ("file_tool", "write_file"): "Write",
+    ("file_tool", "search_files"): "Find",
+    ("file_tool", "search_content"): "Search",
+    ("file_tool", "list_directory"): "List",
+    ("file_tool", "check_project_structure"): "Check",
+    ("terminal_tool", "run_command"): "Bash",
+    ("terminal_tool", "run_terminal_command"): "Bash",
+    ("terminal_tool", "run"): "Bash",
+    ("github_tool", "*"): "GitHub",
+    ("code_gen", "*"): "CodeGen",
+    ("code_review", "*"): "Review",
+    ("debugger", "*"): "Debug",
+    ("browser_tool", "*"): "Browser",
 }
 
 
@@ -159,6 +166,31 @@ def _post_event(event: Dict[str, Any]) -> bool:
         return False
 
 
+def _get_agent_name(self) -> str:
+    """从 ToolRouter 的 config 中获取 agent 名称"""
+    try:
+        app = getattr(getattr(self, "config", None), "app", None)
+        return getattr(app, "name", "beaver") if app else "beaver"
+    except Exception:
+        return "beaver"
+
+
+def _get_tool_display_name(tool_name: str, action: str = "") -> str:
+    """获取工具的显示名称"""
+    # 先尝试精确匹配 (tool_name, action)
+    key = (tool_name, action)
+    if key in TOOL_ACTION_MAP:
+        return TOOL_ACTION_MAP[key]
+    # 再尝试通配符 (tool_name, "*")
+    wildcard = (tool_name, "*")
+    if wildcard in TOOL_ACTION_MAP:
+        return TOOL_ACTION_MAP[wildcard]
+    # 最后用默认转换
+    if action:
+        return action.replace("_", " ").title()
+    return tool_name.replace("_", " ").title()
+
+
 def _patch_tool_router() -> None:
     """
     动态注入 ToolRouter.route() 方法，自动追踪所有工具调用。
@@ -181,15 +213,18 @@ def _patch_tool_router() -> None:
             params = task.get("params", {})
             file = params.get("file_path") or params.get("path") or ""
 
+            # 获取 agent 名称（从 config 中读取，支持多 agent）
+            agent_name = _get_agent_name(self)
+
             # 发送 tool 事件（工具开始）
             if _enabled:
                 _post_event({
                     "type": "tool",
-                    "agent": "beaver",
-                    "tool": _get_tool_display_name(tool_name),
+                    "agent": agent_name,
+                    "tool": _get_tool_display_name(tool_name, action),
                     "action": action,
                     "file": str(file) if file else "",
-                    "message": f"{_get_tool_display_name(tool_name)}: {action}",
+                    "message": f"{_get_tool_display_name(tool_name, action)}: {action}",
                     "status": "active",
                     "timestamp": datetime.now().isoformat(),
                 })
@@ -202,11 +237,11 @@ def _patch_tool_router() -> None:
                 success = result.get("success", False)
                 _post_event({
                     "type": "tool_done" if success else "error",
-                    "agent": "beaver",
-                    "tool": _get_tool_display_name(tool_name),
+                    "agent": agent_name,
+                    "tool": _get_tool_display_name(tool_name, action),
                     "action": action,
                     "file": str(file) if file else "",
-                    "message": f"{_get_tool_display_name(tool_name)}: {action} "
+                    "message": f"{_get_tool_display_name(tool_name, action)}: {action} "
                                + ("✅" if success else "❌"),
                     "status": "idle" if success else "error",
                     "timestamp": datetime.now().isoformat(),
@@ -234,14 +269,3 @@ def _patch_tool_router() -> None:
         print(f"[PixelPilot] Warning: Could not patch ToolRouter: {e}")
     except Exception as e:
         print(f"[PixelPilot] Warning: Patching failed: {e}")
-
-
-def _get_tool_display_name(tool_name: str) -> str:
-    """获取工具的显示名称"""
-    return TOOL_NAME_MAP.get(tool_name, tool_name.replace("_", " ").title())
-
-
-# ──────────────────────────────────────────────────────────────
-# 自动初始化（可选）
-# ──────────────────────────────────────────────────────────────
-
