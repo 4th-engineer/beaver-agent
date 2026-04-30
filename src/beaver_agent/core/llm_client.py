@@ -101,37 +101,60 @@ class LLMClient:
 
         import httpx
 
-        with httpx.Client(base_url=base_url.rstrip("/"), timeout=60.0, follow_redirects=True) as client:
-            response = client.post(
-                "",
-                json={
-                    "model": self.model,
-                    "messages": messages,
-                    "max_tokens": kwargs.get("max_tokens", 4096),
-                    "temperature": kwargs.get("temperature", 0.7),
-                },
-                headers={
-                    "Authorization": f"Bearer {self.api_key}",
-                    "Content-Type": "application/json",
-                },
-            )
-            response.raise_for_status()
-            data = response.json()
+        try:
+            with httpx.Client(base_url=base_url.rstrip("/"), timeout=60.0, follow_redirects=True) as client:
+                response = client.post(
+                    "",
+                    json={
+                        "model": self.model,
+                        "messages": messages,
+                        "max_tokens": kwargs.get("max_tokens", 4096),
+                        "temperature": kwargs.get("temperature", 0.7),
+                    },
+                    headers={
+                        "Authorization": f"Bearer {self.api_key}",
+                        "Content-Type": "application/json",
+                    },
+                )
+                response.raise_for_status()
+                data = response.json()
 
-            content = data.get("content", [])
-            if isinstance(content, list) and len(content) > 0:
-                text_parts = [c.get("text", "") for c in content if c.get("type") == "text"]
-                text = "\n".join(text_parts) if text_parts else str(content)
-            else:
-                text = str(content)
+                content = data.get("content", [])
+                if isinstance(content, list) and len(content) > 0:
+                    text_parts = [c.get("text", "") for c in content if c.get("type") == "text"]
+                    text = "\n".join(text_parts) if text_parts else str(content)
+                else:
+                    text = str(content)
 
+                return LLMResponse(
+                    content=text,
+                    model=self.model,
+                    usage={
+                        "input_tokens": data.get("usage", {}).get("input_tokens", 0),
+                        "output_tokens": data.get("usage", {}).get("output_tokens", 0),
+                    },
+                )
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 401:
+                # Authentication error - let it propagate so fallback kicks in
+                logger.warning("minimax_auth_failed", status_code=401)
+                raise
+            logger.error("minimax_http_error", status_code=e.response.status_code, detail=str(e))
             return LLMResponse(
-                content=text,
-                model=self.model,
-                usage={
-                    "input_tokens": data.get("usage", {}).get("input_tokens", 0),
-                    "output_tokens": data.get("usage", {}).get("output_tokens", 0),
-                },
+                content=f"HTTP error {e.response.status_code}: {e.response.text}",
+                model=self.model
+            )
+        except httpx.RequestError as e:
+            logger.error("minimax_request_error", error=str(e))
+            return LLMResponse(
+                content=f"Request error: {e}",
+                model=self.model
+            )
+        except Exception as e:
+            logger.error("minimax_unknown_error", error=str(e))
+            return LLMResponse(
+                content=f"Unexpected error: {e}",
+                model=self.model
             )
 
     def _call_fallback(self, messages: List[Dict], **kwargs) -> LLMResponse:
