@@ -199,7 +199,7 @@ def _get_agent_name(self) -> str:
     try:
         app = getattr(getattr(self, "config", None), "app", None)
         return getattr(app, "name", "beaver") if app else "beaver"
-    except Exception:
+    except Exception as e:
         if _has_structlog:
             _logger.warning("get_agent_name_failed", error=str(e))
         return "beaver"
