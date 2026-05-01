@@ -55,7 +55,23 @@ class ToolRouter:
     ERR_TOOL_EXECUTION = "ERR_TOOL_EXECUTION"
 
     def route(self, task: Dict[str, Any]) -> Dict[str, Any]:
-        """Route a task to the appropriate tool"""
+        """Route a task to the appropriate tool.
+
+        Takes a task dictionary with 'tool', 'action', and optional 'params' keys,
+        looks up the tool in the registry, and executes the specified action
+        with the given parameters.
+
+        Args:
+            task: Dictionary containing:
+                - tool (str): Name of the tool to route to
+                - action (str): Method name to call on the tool
+                - params (dict, optional): Keyword arguments for the action method
+
+        Returns:
+            Dict with 'success' (bool) and either 'data' (result) or 'error' and
+            'error_code' (string error identifier). On success, includes 'tool'
+            and 'action' keys describing what was executed.
+        """
 
         tool_name = task.get("tool")
         action = task.get("action")
@@ -83,13 +99,28 @@ class ToolRouter:
                     "tool": tool_name, "action": action}
 
     def list_tools(self) -> list:
-        """List all registered tools"""
+        """List all registered tool names.
+
+        Returns:
+            List of strings, each being the name of a registered tool.
+        """
         return list(self._tool_registry.keys())
 
     def get_tool(self, name: str) -> Optional[Any]:
-        """Get a specific tool by name"""
+        """Get a specific tool by name.
+
+        Args:
+            name: The tool name to look up (e.g., 'file_tool', 'terminal_tool').
+
+        Returns:
+            The tool instance, or None if not found.
+        """
         return self._tool_registry.get(name)
 
     def get_llm_client(self) -> Optional[LLMClient]:
-        """Get the LLM client"""
+        """Get the LLM client used for AI-powered tools.
+
+        Returns:
+            The LLMClient instance, or None if initialization failed.
+        """
         return self._llm_client
