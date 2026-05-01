@@ -247,9 +247,6 @@ class SkillManager:
                         steps.append(SkillStep(order=i, instruction=str(step_text)))
                 phases.append(SkillPhase(name="Steps", instruction="", steps=steps))
 
-            # Try new format: phases as list of {name, instruction, steps}
-            raw_phases = frontmatter.get("phases", [])
-
         for phase_data in raw_phases:
             if isinstance(phase_data, dict):
                 phase_name = phase_data.get("name", "Unnamed")
