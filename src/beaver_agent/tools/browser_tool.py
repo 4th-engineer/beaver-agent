@@ -173,7 +173,21 @@ def close() -> BrowserResult:
 
 
 def fetch_content(url: str, timeout: int = 30) -> Dict[str, Any]:
-    """Fetch URL and return structured content"""
+    """Fetch URL and return structured content including title, snapshot, and page state.
+    
+    Args:
+        url: The URL to navigate to and fetch content from.
+        timeout: Maximum time in seconds to wait for page load (default: 30).
+    
+    Returns:
+        Dict with keys: success (bool), url (str), title (str), snapshot (str), message (str).
+        On failure, includes 'error' key instead of content fields.
+    
+    Example:
+        >>> result = fetch_content("https://example.com")
+        >>> if result["success"]:
+        ...     print(result["title"])
+    """
     # Navigate to URL
     nav_result = navigate(url, timeout=timeout)
     if not nav_result.success:
@@ -197,7 +211,24 @@ def fetch_content(url: str, timeout: int = 30) -> Dict[str, Any]:
 
 
 def take_screenshot(url: str, output_path: str = None, full_page: bool = False, timeout: int = 30) -> Dict[str, Any]:
-    """Navigate to URL and take screenshot"""
+    """Navigate to URL and take a screenshot.
+    
+    Combines navigation, waiting for page load, and screenshot capture into a single operation.
+    
+    Args:
+        url: The URL to navigate to.
+        output_path: File path to save screenshot. If None, a temp file is created.
+        full_page: If True, capture the entire scrollable page (default: False).
+        timeout: Maximum time in seconds to wait for navigation (default: 30).
+    
+    Returns:
+        Dict with keys: success (bool), path (str), url (str), error (str if failed).
+    
+    Example:
+        >>> result = take_screenshot("https://example.com", "/tmp/ss.png")
+        >>> if result["success"]:
+        ...     print(f"Saved to {result['path']}")
+    """
     if output_path is None:
         output_path = tempfile.mktemp(suffix=".png")
 
@@ -222,7 +253,27 @@ def take_screenshot(url: str, output_path: str = None, full_page: bool = False, 
 
 # Convenience class for unified interface
 class BrowserTool:
-    """Browser automation tool for beaver-agent"""
+    """Browser automation tool providing a high-level interface for web scraping and automation.
+    
+    This class wraps the module-level browser functions (navigate, snapshot, click, etc.)
+    into a stateful interface that tracks current_url and last_snapshot across operations.
+    
+    Attributes:
+        current_url: The URL of the currently open page, or None if no page is open.
+        last_snapshot: The most recent accessibility tree snapshot, or None.
+    
+    Example:
+        >>> tool = BrowserTool()
+        >>> tool.open("https://example.com")
+        >>> elements = tool.interactive()
+        >>> tool.click("@e5")
+        >>> info = tool.get_page_info()
+    
+    Note:
+        All methods that perform actions (open, click, fill, scroll) automatically
+        refresh the last_snapshot, so subsequent calls to interactive() or snapshot()
+        reflect the updated page state.
+    """
 
     def __init__(self):
         self.current_url: Optional[str] = None
