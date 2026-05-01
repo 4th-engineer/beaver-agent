@@ -164,7 +164,7 @@ Always provide actionable suggestions."""
             return self._generate_fallback_response(intent, context)
 
     def _build_context(self, tool_results: List[Dict[str, Any]]) -> str:
-        """Build context string from tool results — uses rich Table for display."""
+        """Build context string from tool results — tool-specific summarization."""
         if not tool_results:
             return ""
 
@@ -188,9 +188,9 @@ Always provide actionable suggestions."""
 
             status = "[green]✓[/green]" if success else "[red]✗[/red]"
             content = data if success else f"[red]{error}[/red]"
-            # Truncate long data
-            if isinstance(content, str) and len(content) > 500:
-                content = content[:500] + "..."
+
+            # Tool-specific summarization
+            content = self._summarize_content(tool_name, content)
 
             table.add_row(status, tool_name, content)
 
@@ -200,6 +200,113 @@ Always provide actionable suggestions."""
         tmp_console = Console(file=buf, force_terminal=True)
         tmp_console.print(table)
         return buf.getvalue()
+
+    def _summarize_content(self, tool: str, content: str) -> str:
+        """Summarize long tool output based on tool type — no truncation, highlight key info."""
+        if not isinstance(content, str):
+            content = str(content)
+
+        # For file read: show first 20 lines + file stats
+        if tool in ("read_file", "Read"):
+            lines = content.strip().split("\n")
+            if len(lines) > 24:
+                total = len(lines)
+                preview = "\n".join(lines[:20])
+                # Extract key info from first lines
+                first_lines = lines[:5]
+                stats = ""
+                for fl in first_lines:
+                    if "total lines" in fl.lower() or "file" in fl.lower():
+                        stats += f" | {fl.strip()}"
+                return (
+                    f"{preview}\n"
+                    f"[dim]... ({total - 20} more lines){stats}[/dim]\n\n"
+                    "[cyan]📄 文件预览 (前 20 行)[/cyan]"
+                )
+            return content
+
+        # For terminal output: show last 30 lines (usually the important part)
+        if tool in ("terminal", "exec", "bash", "run_command"):
+            lines = content.strip().split("\n")
+            if len(lines) > 35:
+                # Try to find error/warning patterns
+                error_lines = [l for l in lines if any(k in l.lower() for k in ("error", "fail", "exception", "traceback", "warning", "warn"))]
+                if error_lines:
+                    # Show last 15 normal + all error lines
+                    last_normal = lines[-20:] if len(lines) > 20 else lines
+                    errors = "\n".join(error_lines[:10])
+                    return (
+                        f"{chr(10).join(last_normal[:15])}\n\n"
+                        f"[red]⚠️ 发现问题 ({len(error_lines)} 处):[/red]\n{errors}"
+                    )
+                return (
+                    f"{chr(10).join(lines[-30:])}\n\n"
+                    f"[dim]↑ 前 {len(lines) - 30} 行...[/dim]"
+                )
+            return content
+
+        # For search results: show top matches with context
+        if tool in ("search", "grep", "SearchFiles"):
+            lines = content.strip().split("\n")
+            if len(lines) > 20:
+                # Show first 10 + count summary
+                return (
+                    f"{chr(10).join(lines[:10])}\n\n"
+                    f"[dim]... 共 {len(lines)} 条匹配结果[/dim]"
+                )
+            return content
+
+        # For JSON data: pretty-print with syntax highlight
+        if tool in ("mcp", "API", "http", "fetch"):
+            import json
+            try:
+                parsed = json.loads(content)
+                formatted = json.dumps(parsed, indent=2, ensure_ascii=False)
+                if len(formatted) > 2000:
+                    # Show structure summary + first 50 lines
+                    lines = formatted.split("\n")
+                    return (
+                        f"{chr(10).join(lines[:50])}\n\n"
+                        f"[dim]JSON 结构: {self._json_summary(parsed)}[/dim]"
+                    )
+                return formatted
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+        # For git/status: keep last 20 lines
+        if tool in ("git", "git_status", "git_log"):
+            lines = content.strip().split("\n")
+            if len(lines) > 25:
+                return (
+                    f"{chr(10).join(lines[-20:])}\n\n"
+                    f"[dim]↑ 前 {len(lines) - 20} 行...[/dim]"
+                )
+            return content
+
+        # Default: if really long, show structure summary
+        if len(content) > 3000:
+            lines = content.strip().split("\n")
+            return (
+                f"{chr(10).join(lines[:30])}\n\n"
+                f"[dim]...(共 {len(lines)} 行, 约 {len(content)} 字符)[/dim]"
+            )
+
+        return content
+
+    def _json_summary(self, obj: Any, depth: int = 0) -> str:
+        """Build a one-line summary of JSON structure."""
+        if depth > 3:
+            return "..."
+        if isinstance(obj, dict):
+            keys = list(obj.keys())[:5]
+            summary = ", ".join(f"{k}={self._json_summary(obj[k], depth+1)}" for k in keys)
+            suffix = f" (+{len(obj)-5} keys)" if len(obj) > 5 else ""
+            return f"{{{summary}{suffix}}}"
+        elif isinstance(obj, list):
+            return f"[{len(obj)} items]"
+        elif isinstance(obj, str):
+            return f'"{obj[:20]}{"..." if len(obj) > 20 else ""}"'
+        return repr(obj)[:30]
 
     def _generate_fallback_response(self, intent: str, context: str) -> str:
         """Generate response without LLM (fallback mode)"""
