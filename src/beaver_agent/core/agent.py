@@ -164,24 +164,42 @@ Always provide actionable suggestions."""
             return self._generate_fallback_response(intent, context)
 
     def _build_context(self, tool_results: List[Dict[str, Any]]) -> str:
-        """Build context string from tool results"""
+        """Build context string from tool results — uses rich Table for display."""
         if not tool_results:
             return ""
 
-        lines = []
+        table = Table(
+            title="🔧 工具执行结果",
+            show_header=True,
+            header_style="bold cyan",
+            border_style="cyan",
+            box=None,
+            padding=(0, 1),
+        )
+        table.add_column("状态", justify="center", style="green", no_wrap=True)
+        table.add_column("工具", style="bold")
+        table.add_column("结果", style="white")
+
         for result in tool_results:
             tool_name = result.get("tool", "unknown")
             success = result.get("success", False)
             data = result.get("data", "")
             error = result.get("error", "")
 
-            status = "✅" if success else "❌"
-            if success:
-                lines.append(f"{status} [{tool_name}]\n{data}")
-            else:
-                lines.append(f"{status} [{tool_name}] Error: {error}")
+            status = "[green]✓[/green]" if success else "[red]✗[/red]"
+            content = data if success else f"[red]{error}[/red]"
+            # Truncate long data
+            if isinstance(content, str) and len(content) > 500:
+                content = content[:500] + "..."
 
-        return "\n\n".join(lines)
+            table.add_row(status, tool_name, content)
+
+        # Render table to string
+        from io import StringIO
+        buf = StringIO()
+        tmp_console = Console(file=buf, force_terminal=True)
+        tmp_console.print(table)
+        return buf.getvalue()
 
     def _generate_fallback_response(self, intent: str, context: str) -> str:
         """Generate response without LLM (fallback mode)"""
