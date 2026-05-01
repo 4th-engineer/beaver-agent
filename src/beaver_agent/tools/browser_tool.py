@@ -128,7 +128,16 @@ def _validate_browser_binary() -> Optional[str]:
 
 
 def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
-    """Run agent-browser command and return result"""
+    """Run agent-browser command and return result.
+
+    Args:
+        cmd: The command string to execute via agent-browser CLI.
+        timeout: Maximum seconds to wait for command completion (default: 30).
+
+    Returns:
+        BrowserResult with success=True and content=stdout on success,
+        or success=False with error message on failure.
+    """
     if error := _validate_browser_binary():
         return BrowserResult(success=False, error=error)
     try:
