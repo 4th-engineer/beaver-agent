@@ -69,7 +69,22 @@ class IntentParser:
         return "general_chat"
 
     def parse_with_confidence(self, user_input: str) -> Tuple[str, float]:
-        """Parse with confidence score"""
+        """Parse user input and return intent with confidence score.
+
+        Args:
+            user_input: The raw user input string to analyze.
+
+        Returns:
+            A tuple of (intent_name, confidence_score) where confidence_score
+            is a float between 0.0 and 1.0. Skill invocations get 0.95 confidence,
+            pattern matches get 0.5-1.0 based on keyword match count.
+
+        Example:
+            >>> parser = IntentParser()
+            >>> intent, conf = parser.parse_with_confidence("帮我review代码")
+            >>> print(f"{intent}: {conf:.2f}")
+            code_review: 0.70
+        """
         intent = self.parse(user_input)
 
         # Skill matches get high confidence
