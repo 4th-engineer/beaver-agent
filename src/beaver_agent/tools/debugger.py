@@ -63,6 +63,7 @@ class DebuggerTool:
             return self._format_debug_response(response.content, error)
 
         except Exception as e:
+            logger.error("error_analysis_failed", error=str(e))
             return f"❌ Error analysis failed: {e}"
 
     def _analyze_code_health(self, code: str, language: str) -> str:
@@ -84,6 +85,7 @@ Code:
             response = self.llm.chat(prompt)
             return self._format_debug_response(response.content, None)
         except Exception as e:
+            logger.error("code_health_analysis_failed", language=language, error=str(e))
             return f"❌ Code health analysis failed: {e}"
 
     def _basic_error_analysis(

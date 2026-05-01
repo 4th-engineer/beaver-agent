@@ -24,7 +24,7 @@
 | 2026-05-01 12:00 | beaver-agent | Added comprehensive docstrings to ToolRouter.route(), list_tools(), get_tool(), get_llm_client() | 87 tests passing |
 | 2026-05-01 13:00 | beaver-agent | Added comprehensive docstring to IntentParser.parse_with_confidence() with Args, Returns, Example | 87 tests passing |
 | 2026-05-01 14:00 | beaver-agent | Refactored pixel_pilot.py: print() → structlog with graceful fallback | 87 tests passing |
-| 2026-05-01 15:00 | beaver-agent | Added comprehensive docstring to MCPManager.initialize() with Args/Returns/Raises | 87 tests passing |
+| 2026-05-01 16:00 | beaver-agent | Added comprehensive docstrings to MCPManager.call_tool() and _send_notification() with Args/Returns/Raises | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
