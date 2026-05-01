@@ -16,11 +16,109 @@ class BrowserResult:
     success: bool
     content: Any = None
     message: str = ""
-    error: Optional[str] = None
+AGENT_BROWSER_BIN = None  # Resolved on first use via _resolve_browser_binary()
+
+
+def _resolve_browser_binary() -> Optional[str]:
+    """Locate agent-browser binary, platform-aware.
+
+    Searches in order:
+    1. AGENT_BROWSER_BIN env var (user override)
+    2. npm global bin dir (platform-specific)
+    3. Common install locations per platform
+    """
+    import platform
+    import os
+    import shutil
+
+    # 1. User override via environment
+    env_path = os.environ.get("AGENT_BROWSER_BIN")
+    if env_path and Path(env_path).exists():
+        return env_path
+
+    # 2. Try npm global bin
+    try:
+        result = subprocess.run(
+            ["npm", "root", "-g"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if result.returncode == 0:
+            global_npm_root = Path(result.stdout.strip())
+            candidate = global_npm_root / "bin" / "agent-browser"
+            if candidate.exists():
+                return str(candidate)
+            # Also check .bin directly (some npm setups)
+            dot_bin = global_npm_root.parent / ".bin" / "agent-browser"
+            if dot_bin.exists():
+                return str(dot_bin)
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        pass
+
+    # 3. Platform-specific search paths
+    system = platform.system().lower()
+
+    if system == "darwin":
+        # macOS: Homebrew node, nvm, or standard install
+        search_paths = [
+            Path("/opt/homebrew/bin/agent-browser"),        # Apple Silicon Homebrew
+            Path("/usr/local/bin/agent-browser"),            # Intel Homebrew / standard
+            Path.home() / ".nvm/versions/node/*/bin/agent-browser",
+            Path.home() / ".local/bin/agent-browser",
+            Path.home() / ".npm-global/bin/agent-browser",
+        ]
+    elif system == "linux":
+        search_paths = [
+            Path("/usr/local/bin/agent-browser"),
+            Path("/usr/bin/agent-browser"),
+            Path.home() / ".local/bin/agent-browser",
+            Path.home() / ".npm-global/bin/agent-browser",
+        ]
+    elif system == "windows":
+        search_paths = [
+            Path(os.environ.get("PROGRAMFILES", "C:/Program Files")) / "nodejs" / "agent-browser.cmd",
+            Path(os.environ.get("APPDATA", "")) / "npm" / "agent-browser.cmd",
+        ]
+    else:
+        search_paths = [Path.home() / ".local/bin" / "agent-browser"]
+
+    for path in search_paths:
+        # Handle glob patterns (for nvm versioned paths)
+        if "*" in str(path):
+            matches = list(path.parent.glob(path.name))
+            if matches:
+                return str(matches[0])
+        elif path.exists():
+            return str(path)
+
+    # 4. Fall back to whatever `which` finds
+    try:
+        result = subprocess.run(
+            ["which", "agent-browser"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if result.returncode == 0 and result.stdout.strip():
+            return result.stdout.strip()
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        pass
+
+    return None
 
 
 def _validate_browser_binary() -> Optional[str]:
     """Check if agent-browser binary exists. Returns error message if not."""
+    global AGENT_BROWSER_BIN
+    if AGENT_BROWSER_BIN is None:
+        AGENT_BROWSER_BIN = _resolve_browser_binary()
+
+    if not AGENT_BROWSER_BIN:
+        return (
+            "agent-browser not found. "
+            "Install with: npm install -g @agent-browser/cli"
+        )
     if not Path(AGENT_BROWSER_BIN).exists():
         return (
             f"agent-browser not found at {AGENT_BROWSER_BIN}. "

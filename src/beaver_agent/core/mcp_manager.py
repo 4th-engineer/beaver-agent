@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import platform
 import re
 from pathlib import Path
 from typing import Any, Optional
@@ -204,15 +205,29 @@ class MCPManager:
     def _build_env(self, user_env: dict) -> dict:
         """Build environment for subprocess - safe baseline + user vars"""
         import os
+
+        # Platform-aware PATH fallback
+        system = platform.system().lower()
+        if system == "windows":
+            default_path = "C:\\Windows\\System32;C:\\Windows;"
+            default_tmpdir = os.environ.get("TEMP", "C:\\Temp")
+            default_shell = os.environ.get("COMSPEC", "C:\\Windows\\System32\\cmd.exe")
+        else:
+            default_path = "/usr/local/bin:/usr/bin:/bin"
+            default_tmpdir = "/tmp"
+            default_shell = "/bin/bash"
+
         baseline = {
-            "PATH": os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin"),
-            "HOME": os.environ.get("HOME", ""),
+            "PATH": os.environ.get("PATH", default_path),
+            "HOME": os.environ.get("HOME", str(Path.home())),
             "USER": os.environ.get("USER", ""),
             "LANG": os.environ.get("LANG", "en_US.UTF-8"),
             "LC_ALL": os.environ.get("LC_ALL", ""),
             "TERM": os.environ.get("TERM", "xterm-256color"),
-            "SHELL": os.environ.get("SHELL", "/bin/bash"),
-            "TMPDIR": os.environ.get("TMPDIR", "/tmp"),
+            "SHELL": os.environ.get("SHELL", default_shell),
+            "TMPDIR": os.environ.get("TMPDIR", default_tmpdir),
+            "TEMP": os.environ.get("TEMP", default_tmpdir),   # Windows
+            "TMP": os.environ.get("TMP", default_tmpdir),     # Windows
         }
         baseline.update(user_env)
         return baseline
