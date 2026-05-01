@@ -150,12 +150,44 @@ def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
 
 
 def navigate(url: str, timeout: int = 30) -> BrowserResult:
-    """Navigate to a URL"""
+    """Navigate to a URL and return the result.
+
+    Args:
+        url: The URL to navigate to. Must be a valid http/https URL.
+        timeout: Maximum time in seconds to wait for navigation to complete (default: 30).
+
+    Returns:
+        BrowserResult with success=True and content=final URL if navigation succeeded,
+        or success=False and error message if navigation failed.
+
+    Example:
+        >>> result = navigate("https://github.com")
+        >>> if result.success:
+        ...     print(f"Loaded: {result.content}")
+    """
     return _run_browser_cmd(f"open {url}", timeout=timeout)
 
 
 def snapshot(interactive_only: bool = True, compact: bool = True, depth: int = 10) -> BrowserResult:
-    """Get page accessibility tree snapshot"""
+    """Get the page accessibility tree snapshot.
+
+    Captures the current page state as an accessibility tree, which lists all
+    interactive elements with their ref IDs for use with other browser functions.
+
+    Args:
+        interactive_only: If True, only include interactive elements (buttons, links,
+            inputs). If False, include all elements (default: True).
+        compact: If True, use compact output format with fewer newlines (default: True).
+        depth: Maximum tree depth to capture, 1-20 (default: 10).
+
+    Returns:
+        BrowserResult with success=True and content=accessibility tree string,
+        or success=False and error message if snapshot failed.
+
+    Example:
+        >>> result = snapshot(interactive_only=True, compact=False)
+        >>> # Use @e5 from output to click: click("@e5")
+    """
     cmd = "snapshot"
     if interactive_only:
         cmd += " -i"
@@ -184,7 +216,20 @@ def screenshot(path: Optional[str] = None, full_page: bool = False, annotate: bo
 
 
 def get_text(selector: str = None) -> BrowserResult:
-    """Get text content from page or element"""
+    """Get text content from the page or a specific element.
+
+    Args:
+        selector: Optional CSS selector or @ref ID. If None, gets all visible text
+            from the page. If provided, gets text only from the matching element.
+
+    Returns:
+        BrowserResult with success=True and content=text string,
+        or success=False and error message if retrieval failed.
+
+    Example:
+        >>> result = get_text()  # all page text
+        >>> result = get_text("h1.title")  # text of h1 with class title
+    """
     cmd = f"get text" if selector is None else f"get text {selector}"
     return _run_browser_cmd(cmd)
 
@@ -196,12 +241,30 @@ def get_html(selector: str = None) -> BrowserResult:
 
 
 def get_title() -> BrowserResult:
-    """Get page title"""
+    """Get the current page title.
+
+    Returns:
+        BrowserResult with success=True and content=page title string,
+        or success=False and error message if retrieval failed.
+
+    Example:
+        >>> result = get_title()
+        >>> print(f"Page title: {result.content}")
+    """
     return _run_browser_cmd("get title")
 
 
 def get_url() -> BrowserResult:
-    """Get current URL"""
+    """Get the current page URL.
+
+    Returns:
+        BrowserResult with success=True and content=URL string,
+        or success=False and error message if retrieval failed.
+
+    Example:
+        >>> result = get_url()
+        >>> print(f"Current URL: {result.content}")
+    """
     return _run_browser_cmd("get url")
 
 
@@ -223,12 +286,38 @@ def type_text(selector: str, text: str) -> BrowserResult:
 
 
 def press(key: str) -> BrowserResult:
-    """Press keyboard key"""
+    """Press a keyboard key on the page.
+
+    Args:
+        key: Key name (e.g., 'Enter', 'Tab', 'Escape', 'ArrowDown', 'Backspace').
+
+    Returns:
+        BrowserResult with success=True if key press succeeded, or success=False
+        and error message if it failed.
+
+    Example:
+        >>> press("Enter")
+        >>> press("Escape")
+    """
     return _run_browser_cmd(f"press {key}")
 
 
 def scroll(direction: str, pixels: int = 300) -> BrowserResult:
-    """Scroll page: up, down, left, right"""
+    """Scroll the page in a direction by a specified number of pixels.
+
+    Args:
+        direction: Scroll direction - 'up', 'down', 'left', or 'right'.
+        pixels: Number of pixels to scroll (default: 300). Negative values scroll
+            in the opposite direction.
+
+    Returns:
+        BrowserResult with success=True if scroll succeeded, or success=False
+        and error message if it failed.
+
+    Example:
+        >>> scroll("down", 500)
+        >>> scroll("up", 200)
+    """
     return _run_browser_cmd(f"scroll {direction} {pixels}")
 
 
