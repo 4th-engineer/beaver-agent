@@ -4,11 +4,15 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Any
 
+import structlog
+
 from .task import Task, TaskResult
 from .adapter import ModelAdapter
 from .prompting import get_strategy
 from .metrics import get_scorer
 from .loader import get_benchmark_registry
+
+logger = structlog.get_logger()
 
 
 class Runner:
@@ -52,6 +56,7 @@ class Runner:
 
         except Exception as e:
             duration_ms = (time.time() - start) * 1000
+            logger.error("task_execution_failed", task_id=task.id, error=str(e))
             return TaskResult(
                 task_id=task.id,
                 success=False,
@@ -68,12 +73,14 @@ class Runner:
         if not benchmark:
             raise ValueError(f"Benchmark '{benchmark_name}' not found")
 
+        logger.info("benchmark_started", benchmark=benchmark_name, task_count=len(benchmark.tasks))
         results = []
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             futures = {executor.submit(self.run_task, task): task for task in benchmark.tasks}
             for future in as_completed(futures):
                 results.append(future.result())
 
+        logger.info("benchmark_completed", benchmark=benchmark_name, result_count=len(results))
         return results
 
     def summarize_results(self, results: list[TaskResult]) -> dict[str, Any]:

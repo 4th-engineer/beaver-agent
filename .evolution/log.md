@@ -29,7 +29,8 @@
 | 2026-05-01 17:00 | beaver-agent | Added structlog logging to DebuggerTool._analyze_error and _analyze_code_health exception handlers | 87 tests passing |
 | 2026-05-01 18:00 | beaver-agent | Added structlog error logging to CodeGenTool.complete_code and refactor exception handlers | 87 tests passing |
 | 2026-05-01 19:00 | beaver-agent | Added structlog warnings to 4 silent exception handlers in pixel_pilot.py (_test_connection, _post_event x2, _get_agent_name) | 87 tests passing |
-| 2026-05-01 20:00 | beaver-agent | Added structlog warning to TerminalTool.get_error_log exception handler | 87 tests passing |
+| 2026-05-01 20:00 | beaver-agent | Added structlog error logging to LLMClient._call_minimax | 87 tests passing |
+| 2026-05-01 21:00 | beaver-agent | Fixed _patch_tool_router crash when structlog unavailable — added missing `_has_structlog` guard before `_logger.info` call | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
