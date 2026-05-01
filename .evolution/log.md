@@ -33,7 +33,7 @@
 | 2026-05-01 21:00 | beaver-agent | Fixed _patch_tool_router crash when structlog unavailable — added missing `_has_structlog` guard before `_logger.info` call | 87 tests passing |
 | 2026-05-02 02:00 | beaver-agent | Added comprehensive docstrings to 7 browser_tool functions (navigate, snapshot, get_text, get_title, get_url, press, scroll) with Args/Returns/Example sections | 87 tests passing |
 
-| 2026-05-02 03:00 | beaver-agent | Added structlog warning to TerminalTool.get_error_log Windows exception handler | 87 tests passing |
+| 2026-05-02 05:00 | beaver-agent | Added structlog warning when skipping invalid benchmark files in loader.py + fixed README test count (70→87) | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing

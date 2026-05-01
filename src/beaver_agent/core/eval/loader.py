@@ -1,9 +1,11 @@
 """Component 5: Data Loader — loading and parsing benchmark datasets."""
 
 import json
+import structlog
 from pathlib import Path
 from typing import Iterator
 
+logger = structlog.get_logger()
 from .task import Task, Benchmark
 
 
@@ -60,7 +62,7 @@ class BenchmarkRegistry:
                 bm = TaskLoader.from_harness_format(str(fp))
                 self.register(bm)
             except Exception:
-                pass  # skip invalid files
+                logger.warning("skipped_invalid_benchmark_file", path=str(fp))
         return self
 
 
