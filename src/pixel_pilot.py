@@ -161,9 +161,9 @@ def _test_connection() -> bool:
         )
         with request.urlopen(req, timeout=2) as resp:
             return resp.status == 200
-    except Exception:
+    except Exception as e:
         if _has_structlog:
-            _logger.warning("connection_test_failed", url=_viewer_url)
+            _logger.warning("connection_test_failed", url=_viewer_url, error=str(e))
         return False
 
 
@@ -185,9 +185,9 @@ def _post_event(event: Dict[str, Any]) -> bool:
         if _has_structlog:
             _logger.warning("post_event_url_error", url=_viewer_url)
         return False
-    except Exception:
+    except Exception as e:
         if _has_structlog:
-            _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"))
+            _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"), error=str(e))
         return False
 
 
