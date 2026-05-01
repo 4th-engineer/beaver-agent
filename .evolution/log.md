@@ -34,6 +34,7 @@
 | 2026-05-02 02:00 | beaver-agent | Added comprehensive docstrings to 7 browser_tool functions (navigate, snapshot, get_text, get_title, get_url, press, scroll) with Args/Returns/Example sections | 87 tests passing |
 
 | 2026-05-02 05:00 | beaver-agent | Added structlog warning when skipping invalid benchmark files in loader.py + fixed README test count (70→87) | 87 tests passing |
+| 2026-05-02 06:00 | beaver-agent | Fixed bare except in _get_agent_name - was using str(e) without capturing exception variable | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
