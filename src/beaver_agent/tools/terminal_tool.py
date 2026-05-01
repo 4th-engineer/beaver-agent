@@ -129,6 +129,7 @@ class TerminalTool:
                     return result.stdout
                 return "No Windows System log errors found"
             except Exception as e:
+                logger.warning("error_reading_windows_log", error=str(e))
                 return f"Error reading Windows log: {e}"
 
         # Linux / macOS / other Unix
