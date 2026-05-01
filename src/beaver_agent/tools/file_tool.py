@@ -16,7 +16,18 @@ class FileTool:
         self.config = config
 
     def read_file(self, file_path: str, limit: Optional[int] = None) -> str:
-        """Read file contents"""
+        """Read the contents of a file.
+
+        Args:
+            file_path: Path to the file to read (supports ~ expansion).
+            limit: Optional maximum number of lines to read. If provided,
+                   only the first `limit` lines are returned.
+
+        Returns:
+            A string containing the file contents with a header showing
+            the file path and line count, or an error message if reading
+            fails.
+        """
         try:
             path = Path(file_path).expanduser()
             if not path.exists():
@@ -44,7 +55,18 @@ class FileTool:
             return f"Error reading file: {e}"
 
     def write_file(self, file_path: str, content: str) -> str:
-        """Write content to file"""
+        """Write content to a file, creating parent directories as needed.
+
+        Args:
+            file_path: Path to the file to write (supports ~ expansion).
+                       Parent directories are created automatically if they
+                       don't exist.
+            content: The text content to write to the file.
+
+        Returns:
+            A success message with the file path, or an error message
+            if writing fails.
+        """
         try:
             path = Path(file_path).expanduser()
 
@@ -61,7 +83,16 @@ class FileTool:
             return f"Error writing file: {e}"
 
     def list_directory(self, dir_path: str = ".") -> str:
-        """List directory contents"""
+        """List the contents of a directory.
+
+        Args:
+            dir_path: Path to the directory to list (supports ~ expansion).
+                      Defaults to the current directory (".").
+
+        Returns:
+            A string listing each item in the directory with its type
+            icon (📁 for directories, 📄 for files) and file size.
+        """
         try:
             path = Path(dir_path).expanduser()
             if not path.exists():
@@ -80,7 +111,18 @@ class FileTool:
             return f"Error listing directory: {e}"
 
     def search_files(self, pattern: str, path: str = ".") -> str:
-        """Search for files matching pattern"""
+        """Search for files matching a glob pattern.
+
+        Args:
+            pattern: Glob pattern to match file names against (e.g., "*.py",
+                    "**/*.json"). Supports fnmatch patterns.
+            path: Root directory to search from (supports ~ expansion).
+                  Defaults to current directory.
+
+        Returns:
+            A string listing matched file paths (up to 20), or a message
+            indicating no files matched.
+        """
         try:
             import fnmatch
             matches = []
@@ -100,7 +142,19 @@ class FileTool:
             return f"Error searching files: {e}"
 
     def search_content(self, query: str, path: str = ".", file_pattern: str = "*") -> str:
-        """Search for content within files"""
+        """Search for text content within files.
+
+        Args:
+            query: Text string to search for (case-insensitive).
+            path: Root directory to search from (supports ~ expansion).
+                  Defaults to current directory.
+            file_pattern: Glob pattern to filter which files to search.
+                          Defaults to "*" (all files).
+
+        Returns:
+            A string listing matching lines with file path and line number
+            (up to 30 matches), or a message indicating no matches found.
+        """
         try:
             import fnmatch
             matches = []
