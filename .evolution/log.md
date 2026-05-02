@@ -57,6 +57,8 @@
 | 2026-05-03 15:00 | beaver-agent | Added comprehensive docstrings to all ConversationLogger public methods (start_session, log_user_input, log_llm_request, log_llm_response, log_tool_call, log_skill_invocation, end_session, get_recent_logs, list_log_files) | 87 tests passing |
 | 2026-05-03 04:00 | beaver-agent | Added comprehensive docstrings to TerminalTool.execute, GitHubTool.operate, and GitHubTool.get_repo_info | 87 tests passing |
 
+| 2026-05-03 03:00 | beaver-agent | Added comprehensive docstrings to SkillManager (find_matching_skill, get_skill, list_skills, list_skills_by_category, reload) and IntentParser (parse, get_supported_intents, set_skill_manager) — all now have Args/Returns/Example sections | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements |

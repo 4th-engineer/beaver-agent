@@ -14,6 +14,16 @@ class ToolRouter:
     """Route tasks to appropriate tools"""
 
     def __init__(self, config: BeaverConfig):
+        """Initialize the ToolRouter with configuration and register all tools and LLM.
+
+        Args:
+            config: BeaverConfig instance containing model and tool configuration.
+                Used to initialize the LLM client and pass to each tool constructor.
+
+        Registers all available tools (file_tool, terminal_tool, github_tool,
+        code_gen, code_review, debugger) and sets up the LLM client for
+        AI-powered tools. Logs registration count and LLM provider on success.
+        """
         self.config = config
         self._tool_registry: Dict[str, Any] = {}
         self._llm_client: Optional[LLMClient] = None
@@ -21,7 +31,12 @@ class ToolRouter:
         self._register_tools()
 
     def _register_llm(self) -> None:
-        """Initialize LLM client"""
+        """Initialize the LLM client for AI-powered tool operations.
+
+        Creates an LLMClient instance using self.config.model and stores it in
+        self._llm_client. If initialization fails, logs the error and leaves
+        _llm_client as None — tools that require the LLM will fall back gracefully.
+        """
         try:
             self._llm_client = LLMClient(self.config.model)
             logger.info("llm_client_ready", provider=self.config.model.provider)
@@ -29,7 +44,14 @@ class ToolRouter:
             logger.error("llm_init_failed", error=str(e))
 
     def _register_tools(self) -> None:
-        """Register all available tools"""
+        """Register all available tools in the tool registry.
+
+        Imports and instantiates each tool (FileTool, TerminalTool, GitHubTool,
+        CodeGenTool, CodeReviewTool, DebuggerTool), passing self.config and, for
+        AI-powered tools, self._llm_client. Stores each tool in _tool_registry
+        by name (e.g., 'file_tool', 'terminal_tool'). Logs the total count
+        of registered tools.
+        """
         from beaver_agent.tools.file_tool import FileTool
         from beaver_agent.tools.terminal_tool import TerminalTool
         from beaver_agent.tools.github_tool import GitHubTool
