@@ -61,6 +61,8 @@
 
 | 2026-05-03 03:30 | beaver-agent | Added docstrings to ToolRouter.__init__, _register_llm, _register_tools — all undocumented initialization methods now have Args/description sections | 87 tests passing |
 
+| 2026-05-03 04:00 | beaver-agent | Added docstrings to CodeReviewIssue.__init__ and ConversationLogger.__init__ | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements |

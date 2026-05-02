@@ -16,6 +16,12 @@ class ConversationLogger:
     """Thread-safe conversation logger for debugging and analysis"""
 
     def __init__(self, log_dir: str = None):
+        """Initialize the conversation logger.
+
+        Args:
+            log_dir: Optional directory path for storing log files.
+                Defaults to ``logs/`` in the project root.
+        """
         if log_dir is None:
             # Default to logs/ in project root
             project_root = Path(__file__).parent.parent.parent

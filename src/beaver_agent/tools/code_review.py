@@ -17,6 +17,16 @@ class CodeReviewIssue:
         message: str,
         suggestion: Optional[str] = None
     ):
+        """Initialize a code review issue.
+
+        Args:
+            severity: Issue severity level - one of critical, major, minor,
+                or suggestion.
+            line: Line number where the issue occurs, or None if it applies
+                to the whole file.
+            message: Human-readable description of the issue.
+            suggestion: Optional fix suggestion for resolving the issue.
+        """
         self.severity = severity
         self.line = line
         self.message = message
