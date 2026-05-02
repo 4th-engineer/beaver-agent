@@ -64,7 +64,17 @@ class BeaverAgent:
         logger.info("agent_initialized", session_id=self.session_id, model=config.model.name)
 
     def run(self, user_input: str) -> str:
-        """Main agent loop: parse intent → plan tasks → execute tools → return response"""
+        """Main agent loop: parse intent → plan tasks → execute tools → return response.
+
+        Args:
+            user_input: The user's input string (truncated to 100 chars for logging).
+
+        Returns:
+            The agent's response string, or an error message if processing failed.
+
+        Raises:
+            No exceptions are raised — all errors are caught and returned as error strings.
+        """
         try:
             logger.info("processing_request", input=user_input[:100])
 
@@ -115,7 +125,19 @@ class BeaverAgent:
         intent: str,
         tool_results: List[Dict[str, Any]]
     ) -> str:
-        """Generate final response using LLM with tool results"""
+        """Generate final response using LLM with tool results.
+
+        Args:
+            user_input: The original user input string.
+            intent: The parsed intent from IntentParser (e.g., 'code_generation').
+            tool_results: List of tool execution results to include in context.
+
+        Returns:
+            The LLM-generated response string, or a fallback response if LLM is unavailable.
+
+        Raises:
+            No exceptions are raised — all errors are caught and returned as error strings.
+        """
 
         context = self._build_context(tool_results)
 
