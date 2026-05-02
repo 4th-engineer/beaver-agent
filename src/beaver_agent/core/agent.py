@@ -23,6 +23,14 @@ class BeaverAgent:
     """Beaver Agent Agent - Main orchestration class with LLM"""
 
     def __init__(self, config: BeaverConfig):
+        """Initialize the BeaverAgent with configuration.
+
+        Args:
+            config: BeaverConfig containing model, tools, and app settings.
+
+        Raises:
+            Exception: Re-raises data store initialization failures after logging.
+        """
         self.config = config
         
         # Initialize data store and run migrations BEFORE other init

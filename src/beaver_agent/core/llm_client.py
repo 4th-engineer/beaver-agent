@@ -23,6 +23,16 @@ class LLMClient:
     """Unified LLM client supporting OpenRouter, Anthropic, OpenAI"""
 
     def __init__(self, config: ModelConfig):
+        """Initialize the LLM client with model configuration.
+
+        Args:
+            config: ModelConfig containing provider, model name, api key, and api base.
+                api_key falls back to ANTHROPIC_API_KEY or OPENAI_API_KEY environment variables.
+
+        Note:
+            Provider is auto-detected from config.provider (openrouter/anthropic/openai).
+            Client instance (_client) is created lazily via _init_client().
+        """
         self.config = config
         self.provider = config.provider
         self.model = config.name
