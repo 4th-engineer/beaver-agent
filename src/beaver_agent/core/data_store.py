@@ -21,8 +21,9 @@ class DataVersion:
         self.raw = self.raw.strip()
         try:
             self._parsed = pkg_version.parse(self.raw)
-        except Exception:
+        except Exception as e:
             self._parsed = pkg_version.parse(self.raw.split('-')[0])
+            logger.warning("version_parse_fallback", raw=self.raw, original_error=str(e))
     
     def __str__(self) -> str:
         return self.raw

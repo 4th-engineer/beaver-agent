@@ -48,9 +48,11 @@
 | 2026-05-03 06:00 | beaver-agent | Fixed missing rich imports (Console, Table) in agent.py _build_context — was using Table/Console without import | 87 tests passing |
 | 2026-05-03 07:00 | beaver-agent | Added structlog import and logger.warning to CodeExecutionScorer.score() — silent exec() failures now logged | 87 tests passing |
 | 2026-05-03 08:00 | beaver-agent | Refactored connect() in pixel_pilot.py — restructured structlog/print branching to eliminate duplicate _has_structlog check | 87 tests passing |
-| 2026-05-03 09:00 | beaver-agent | Removed dead if __name__ == '__main__' block from code_analyzer.py | 87 tests passing |
-| 2026-05-03 10:00 | beaver-agent | Fixed duplicate if test_result block in pixel_pilot.py connect() — on connection failure, code was incorrectly enabling tracking | 87 tests passing |
-| 2026-05-03 11:00 | beaver-agent | Added comprehensive docstrings to BeaverHarness (register_benchmark, run, run_single, list_benchmarks, benchmark_info) and ModelAdapter classes (BeaverAdapter, OpenAIAdapter, MiniMaxAdapter) | 87 tests passing |
+| 2026-05-03 09:00 | beaver-agent | Removed dead code in SkillManager._parse_phases - second raw_phases read was unreachable after early return | 87 tests passing |
+| 2026-05-03 10:00 | beaver-agent | Fixed connect() - status messages now always printed regardless of verbose flag; removed incorrect verbose guard | 87 tests passing |
+| 2026-05-03 11:00 | beaver-agent | Added comprehensive docstrings to GitHubTool.create_issue, list_issues, get_issue with Args/Returns/Raises sections | 87 tests passing |
+| 2026-05-03 12:00 | beaver-agent | Added structlog error logging to FileTool.search_content exception handler — all 6 FileTool methods now log errors consistently | 87 tests passing |
+| 2026-05-03 13:00 | beaver-agent | Added structlog warning when DataVersion falls back to parsing version string in __post_init__ | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
