@@ -114,8 +114,8 @@ class MCPManager:
             try:
                 await self._connect_server(server_name, server_config)
             except Exception as e:
-                logger.error("mcp_server_connect_failed",
-                           server=server_name, error=str(e))
+                logger.warning("mcp_server_connect_failed",
+                               server=server_name, error=str(e))
 
     def _load_configs_from_directory(self, configs_path: Path) -> None:
         """Load all MCP server configs from a directory of YAML files"""
