@@ -47,14 +47,19 @@
 | 2026-05-03 05:00 | beaver-agent | Added structlog import and logger to browser_tool.py; added error logging on bare Exception in _run_browser_cmd | 87 tests passing |
 | 2026-05-03 06:00 | beaver-agent | Fixed missing rich imports (Console, Table) in agent.py _build_context — was using Table/Console without import | 87 tests passing |
 | 2026-05-03 07:00 | beaver-agent | Added structlog import and logger.warning to CodeExecutionScorer.score() — silent exec() failures now logged | 87 tests passing |
-| 2026-05-03 08:00 | beaver-agent | Refactored connect() in pixel_pilot.py — restructured structlog/print branching to eliminate duplicate _has_structlog check | 87 tests passing |
+| 2026-05-03 06:00 | beaver-agent | Refactored connect() in pixel_pilot.py — restructured structlog/print branching to eliminate duplicate _has_structlog check | 87 tests passing |
+| 2026-05-03 05:00 | beaver-agent | Added structlog error logging to interactive.py REPL exception handler | 87 tests passing |
+| 2026-05-03 06:00 | beaver-agent | Added comprehensive docstrings to get_scorer() in metrics.py and 5 functions in loader.py (BenchmarkRegistry.register/get/list_benchmarks, get_benchmark_registry, register_benchmark, list_benchmarks) | 87 tests passing |
+| 2026-05-03 06:00 | beaver-agent | Refactored ToolRouter._register_tools with fault-tolerant loop — if one tool fails to initialize, others still register; logs warning per failed tool | 87 tests passing |
 | 2026-05-03 09:00 | beaver-agent | Removed dead code in SkillManager._parse_phases - second raw_phases read was unreachable after early return | 87 tests passing |
 | 2026-05-03 10:00 | beaver-agent | Fixed connect() - status messages now always printed regardless of verbose flag; removed incorrect verbose guard | 87 tests passing |
-| 2026-05-03 11:00 | beaver-agent | Added comprehensive docstrings to GitHubTool.create_issue, list_issues, get_issue with Args/Returns/Raises sections | 87 tests passing |
-| 2026-05-03 12:00 | beaver-agent | Added structlog error logging to FileTool.search_content exception handler — all 6 FileTool methods now log errors consistently | 87 tests passing |
-| 2026-05-03 13:00 | beaver-agent | Added structlog warning when DataVersion falls back to parsing version string in __post_init__ | 87 tests passing |
-| 2026-05-03 14:00 | beaver-agent | Added exception handler to BeaverAgent.run() — unexpected errors logged via structlog and return graceful error message | 87 tests passing |
-| 2026-05-03 15:00 | beaver-agent | Added comprehensive docstrings to all ConversationLogger public methods (start_session, log_user_input, log_llm_request, log_llm_response, log_tool_call, log_skill_invocation, end_session, get_recent_logs, list_log_files) | 87 tests passing |
+| 2026-05-03 11:00 | Added comprehensive docstrings to GitHubTool.create_issue, list_issues, get_issue with Args/Returns/Raises sections | 87 tests passing |
+| 2026-05-03 12:00 | Added structlog error logging to FileTool.search_content exception handler — all 6 FileTool methods now log errors consistently | 87 tests passing |
+| 2026-05-03 13:00 | Added structlog warning when DataVersion falls back to parsing version string in __post_init__ | 87 tests passing |
+| 2026-05-03 14:00 | Added exception handler to BeaverAgent.run() — unexpected errors logged via structlog and return graceful error message | 87 tests passing |
+| 2026-05-03 15:00 | Added comprehensive docstrings to all ConversationLogger public methods | 87 tests passing |
+| 2026-05-03 05:00 | Updated architecture.md doc — test count (70→87) and date (04-28→05-03) | 87 tests passing |
+| 2026-05-03 06:00 | Updated architecture.md doc — test count (70→87) and date (04-28→05-03) | 87 tests passing |
 | 2026-05-03 04:00 | beaver-agent | Added comprehensive docstrings to TerminalTool.execute, GitHubTool.operate, and GitHubTool.get_repo_info | 87 tests passing |
 
 | 2026-05-03 03:00 | beaver-agent | Added comprehensive docstrings to SkillManager (find_matching_skill, get_skill, list_skills, list_skills_by_category, reload) and IntentParser (parse, get_supported_intents, set_skill_manager) — all now have Args/Returns/Example sections | 87 tests passing |
