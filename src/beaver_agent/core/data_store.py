@@ -374,8 +374,8 @@ class DataStore:
             try:
                 with open(f) as fh:
                     total_entries += sum(1 for _ in fh if _.strip())
-            except IOError:
-                pass
+            except IOError as e:
+                logger.warning("log_file_read_failed_for_stats", path=str(f), error=str(e))
         
         builtin_skills = 0
         if self.skills_builtin.exists():
