@@ -89,16 +89,15 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
             _logger.info("connected", url=_viewer_url)
         else:
             print("[PixelPilot] ✅ Connected! Events will be streamed automatically.")
+
+        _enabled = True
+        _initialized = True
+        _patch_tool_router()
     else:
         if _has_structlog:
             _logger.warning("server_not_reachable", url=_viewer_url)
         else:
             print("[PixelPilot] ⚠️  Server not reachable, events will be queued locally.")
-
-    if test_result:
-        _enabled = True
-        _initialized = True
-        _patch_tool_router()
 
 
 def disconnect() -> None:
