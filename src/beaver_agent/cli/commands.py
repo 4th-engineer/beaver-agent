@@ -10,7 +10,31 @@ console = Console()
 
 
 def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
-    """Handle built-in slash commands. Returns False if should exit."""
+    """Handle built-in slash commands from the REPL.
+
+    Parses user input starting with "/" and executes the corresponding
+    built-in command. Supports model switching, debugging, browsing, and more.
+
+    Args:
+        cmd: The raw command string input by the user (e.g., "/help", "/model gpt-4")
+        config: The Beaver configuration object containing model, app, and CLI settings
+        agent: The active BeaverAgent instance for accessing session state
+
+    Returns:
+        True if the REPL should continue running, False if the user issued /exit
+
+    Supported Commands:
+        /exit, /quit, /q   - Exit the REPL (returns False)
+        /help, /h, ?      - Display help message
+        /clear, /reset    - Clear the terminal screen
+        /model            - Display current model name and provider
+        /model <name>     - Switch to a different model by name
+        /status           - Display agent session status
+        /debug            - Toggle debug mode on/off
+        /analyze          - Analyze the repository structure
+        /browse <url>     - Open a URL and retrieve content
+        /screenshot       - Take a screenshot of the current browser page
+    """
     from pathlib import Path
     from beaver_agent.tools.browser_tool import BrowserTool
     from beaver_agent.tools.code_analyzer import analyze_repository
@@ -86,7 +110,12 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
 
 
 def print_help() -> None:
-    """Print help message"""
+    """Print the help message with available commands and features.
+
+    Displays a formatted markdown table of all available slash commands,
+    a list of agent capabilities, and example usage patterns.
+    Uses Rich's Markdown renderer for proper syntax highlighting.
+    """
     help_text = """
 # 🦫 Beaver Agent 帮助
 
@@ -122,13 +151,21 @@ def print_help() -> None:
 
 
 def show_model_info(config: BeaverConfig) -> None:
-    """Show current model info"""
+    """Display the current model's name and provider.
+
+    Args:
+        config: The Beaver configuration containing model settings
+    """
     console.print(f"[green]当前模型:[/green] {config.model.name}")
     console.print(f"[green]Provider:[/green] {config.model.provider}")
 
 
 def show_status(agent: BeaverAgent) -> None:
-    """Show agent status"""
+    """Display the agent's current runtime status.
+
+    Args:
+        agent: The active BeaverAgent instance to query for status
+    """
     console.print(f"[green]Agent状态:[/green] 运行中")
     console.print(f"[green]会话ID:[/green] {agent.session_id}")
 
