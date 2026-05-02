@@ -159,7 +159,7 @@ def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
     except subprocess.TimeoutExpired:
         return BrowserResult(success=False, error=f"Command timed out after {timeout}s")
     except Exception as e:
-        logger.error("browser_command_failed", error=str(e))
+        logger.error("browser_command_failed", cmd=cmd, error=str(e))
         return BrowserResult(success=False, error=str(e))
 
 
