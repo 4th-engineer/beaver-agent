@@ -59,6 +59,8 @@
 
 | 2026-05-03 03:00 | beaver-agent | Added comprehensive docstrings to SkillManager (find_matching_skill, get_skill, list_skills, list_skills_by_category, reload) and IntentParser (parse, get_supported_intents, set_skill_manager) — all now have Args/Returns/Example sections | 87 tests passing |
 
+| 2026-05-03 03:30 | beaver-agent | Added docstrings to ToolRouter.__init__, _register_llm, _register_tools — all undocumented initialization methods now have Args/description sections | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements |
