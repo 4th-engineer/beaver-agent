@@ -155,7 +155,8 @@ class DataStore:
         try:
             content = self.applied_file.read_text().strip()
             return json.loads(content) if content else []
-        except (json.JSONDecodeError, IOError):
+        except (json.JSONDecodeError, IOError) as e:
+            logger.warning("applied_migrations_read_failed", error=str(e), path=str(self.applied_file))
             return []
     
     def _save_applied(self, names: List[str]) -> None:
