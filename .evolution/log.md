@@ -40,6 +40,7 @@
 | 2026-05-02 10:00 | beaver-agent | Fixed connect() - status messages now always printed regardless of verbose flag; removed incorrect verbose guard | 87 tests passing |
 | 2026-05-02 11:00 | beaver-agent | Added comprehensive docstrings to GitHubTool.create_issue, list_issues, get_issue with Args/Returns/Raises sections | 87 tests passing |
 | 2026-05-03 00:00 | beaver-agent | Added structlog error logging to DebuggerTool._suggest_fixes exception handler | 87 tests passing |
+| 2026-05-03 01:00 | beaver-agent | Added fallback print() to silent exception handlers in _test_connection and _post_event (pixel_pilot.py) | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
