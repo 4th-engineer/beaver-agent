@@ -171,7 +171,26 @@ class LLMClient:
         context: Optional[List[Dict]] = None,
         **kwargs
     ) -> LLMResponse:
-        """Simple chat interface"""
+        """Simple chat interface for direct LLM communication.
+
+        Args:
+            prompt: The user's message text.
+            system: Optional system prompt to set the assistant's behavior.
+            context: Optional list of message dicts representing prior
+                conversation history for multi-turn dialogue. Each dict
+                should have 'role' and 'content' keys.
+            **kwargs: Additional arguments passed to the underlying
+                provider call (e.g., max_tokens, temperature).
+
+        Returns:
+            LLMResponse containing the assistant's reply text, model name,
+            and token usage statistics.
+
+        Example:
+            >>> client = LLMClient(config)
+            >>> response = client.chat("What is 2+2?", temperature=0.5)
+            >>> print(response.content)
+        """
 
         messages = []
 
@@ -195,7 +214,19 @@ class LLMClient:
         language: str = "python",
         context: Optional[str] = None
     ) -> LLMResponse:
-        """Generate code from description"""
+        """Generate code from a natural language description.
+
+        Args:
+            description: A plain-text description of the code to generate.
+            language: The target programming language (default: "python").
+                Common values: "python", "javascript", "go", "rust", "java".
+            context: Optional existing code or file content to use as
+                context for more accurate generation.
+
+        Returns:
+            LLMResponse containing the generated code (wrapped in markdown
+            triple backticks), the model name, and token usage.
+        """
 
         system = f"""You are Beaver Agent, an expert coding assistant.
 Generate clean, well-documented code based on the user's request.
@@ -215,7 +246,19 @@ If you need more context, ask clarifying questions."""
         language: str = "python",
         file_path: Optional[str] = None
     ) -> LLMResponse:
-        """Review code and provide suggestions"""
+        """Review code and provide improvement suggestions.
+
+        Args:
+            code: The source code to review.
+            language: The programming language of the code (default: "python").
+            file_path: Optional file path included in the prompt to give
+                the LLM context about where this code lives.
+
+        Returns:
+            LLMResponse containing a formatted code review with sections
+            for bugs, quality issues, security concerns, and performance
+            suggestions, along with the model name and token usage.
+        """
 
         system = """You are Beaver Agent, an expert code reviewer.
 Analyze the code and provide:
@@ -237,7 +280,18 @@ Format your review with clear sections and line numbers if provided."""
         error: str,
         language: str = "python"
     ) -> LLMResponse:
-        """Debug code with error message"""
+        """Debug code that produced an error.
+
+        Args:
+            code: The source code that triggered an error.
+            error: The error message or traceback to analyze.
+            language: The programming language of the code (default: "python").
+
+        Returns:
+            LLMResponse containing root cause analysis, the exact fix,
+            and prevention tips, plus corrected code when applicable,
+            along with the model name and token usage.
+        """
 
         system = """You are Beaver Agent, an expert debugging assistant.
 Analyze the error and provide:
@@ -262,7 +316,17 @@ Code:
         return self.chat(prompt, system=system)
 
     def explain_code(self, code: str, language: str = "python") -> LLMResponse:
-        """Explain what code does"""
+        """Explain what code does in plain language.
+
+        Args:
+            code: The source code to explain.
+            language: The programming language of the code (default: "python").
+
+        Returns:
+            LLMResponse containing a clear explanation of the code's
+            functionality, breaking down complex parts and providing
+            examples where helpful, plus the model name and token usage.
+        """
 
         system = """You are Beaver Agent, an expert programming tutor.
 Explain code clearly, breaking down complex parts.
