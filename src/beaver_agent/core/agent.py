@@ -380,7 +380,18 @@ Always provide actionable suggestions."""
 """
 
     def reset(self) -> None:
-        """Reset agent state"""
+        """Reset agent state for a new conversation session.
+
+        Clears the conversation history, memory, and session logger, then
+        starts a fresh session with a new session ID. Used to begin a new
+        task or conversation context.
+
+        Args:
+            None
+
+        Returns:
+            None. Internal state is mutated in place.
+        """
         self.logger.end_session()
         self.conversation_history.clear()
         self.memory.clear()
@@ -389,6 +400,17 @@ Always provide actionable suggestions."""
         logger.info("agent_reset", new_session_id=self.session_id)
 
     def shutdown(self) -> None:
-        """Shutdown agent and close log files"""
+        """Shutdown the agent and release all resources.
+
+        Ends the current logging session and closes any open file handles
+        or connections. After shutdown, the agent should not be used without
+        re-initialization.
+
+        Args:
+            None
+
+        Returns:
+            None. Resources are released in place.
+        """
         self.logger.end_session()
         logger.info("agent_shutdown", session_id=self.session_id)
