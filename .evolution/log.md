@@ -68,6 +68,7 @@
 | 2026-05-03 05:00 | beaver-agent | Added comprehensive docstrings to CodeGenTool.generate, complete_code, and refactor — all now have Args/Returns sections | 87 tests passing |
 | 2026-05-03 09:00 | beaver-agent | Added comprehensive docstrings to LLMClient._call_anthropic and _call_openai with Args/Returns/Raises sections | 87 tests passing |
 | 2026-05-03 10:00 | beaver-agent | Enhanced docstrings for BeaverAgent.reset and shutdown methods (Args/Returns sections) | 87 tests passing |
+| 2026-05-03 11:00 | beaver-agent | Added comprehensive docstrings to all 5 CLI command functions (handle_command, print_help, show_model_info, show_status, chat_command, model_command) | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
