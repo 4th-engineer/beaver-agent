@@ -27,7 +27,34 @@ class GitHubTool:
         repo: Optional[str] = None,
         **kwargs
     ) -> str:
-        """Generic GitHub operation"""
+        """Generic GitHub operation dispatcher.
+
+        Routes to the appropriate GitHub API method based on the action parameter.
+        Falls back to instance owner/repo if not provided.
+
+        Args:
+            action: The operation to perform. Supported values:
+                - "info": Get repository information (via get_repo_info)
+                - "create_issue": Create an issue (via create_issue)
+                - "list_issues": List repository issues (via list_issues)
+                - "get_issue": Get a specific issue by number (via get_issue)
+                - "create_pr": Create a pull request (via create_pr)
+            owner: GitHub repository owner. Defaults to instance owner if not provided.
+            repo: GitHub repository name. Defaults to instance repo if not provided.
+            **kwargs: Action-specific arguments:
+                - create_issue: title (str), body (str)
+                - get_issue: number (int)
+                - create_pr: title (str), body (str), head (str), base (str)
+
+        Returns:
+            A string containing the operation result or an error message.
+            Returns "Unknown action: {action}" for unrecognized actions.
+
+        Example:
+            >>> tool.operate("info", "owner", "repo")
+            >>> tool.operate("create_issue", "owner", "repo", title="Bug", body="...")
+            >>> tool.operate("get_issue", number=42)
+        """
         owner = owner or self.owner
         repo = repo or self.repo
 
@@ -55,7 +82,22 @@ class GitHubTool:
             return f"Unknown action: {action}"
 
     def get_repo_info(self, owner: str, repo: str) -> str:
-        """Get repository information"""
+        """Get detailed repository information from GitHub API.
+
+        Fetches repository metadata including stars, forks, watchers, open issues,
+        language, description, and HTML URL.
+
+        Args:
+            owner: GitHub repository owner (user or organization name).
+            repo: GitHub repository name.
+
+        Returns:
+            A formatted markdown string containing repository statistics:
+            - ⭐ Stars, 🍴 Forks, 👁️ Watchers, 📝 Open Issues,
+            - 🏷️ Primary language, 📖 Description, 🔗 HTML URL.
+            Returns an error message if the GitHub token is not configured
+            or the API request fails.
+        """
         if not self._check_config():
             return "❌ GitHub token not configured. Set github.token in config."
 

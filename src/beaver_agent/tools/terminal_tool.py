@@ -27,7 +27,32 @@ class TerminalTool:
         timeout: int = 60,
         shell: bool = True
     ) -> str:
-        """Execute a terminal command"""
+        """Execute a terminal command.
+
+        Runs a shell command and returns its stdout/stderr output. Security-blocked
+        commands (e.g., destructive rm, disk operations) are rejected before execution.
+
+        Args:
+            command: The shell command string to execute.
+            cwd: Optional working directory to run the command in. Defaults to None (current dir).
+            timeout: Maximum seconds to wait for command completion. Defaults to 60.
+            shell: If True, command is executed via shell (allows pipes, redirects). Defaults to True.
+
+        Returns:
+            A string containing command output (stdout/stderr), or an error message.
+            Returns "✅ Command executed successfully (no output)" on success with no output.
+            Returns "❌ Command blocked for security reasons" for blocked commands.
+            Returns "❌ Command timed out after {timeout}s" on timeout.
+            Returns "❌ Error: {exception}" on unexpected failures.
+
+        Raises:
+            No exceptions are raised — all errors are returned as strings.
+
+        Example:
+            >>> result = tool.execute("ls -la /tmp")
+            >>> result = tool.execute("grep -r 'error' ./logs", cwd="/home/user")
+            >>> result = tool.execute("python script.py", timeout=120)
+        """
         try:
             # Security check
             if self._is_blocked(command):
