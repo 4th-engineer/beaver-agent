@@ -7,6 +7,10 @@ from pathlib import Path
 from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 
+import structlog
+
+logger = structlog.get_logger()
+
 
 AGENT_BROWSER_BIN = "/home/agentuser/.hermes/hermes-agent/node_modules/.bin/agent-browser"
 
@@ -155,6 +159,7 @@ def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
     except subprocess.TimeoutExpired:
         return BrowserResult(success=False, error=f"Command timed out after {timeout}s")
     except Exception as e:
+        logger.error("browser_command_failed", error=str(e))
         return BrowserResult(success=False, error=str(e))
 
 
