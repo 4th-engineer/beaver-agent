@@ -38,14 +38,36 @@ class BeaverHarness:
             self.registry.load_from_directory(benchmark_dir)
 
     def add_task(self, task: Task) -> "BeaverHarness":
-        """Add a single task to an in-memory ephemeral benchmark."""
+        """Add a single task to an in-memory ephemeral benchmark.
+
+        Args:
+            task: The Task instance to add to the ephemeral benchmark.
+
+        Returns:
+            self — for method chaining (builder pattern).
+
+        Example:
+            >>> harness.add_task(Task(id="t1", ...))
+            <BeaverHarness>
+        """
         if "ephemeral" not in self.registry.list_benchmarks():
             self.registry.register(Benchmark(name="ephemeral"))
         self.registry.get("ephemeral").add_task(task)
         return self
 
     def load_benchmarks(self, dir_path: str) -> "BeaverHarness":
-        """Load all .json benchmarks from a directory."""
+        """Load all .json benchmarks from a directory.
+
+        Args:
+            dir_path: Absolute or relative path to a directory containing
+                benchmark .json files. Files are loaded by BenchmarkRegistry.
+
+        Returns:
+            self — for method chaining (builder pattern).
+
+        Example:
+            >>> harness.load_benchmarks("benchmarks/")
+        """
         self.registry.load_from_directory(dir_path)
         return self
 
