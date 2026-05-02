@@ -50,6 +50,14 @@ class BeaverHarness:
         return self
 
     def register_benchmark(self, benchmark: Benchmark) -> "BeaverHarness":
+        """Register a benchmark with the internal registry.
+
+        Args:
+            benchmark: The Benchmark instance to register.
+
+        Returns:
+            self — for method chaining.
+        """
         self.registry.register(benchmark)
         return self
 
@@ -58,20 +66,48 @@ class BeaverHarness:
         benchmark_name: str,
         summarize: bool = True,
     ) -> dict[str, Any] | list[TaskResult]:
-        """Run a named benchmark and optionally summarize results."""
+        """Run a named benchmark and optionally summarize results.
+
+        Args:
+            benchmark_name: Name of the benchmark to run (must be registered).
+            summarize: If True, return a summary dict; if False, return raw TaskResult list.
+
+        Returns:
+            A summary dict (if summarize=True) or a list of TaskResult objects.
+        """
         results = self.runner.run_benchmark(benchmark_name)
         if summarize:
             return self.runner.summarize_results(results)
         return results
 
     def run_single(self, task: Task) -> TaskResult:
-        """Run one task immediately."""
+        """Run one task immediately and return its result.
+
+        Args:
+            task: The Task to execute.
+
+        Returns:
+            A TaskResult with the execution outcome.
+        """
         return self.runner.run_task(task)
 
     def list_benchmarks(self) -> list[str]:
+        """List all registered benchmark names.
+
+        Returns:
+            A list of benchmark name strings.
+        """
         return self.registry.list_benchmarks()
 
     def benchmark_info(self, name: str) -> dict[str, Any]:
+        """Get metadata for a registered benchmark.
+
+        Args:
+            name: The benchmark name to look up.
+
+        Returns:
+            A dict with name, description, task_count, and task_types; or empty dict if not found.
+        """
         bm = self.registry.get(name)
         if not bm:
             return {}

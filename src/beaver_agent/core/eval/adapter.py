@@ -24,9 +24,23 @@ class BeaverAdapter(ModelAdapter):
         self._client = llm_client
 
     def generate(self, prompt: str, **kwargs) -> str:
+        """Generate text using the BeaverAgent LLM client.
+
+        Args:
+            prompt: The input prompt to send to the LLM.
+            **kwargs: Additional keyword arguments passed to the client.
+
+        Returns:
+            The generated text response from the LLM.
+        """
         return self._client.generate(prompt)
 
     def supports_streaming(self) -> bool:
+        """Return False since BeaverAdapter does not support streaming.
+
+        Returns:
+            False — streaming is not supported by this adapter.
+        """
         return False
 
 
@@ -39,9 +53,26 @@ class OpenAIAdapter(ModelAdapter):
         self.base_url = base_url
 
     def generate(self, prompt: str, **kwargs) -> str:
+        """Generate text using OpenAI-compatible API.
+
+        Args:
+            prompt: The input prompt to send to the LLM.
+            **kwargs: Additional keyword arguments (e.g., temperature, max_tokens).
+
+        Returns:
+            The generated text response from the LLM.
+
+        Raises:
+            NotImplementedError: OpenAI adapter is not yet implemented.
+        """
         raise NotImplementedError("OpenAI adapter not yet implemented")
 
     def supports_streaming(self) -> bool:
+        """Return True since OpenAI adapter supports streaming.
+
+        Returns:
+            True — streaming is supported by this adapter.
+        """
         return True
 
 
@@ -53,7 +84,24 @@ class MiniMaxAdapter(ModelAdapter):
         self.model = model
 
     def generate(self, prompt: str, **kwargs) -> str:
+        """Generate text using MiniMax API.
+
+        Args:
+            prompt: The input prompt to send to the LLM.
+            **kwargs: Additional keyword arguments passed to the API.
+
+        Returns:
+            The generated text response from the LLM.
+
+        Raises:
+            NotImplementedError: MiniMax adapter is not yet implemented.
+        """
         raise NotImplementedError("MiniMax adapter not yet implemented")
 
     def supports_streaming(self) -> bool:
+        """Return False since MiniMax adapter does not support streaming.
+
+        Returns:
+            False — streaming is not supported by this adapter.
+        """
         return False
