@@ -70,6 +70,7 @@
 | 2026-05-03 10:00 | beaver-agent | Enhanced docstrings for BeaverAgent.reset and shutdown methods (Args/Returns sections) | 87 tests passing |
 | 2026-05-03 11:00 | beaver-agent | Added comprehensive docstrings to all 5 CLI command functions (handle_command, print_help, show_model_info, show_status, chat_command, model_command) | 87 tests passing |
 | 2026-05-03 12:00 | beaver-agent | Added language context to code_completion_failed structlog error — makes debugging easier when code completion fails for specific languages | 87 tests passing |
+| 2026-05-03 15:00 | beaver-agent | Added cmd parameter to browser_command_failed structlog error — makes debugging easier when browser commands fail | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
