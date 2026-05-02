@@ -21,7 +21,17 @@ class CodeGenTool:
         file_path: Optional[str] = None,
         context: Optional[str] = None
     ) -> str:
-        """Generate code based on description"""
+        """Generate code based on a description.
+
+        Args:
+            description: Natural language description of the code to generate.
+            language: Programming language (python, javascript, go, etc.).
+            file_path: Optional path to save the generated code.
+            context: Optional additional context or requirements for generation.
+
+        Returns:
+            Generated code string, or a skeleton template if LLM is not configured.
+        """
 
         logger.info("generating_code", language=language, description=description[:50])
 
@@ -94,7 +104,16 @@ func main() {{
         description: str,
         language: str = "python"
     ) -> str:
-        """Complete partial code using LLM to fill in TODO sections."""
+        """Complete partial code by filling in TODO sections via LLM.
+
+        Args:
+            partial_code: The existing code with TODO markers to fill in.
+            description: Description of what the code should do.
+            language: Programming language of the code.
+
+        Returns:
+            Completed code with TODO sections filled in.
+        """
         logger.info("completing_code", language=language, description=description[:50])
 
         prompt_text = f"""Complete the following {language} code.
@@ -119,7 +138,16 @@ Description: {description}
         style: str = "clean",
         language: str = "python"
     ) -> str:
-        """Refactor code to follow best practices using LLM."""
+        """Refactor code to follow best practices using LLM.
+
+        Args:
+            code: The source code to refactor.
+            style: Refactoring style (e.g., "clean", "readable", "performant").
+            language: Programming language of the code.
+
+        Returns:
+            Refactored code string.
+        """
         logger.info("refactoring_code", language=language, style=style)
 
         prompt = f"""Refactor the following {language} code to be more {style}.

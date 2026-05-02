@@ -63,6 +63,8 @@
 
 | 2026-05-03 04:00 | beaver-agent | Added docstrings to CodeReviewIssue.__init__ and ConversationLogger.__init__ | 87 tests passing |
 
+| 2026-05-03 04:00 | beaver-agent | Added docstrings to Benchmark.add_task and get_task — all Benchmark public methods now documented | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements |
