@@ -145,12 +145,32 @@ class DataStore:
         return DataVersion(self.version_file.read_text().strip())
     
     def set_version(self, ver: str) -> None:
-        """Set current data version"""
+        """Set the current data store version.
+
+        Writes the version string to the version file, which tracks
+        the schema version for migration purposes.
+
+        Args:
+            ver: Version string to set (e.g. "0.1.0"). Leading/trailing
+                 whitespace is stripped before writing.
+        """
         self.version_file.write_text(ver.strip())
         logger.info("data_version_set", version=ver)
     
     def get_applied_migrations(self) -> List[str]:
-        """Get list of applied migration names"""
+        """Get list of applied migration names.
+
+        Reads the applied migrations file and returns the list of
+        migration names that have already been applied. If the file
+        does not exist, returns an empty list.
+
+        Returns:
+            List of applied migration name strings. Returns empty list
+            if no migrations have been applied or file is missing.
+
+        Raises:
+            No explicit raises — failures are logged and return [].
+        """
         if not self.applied_file.exists():
             return []
         try:
