@@ -44,7 +44,27 @@ class IntentParser:
         self.skill_manager = skill_manager
 
     def parse(self, user_input: str) -> str:
-        """Parse user input and return intent"""
+        """Parse user input and return the primary intent name.
+
+        Resolution order: skill invocation (/skill prefix) → skill routing
+        (trigger match) → pattern keyword matching → general_chat fallback.
+
+        Args:
+            user_input: The raw user input string to analyze.
+
+        Returns:
+            Intent name string: one of the INTENT_PATTERNS keys, a
+            ``skill:<name>`` prefixed string for skill-matched inputs,
+            ``skill_invocation`` for /skill commands, or ``general_chat``
+            when no pattern matches.
+
+        Example:
+            >>> parser = IntentParser()
+            >>> parser.parse("帮我review代码")
+            'code_review'
+            >>> parser.parse("帮我写一个函数")
+            'code_generation'
+        """
 
         # Check for skill invocation first
         if user_input.strip().startswith("/skill "):
@@ -100,7 +120,21 @@ class IntentParser:
         return intent, confidence
 
     def get_supported_intents(self) -> List[str]:
-        """Return list of supported intents"""
+        """Return all supported intent names.
+
+        Returns the union of built-in INTENT_PATTERNS keys and any
+        loaded skill names prefixed with ``skill:``.
+
+        Returns:
+            A list of all supported intent name strings.
+
+        Example:
+            >>> parser = IntentParser(skill_manager)
+            >>> "code_generation" in parser.get_supported_intents()
+            True
+            >>> "skill:github" in parser.get_supported_intents()
+            True
+        """
         intents = list(self.INTENT_PATTERNS.keys())
 
         # Add skill names if skill_manager is available
@@ -111,5 +145,13 @@ class IntentParser:
         return intents
 
     def set_skill_manager(self, skill_manager: SkillManager) -> None:
-        """Set the skill manager"""
+        """Attach a SkillManager for skill-based intent routing.
+
+        After calling this, :meth:`parse` and :meth:`parse_with_confidence`
+        will attempt to match user input against loaded skills before
+        falling back to keyword patterns.
+
+        Args:
+            skill_manager: The SkillManager instance to use for skill lookups.
+        """
         self.skill_manager = skill_manager

@@ -285,7 +285,23 @@ class SkillManager:
         return {}
 
     def find_matching_skill(self, user_input: str) -> Optional[Skill]:
-        """Find the first skill that matches the user input"""
+        """Find the first skill that matches the user input.
+
+        Iterates through all loaded skills in insertion order and returns
+        the first one whose trigger keyword appears in the user input.
+
+        Args:
+            user_input: The raw user input string to match against skill triggers.
+
+        Returns:
+            The first matching Skill, or None if no skill trigger matches.
+
+        Example:
+            >>> skill = manager.find_matching_skill("I need to write a test")
+            >>> if skill:
+            ...     print(skill.name)
+            test-driven-development
+        """
         for skill in self._skills.values():
             if skill.matches(user_input):
                 logger.debug("skill_matched", skill=skill.name, trigger=skill.trigger)
@@ -293,21 +309,65 @@ class SkillManager:
         return None
 
     def get_skill(self, name: str) -> Optional[Skill]:
-        """Get a skill by name"""
+        """Get a skill by exact name.
+
+        Args:
+            name: The exact name of the skill to retrieve.
+
+        Returns:
+            The Skill with the given name, or None if not found.
+
+        Example:
+            >>> skill = manager.get_skill("test-driven-development")
+            >>> print(skill.description if skill else "not found")
+            Write tests before implementing code...
+        """
         return self._skills.get(name)
 
     def list_skills(self) -> List[Dict[str, Any]]:
-        """List all available skills"""
+        """List all available skills as dictionaries.
+
+        Returns each skill's metadata (name, category, description, trigger,
+        phases, checklist, examples) as a dict, suitable for serialization
+        or API responses.
+
+        Returns:
+            A list of skill metadata dictionaries for all loaded skills.
+
+        Example:
+            >>> skills = manager.list_skills()
+            >>> len(skills)
+            5
+        """
         return [skill.to_dict() for skill in self._skills.values()]
 
     def list_skills_by_category(self, category: str) -> List[Dict[str, Any]]:
-        """List skills in a specific category"""
+        """List all skills belonging to a specific category.
+
+        Args:
+            category: The category name to filter by (e.g., "testing", "refactoring").
+
+        Returns:
+            A list of skill metadata dictionaries for skills in the given category.
+
+        Example:
+            >>> testing_skills = manager.list_skills_by_category("testing")
+        """
         return [
             skill.to_dict() for skill in self._skills.values()
             if skill.category == category
         ]
 
     def reload(self) -> None:
-        """Reload all skills from disk"""
+        """Reload all skills from disk.
+
+        Clears the in-memory skill cache and re-discovers all skills from the
+        skills directories (builtin, user, and legacy). Useful when skills have
+        been added or modified on disk without restarting the agent.
+
+        Note:
+            User skills take priority over builtin skills with the same name.
+            Newly added skills appear immediately; deleted skills are removed.
+        """
         self._skills.clear()
         self._load_skills()
