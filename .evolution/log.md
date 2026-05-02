@@ -46,6 +46,7 @@
 | 2026-05-03 04:00 | beaver-agent | Added comprehensive docstrings to all 8 BrowserTool public methods (open, browse, interactive, screenshot, click, fill, scroll, get_page_info) with Args/Returns sections | 87 tests passing |
 | 2026-05-03 05:00 | beaver-agent | Added structlog import and logger to browser_tool.py; added error logging on bare Exception in _run_browser_cmd | 87 tests passing |
 | 2026-05-03 06:00 | beaver-agent | Fixed missing rich imports (Console, Table) in agent.py _build_context — was using Table/Console without import | 87 tests passing |
+| 2026-05-03 07:00 | beaver-agent | Added structlog import and logger.warning to CodeExecutionScorer.score() — silent exec() failures now logged | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing

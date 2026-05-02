@@ -84,14 +84,14 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
     # 测试连接（只调用一次）
     test_result = _test_connection()
 
-    if _has_structlog:
-        if test_result:
+    if test_result:
+        if _has_structlog:
             _logger.info("connected", url=_viewer_url)
         else:
-            _logger.warning("server_not_reachable", url=_viewer_url)
-    else:
-        if test_result:
             print("[PixelPilot] ✅ Connected! Events will be streamed automatically.")
+    else:
+        if _has_structlog:
+            _logger.warning("server_not_reachable", url=_viewer_url)
         else:
             print("[PixelPilot] ⚠️  Server not reachable, events will be queued locally.")
 
