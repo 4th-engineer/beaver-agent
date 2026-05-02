@@ -73,6 +73,7 @@
 | 2026-05-03 15:00 | beaver-agent | Added cmd parameter to browser_command_failed structlog error — makes debugging easier when browser commands fail | 87 tests passing |
 
 | 2026-05-03 05:00 | beaver-agent | Added structlog error logging to interactive.py REPL exception handler | 87 tests passing |
+| 2026-05-03 06:00 | beaver-agent | Added comprehensive docstrings to get_scorer() in metrics.py and 5 functions in loader.py (BenchmarkRegistry.register/get/list_benchmarks, get_benchmark_registry, register_benchmark, list_benchmarks) | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing

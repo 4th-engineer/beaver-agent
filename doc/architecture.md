@@ -274,6 +274,11 @@ github_operation →  github_tool.py
 | Code Review | `src/beaver_agent/tools/code_review.py` | 代码审查 |
 | Debugger | `src/beaver_agent/tools/debugger.py` | 错误调试 |
 | Terminal | `src/beaver_agent/tools/terminal_tool.py` | 命令执行 |
+| Code Analyzer | `src/beaver_agent/tools/code_analyzer.py` | 代码仓库分析 |
+| BeaverHarness | `src/beaver_agent/core/eval/harness.py` | 评估测试框架 |
+| Benchmark/Task | `src/beaver_agent/core/eval/task.py` | 基准测试数据模型 |
+| TaskLoader | `src/beaver_agent/core/eval/loader.py` | 基准测试加载器 |
+| Scorers | `src/beaver_agent/core/eval/metrics.py` | 评分指标 |
 
 ### 自我进化
 
