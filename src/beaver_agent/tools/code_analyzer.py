@@ -42,6 +42,12 @@ class CodeAnalyzer:
     """Analyze Python repository and build dependency graph"""
 
     def __init__(self, root_path: str):
+        """Initialize the CodeAnalyzer with a project root path.
+
+        Args:
+            root_path: Absolute path to the project root directory to analyze.
+                   The analyzer will scan `root_path/src/beaver_agent` for Python files.
+        """
         self.root_path = Path(root_path)
         self.modules: Dict[str, ModuleInfo] = {}
         self.all_functions: Dict[str, Tuple[str, FunctionInfo]] = {}  # name -> (module, func)

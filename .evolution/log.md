@@ -80,6 +80,7 @@
 | 2026-05-03 05:00 | beaver-agent | Added structlog error logging to interactive.py REPL exception handler | 87 tests passing |
 | 2026-05-03 06:00 | beaver-agent | Added comprehensive docstrings to get_scorer() in metrics.py and 5 functions in loader.py (BenchmarkRegistry.register/get/list_benchmarks, get_benchmark_registry, register_benchmark, list_benchmarks) | 87 tests passing |
 | 2026-05-03 07:00 | beaver-agent | Added comprehensive docstrings to all 4 Scorer.score() methods (ExactMatchScorer, SimilarityScorer, CodeExecutionScorer, CodeReviewScorer) with Args/Returns sections | 87 tests passing |
+| 2026-05-03 06:00 | beaver-agent | Added docstrings to BeaverAgent.__init__ and LLMClient.__init__ (last two undocumented __init__ methods in core) | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
