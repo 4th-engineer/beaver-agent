@@ -70,7 +70,21 @@ class CodeReviewTool:
         file_path: Optional[str] = None,
         context: Optional[str] = None
     ) -> str:
-        """Review code and return findings"""
+        """Review code and return findings.
+
+        Attempts LLM-based review first; falls back to static analysis
+        if the LLM client is unavailable or returns an error.
+
+        Args:
+            code: Source code to review.
+            language: Programming language hint (e.g., "python", "javascript").
+            file_path: Optional file path for context in the review.
+            context: Optional additional context for the review.
+
+        Returns:
+            A formatted review report string containing identified issues,
+            or an error message if review fails completely.
+        """
 
         logger.info("reviewing_code", file_path=file_path, language=language)
 
