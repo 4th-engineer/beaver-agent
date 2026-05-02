@@ -4,6 +4,8 @@ import uuid
 from typing import Optional, Dict, Any, List
 
 import structlog
+from rich.console import Console
+from rich.table import Table
 
 from beaver_agent.core.config import BeaverConfig
 from beaver_agent.core.llm_client import LLMClient
