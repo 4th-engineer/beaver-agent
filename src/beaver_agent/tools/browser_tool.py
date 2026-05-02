@@ -476,7 +476,14 @@ class BrowserTool:
         self.last_snapshot: Optional[str] = None
 
     def open(self, url: str) -> str:
-        """Open URL and return snapshot"""
+        """Open a URL in the browser and return the page snapshot.
+
+        Args:
+            url: The URL to navigate to (http/https).
+
+        Returns:
+            Page accessibility tree snapshot as string, or error message.
+        """
         result = navigate(url)
         if result.success:
             self.current_url = url
@@ -486,7 +493,19 @@ class BrowserTool:
         return f"Error: {result.error}"
 
     def browse(self, url: str, action: str = "snapshot") -> str:
-        """Open URL and perform action (snapshot, screenshot, etc.)"""
+        """Open URL and perform a browser action.
+
+        Args:
+            url: The URL to navigate to (http/https).
+            action: The action to perform after loading — one of:
+                - "snapshot" (default): Return accessibility tree
+                - "screenshot": Take and return screenshot path
+                - "title": Return page title only
+
+        Returns:
+            Result of the specified action, or "Unknown action" if
+            the action name is not recognized.
+        """
         self.open(url)
         if action == "snapshot":
             return self.last_snapshot or "No content"
@@ -499,18 +518,42 @@ class BrowserTool:
         return "Unknown action"
 
     def interactive(self) -> str:
-        """Get interactive elements only"""
+        """Get interactive elements from the current page.
+
+        Returns:
+            Compact accessibility tree showing only interactive
+            elements (buttons, links, inputs), or "No interactive
+            elements" if none are found.
+        """
         result = snapshot(interactive_only=True, compact=False)
         self.last_snapshot = result.content
         return result.content or "No interactive elements"
 
     def screenshot(self, path: str = None, full: bool = False) -> str:
-        """Take screenshot"""
+        """Take a screenshot of the current page.
+
+        Args:
+            path: Optional file path to save the screenshot.
+                  If None, a default path is used.
+            full: If True, capture the entire scrollable page.
+                  If False, capture only the visible viewport.
+
+        Returns:
+            Path where the screenshot was saved, or an error message.
+        """
         result = screenshot(path, full_page=full, annotate=True)
         return result.message
 
     def click(self, selector: str) -> str:
-        """Click element"""
+        """Click an interactive element by its ref selector.
+
+        Args:
+            selector: Element ref from accessibility tree (e.g., "@e5").
+
+        Returns:
+            Updated page snapshot after the click, or error message
+            if the click failed.
+        """
         result = click(selector)
         if result.success:
             snap = snapshot()
@@ -519,12 +562,29 @@ class BrowserTool:
         return f"Error: {result.error}"
 
     def fill(self, selector: str, text: str) -> str:
-        """Fill input"""
+        """Fill an input field with text.
+
+        Args:
+            selector: Element ref from accessibility tree (e.g., "@e5").
+            text: The text string to type into the field.
+
+        Returns:
+            Status message indicating success or an error description.
+        """
         result = fill(selector, text)
         return result.message if result.success else f"Error: {result.error}"
 
     def scroll(self, direction: str = "down", pixels: int = 300) -> str:
-        """Scroll page"""
+        """Scroll the page in a direction.
+
+        Args:
+            direction: Scroll direction — "up" or "down" (default: "down").
+            pixels: Number of pixels to scroll (default: 300).
+
+        Returns:
+            Updated page snapshot after scrolling, or error message
+            if the scroll failed.
+        """
         result = scroll(direction, pixels)
         if result.success:
             snap = snapshot()
@@ -533,7 +593,13 @@ class BrowserTool:
         return f"Error: {result.error}"
 
     def get_page_info(self) -> Dict[str, str]:
-        """Get current page info"""
+        """Get the current page title and URL.
+
+        Returns:
+            Dictionary with "title" (page title string) and "url"
+            (current URL string) keys. Values are empty strings if
+            the page info could not be retrieved.
+        """
         title = get_title()
         url = get_url()
         return {
