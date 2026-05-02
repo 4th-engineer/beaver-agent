@@ -448,7 +448,4 @@ def analyze_repository(root_path: str) -> str:
     return analyzer.generate_tree()
 
 
-if __name__ == "__main__":
-    # Test
-    result = analyze_repository("/home/agentuser/beaver-agent")
-    print(result)
+
