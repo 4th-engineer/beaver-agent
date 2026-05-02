@@ -225,4 +225,5 @@ Code:
             response = self.llm.chat(prompt)
             return response.content
         except Exception as e:
+            logger.error("suggest_fixes_failed", language=language, error=str(e))
             return f"❌ Failed to suggest fixes: {e}"
