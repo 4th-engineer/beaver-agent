@@ -57,45 +57,49 @@ class BeaverAgent:
 
     def run(self, user_input: str) -> str:
         """Main agent loop: parse intent → plan tasks → execute tools → return response"""
+        try:
+            logger.info("processing_request", input=user_input[:100])
 
-        logger.info("processing_request", input=user_input[:100])
+            # Add user message to history
+            self.conversation_history.append({"role": "user", "content": user_input})
 
-        # Add user message to history
-        self.conversation_history.append({"role": "user", "content": user_input})
+            # Log user input
+            self.logger.log_user_input(user_input, intent=None)
 
-        # Log user input
-        self.logger.log_user_input(user_input, intent=None)
+            # Step 1: Parse intent
+            intent = self.intent_parser.parse(user_input)
+            logger.debug("intent_parsed", intent=intent)
 
-        # Step 1: Parse intent
-        intent = self.intent_parser.parse(user_input)
-        logger.debug("intent_parsed", intent=intent)
+            # Step 2: Plan tasks
+            tasks = self.task_planner.plan(user_input, intent)
+            logger.debug("tasks_planned", task_count=len(tasks))
 
-        # Step 2: Plan tasks
-        tasks = self.task_planner.plan(user_input, intent)
-        logger.debug("tasks_planned", task_count=len(tasks))
+            # Step 3: Execute tools and collect results
+            tool_results = []
+            for task in tasks:
+                result = self.tool_router.route(task)
+                tool_results.append(result)
 
-        # Step 3: Execute tools and collect results
-        tool_results = []
-        for task in tasks:
-            result = self.tool_router.route(task)
-            tool_results.append(result)
+                # Log tool call
+                self.logger.log_tool_call(
+                    tool_name=task.get("tool", "unknown"),
+                    action=task.get("action", ""),
+                    params=task.get("params", {}),
+                    result=result,
+                    success=result.get("success", False),
+                )
 
-            # Log tool call
-            self.logger.log_tool_call(
-                tool_name=task.get("tool", "unknown"),
-                action=task.get("action", ""),
-                params=task.get("params", {}),
-                result=result,
-                success=result.get("success", False),
-            )
+            # Step 4: Generate response using LLM
+            response = self._generate_response(user_input, intent, tool_results)
 
-        # Step 4: Generate response using LLM
-        response = self._generate_response(user_input, intent, tool_results)
+            # Add assistant response to history
+            self.conversation_history.append({"role": "assistant", "content": response})
 
-        # Add assistant response to history
-        self.conversation_history.append({"role": "assistant", "content": response})
+            return response
 
-        return response
+        except Exception as e:
+            logger.error("agent_run_failed", error=str(e), input=user_input[:100])
+            return f"❌ An unexpected error occurred: {e}"
 
     def _generate_response(
         self,
