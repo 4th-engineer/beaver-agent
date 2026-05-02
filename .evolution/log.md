@@ -72,6 +72,7 @@
 | 2026-05-03 09:00 | Added comprehensive docstrings to Task, TaskResult, and Benchmark classes with full Attributes sections | 87 tests passing |
 | 2026-05-03 10:00 | Added warning log when log file read fails in data_store.get_stats — silent except IOError: pass could hide file permission issues | 87 tests passing |
 | 2026-05-03 11:00 | Added comprehensive docstrings to DebuggerTool methods (analyze, _analyze_error, _analyze_code_health, _format_debug_response, suggest_fixes) | 87 tests passing |
+| 2026-05-03 07:40 | Added language/style context to code_refactor_failed structlog error — matches complete_code consistency | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
