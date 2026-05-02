@@ -163,6 +163,8 @@ def _test_connection() -> bool:
     except Exception as e:
         if _has_structlog:
             _logger.warning("connection_test_failed", url=_viewer_url, error=str(e))
+        else:
+            print(f"[PixelPilot] ⚠️  Connection test failed for {_viewer_url}: {e}")
         return False
 
 
@@ -183,10 +185,14 @@ def _post_event(event: Dict[str, Any]) -> bool:
     except error.URLError:
         if _has_structlog:
             _logger.warning("post_event_url_error", url=_viewer_url)
+        else:
+            print(f"[PixelPilot] ⚠️  URL error posting event to {_viewer_url}")
         return False
     except Exception as e:
         if _has_structlog:
             _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"), error=str(e))
+        else:
+            print(f"[PixelPilot] ⚠️  Failed to post event ({event.get('type')}) to {_viewer_url}: {e}")
         return False
 
 
