@@ -21,6 +21,13 @@ class BeaverAdapter(ModelAdapter):
     """Adapter that uses the existing BeaverAgent LLM client."""
 
     def __init__(self, llm_client):
+        """Initialize the BeaverAdapter with a BeaverAgent LLM client.
+
+        Args:
+            llm_client: An instance of the BeaverAgent LLM client
+                (e.g., LLMClient) used to generate text via the
+                agent's configured model and provider.
+        """
         self._client = llm_client
 
     def generate(self, prompt: str, **kwargs) -> str:
@@ -48,6 +55,16 @@ class OpenAIAdapter(ModelAdapter):
     """Adapter for OpenAI-compatible API endpoints."""
 
     def __init__(self, model: str = "gpt-4", api_key: str = "", base_url: str = ""):
+        """Initialize the OpenAIAdapter.
+
+        Args:
+            model: The model name to use (default: "gpt-4").
+            api_key: API key for authentication. If empty, the adapter
+                will attempt to read from the OPENAI_API_KEY environment
+                variable at generate() time.
+            base_url: Base URL for the OpenAI-compatible API endpoint.
+                If empty, defaults to the standard OpenAI API URL.
+        """
         self.model = model
         self.api_key = api_key
         self.base_url = base_url
@@ -80,6 +97,12 @@ class MiniMaxAdapter(ModelAdapter):
     """Adapter for MiniMax API."""
 
     def __init__(self, api_key: str, model: str = "MiniMax-M2.7"):
+        """Initialize the MiniMaxAdapter.
+
+        Args:
+            api_key: The MiniMax API key for authentication.
+            model: The model name to use (default: "MiniMax-M2.7").
+        """
         self.api_key = api_key
         self.model = model
 
