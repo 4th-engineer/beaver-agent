@@ -3,6 +3,7 @@
 import sys
 from typing import Optional
 
+import structlog
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
@@ -16,6 +17,7 @@ from beaver_agent.cli.commands import handle_command
 
 
 console = Console()
+logger = structlog.get_logger()
 
 
 def run_repl(config: BeaverConfig) -> None:
@@ -69,6 +71,7 @@ def run_repl(config: BeaverConfig) -> None:
         except EOFError:
             break
         except Exception as e:
+            logger.error("repl_error", error=str(e))
             console.print(f"[red]✗ 错误:[/red] {e}")
             if config.app.debug:
                 import traceback
