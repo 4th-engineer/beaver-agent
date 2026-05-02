@@ -73,6 +73,25 @@ class CodeReviewScorer(Scorer):
 
 
 def get_scorer(task_type: str) -> Scorer:
+    """Factory function that returns the appropriate Scorer for a task type.
+
+    Args:
+        task_type: The type of task to score. Supported values:
+            - "code_generation": Uses SimilarityScorer (Levenshtein-based)
+            - "bug_fix": Uses ExactMatchScorer (binary pass/fail)
+            - "code_review": Uses CodeReviewScorer (keyword coverage)
+            - "architecture": Uses SimilarityScorer (Levenshtein-based)
+
+    Returns:
+        A Scorer instance appropriate for the given task type.
+        Defaults to SimilarityScorer if task_type is not recognized.
+
+    Example:
+        >>> scorer = get_scorer("code_generation")
+        >>> score, details = scorer.score("def foo(): pass", "def foo(): pass")
+        >>> print(score)
+        1.0
+    """
     return {
         "code_generation": SimilarityScorer(),
         "bug_fix": ExactMatchScorer(),
