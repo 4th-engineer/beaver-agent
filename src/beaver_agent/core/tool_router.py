@@ -50,7 +50,8 @@ class ToolRouter:
         CodeGenTool, CodeReviewTool, DebuggerTool), passing self.config and, for
         AI-powered tools, self._llm_client. Stores each tool in _tool_registry
         by name (e.g., 'file_tool', 'terminal_tool'). Logs the total count
-        of registered tools.
+        of registered tools. If a tool fails to initialize, logs the error
+        and continues with remaining tools — partial registration is acceptable.
         """
         from beaver_agent.tools.file_tool import FileTool
         from beaver_agent.tools.terminal_tool import TerminalTool
@@ -59,14 +60,21 @@ class ToolRouter:
         from beaver_agent.tools.code_review import CodeReviewTool
         from beaver_agent.tools.debugger import DebuggerTool
 
-        self._tool_registry = {
-            "file_tool": FileTool(self.config),
-            "terminal_tool": TerminalTool(self.config),
-            "github_tool": GitHubTool(self.config),
-            "code_gen": CodeGenTool(self.config, self._llm_client),
-            "code_review": CodeReviewTool(self.config, self._llm_client),
-            "debugger": DebuggerTool(self.config, self._llm_client),
-        }
+        tool_entries = [
+            ("file_tool", lambda: FileTool(self.config)),
+            ("terminal_tool", lambda: TerminalTool(self.config)),
+            ("github_tool", lambda: GitHubTool(self.config)),
+            ("code_gen", lambda: CodeGenTool(self.config, self._llm_client)),
+            ("code_review", lambda: CodeReviewTool(self.config, self._llm_client)),
+            ("debugger", lambda: DebuggerTool(self.config, self._llm_client)),
+        ]
+
+        self._tool_registry = {}
+        for name, factory in tool_entries:
+            try:
+                self._tool_registry[name] = factory()
+            except Exception as e:
+                logger.warning("tool_registration_failed", tool=name, error=str(e))
 
         logger.info("tools_registered", count=len(self._tool_registry))
 
