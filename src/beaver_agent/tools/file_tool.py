@@ -177,6 +177,7 @@ class FileTool:
                 return f"No matches for '{query}' found"
 
         except Exception as e:
+            logger.error("search_content_failed", query=query, path=path, error=str(e))
             return f"Error searching content: {e}"
 
     def check_project_structure(self, path: str = ".") -> str:
