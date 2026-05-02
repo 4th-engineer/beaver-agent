@@ -26,6 +26,17 @@ class ExactMatchScorer(Scorer):
     """Binary exact match - 1.0 if identical, 0.0 otherwise."""
 
     def score(self, prediction: str, reference: str, context: dict = None) -> tuple[float, dict]:
+        """Score prediction against reference using exact string match.
+
+        Args:
+            prediction: The predicted output string.
+            reference: The expected/reference output string.
+            context: Optional context dictionary (unused, for API compatibility).
+
+        Returns:
+            A tuple of (score, details) where score is 1.0 for exact match, 0.0 otherwise.
+            details contains {"exact_match": bool}.
+        """
         match = prediction.strip() == reference.strip()
         return (1.0 if match else 0.0), {"exact_match": match}
 
@@ -34,6 +45,17 @@ class SimilarityScorer(Scorer):
     """Levenshtein-based string similarity."""
 
     def score(self, prediction: str, reference: str, context: dict = None) -> tuple[float, dict]:
+        """Score prediction against reference using string similarity.
+
+        Args:
+            prediction: The predicted output string.
+            reference: The expected/reference output string.
+            context: Optional context dictionary (unused, for API compatibility).
+
+        Returns:
+            A tuple of (score, details) where score is 0.0-1.0 based on Levenshtein similarity.
+            details contains {"similarity": float}.
+        """
         ratio = difflib.SequenceMatcher(None, prediction.strip(), reference.strip()).ratio()
         return ratio, {"similarity": ratio}
 
@@ -46,6 +68,17 @@ class CodeExecutionScorer(Scorer):
         self.test_cases = test_cases
 
     def score(self, prediction: str, reference: str, context: dict = None) -> tuple[float, dict]:
+        """Execute generated code and score against expected test results.
+
+        Args:
+            prediction: Python code to execute.
+            reference: Expected result string (unused, test_cases define expectations).
+            context: Optional dict that may contain "test_cases" key with test definitions.
+
+        Returns:
+            A tuple of (score, details) where score is passed/total test cases (0.0-1.0).
+            details contains {"passed": int, "total": int, "errors": list[str]}.
+        """
         passed = 0
         errors = []
         for tc in self.test_cases:
@@ -66,6 +99,17 @@ class CodeReviewScorer(Scorer):
     """Score code review quality by checking for key elements."""
 
     def score(self, prediction: str, reference: str, context: dict = None) -> tuple[float, dict]:
+        """Score code review quality by keyword coverage.
+
+        Args:
+            prediction: The code review text to evaluate.
+            reference: Expected keywords or reference text (unused).
+            context: Optional context dictionary (unused, for API compatibility).
+
+        Returns:
+            A tuple of (score, details) where score is keyword coverage ratio (0.0-1.0).
+            details contains {"keyword_coverage": float, "keywords_found": int}.
+        """
         keywords = ["bug", "security", "performance", "readability", "issue", "recommend"]
         found = sum(1 for kw in keywords if kw.lower() in prediction.lower())
         coverage = found / len(keywords)
