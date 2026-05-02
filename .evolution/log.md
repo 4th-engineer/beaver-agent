@@ -65,6 +65,8 @@
 
 | 2026-05-03 04:00 | beaver-agent | Added docstrings to Benchmark.add_task and get_task — all Benchmark public methods now documented | 87 tests passing |
 
+| 2026-05-03 05:00 | beaver-agent | Added comprehensive docstrings to CodeGenTool.generate, complete_code, and refactor — all now have Args/Returns sections | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements |

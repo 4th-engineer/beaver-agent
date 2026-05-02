@@ -68,7 +68,20 @@ class LLMClient:
             self._call = self._call_fallback
 
     def _call_anthropic(self, messages: List[Dict], **kwargs) -> LLMResponse:
-        """Call Anthropic Claude"""
+        """Call Anthropic Claude API.
+
+        Args:
+            messages: List of message dicts with 'role' and 'content' keys.
+            **kwargs: Additional arguments:
+                - max_tokens (int): Maximum tokens to generate (default: 4096)
+                - temperature (float): Sampling temperature (default: 0.7)
+
+        Returns:
+            LLMResponse with Claude's reply text, model name, and token usage.
+
+        Raises:
+            Exception: Propagates API errors for caller to handle.
+        """
         response = self._client.messages.create(
             model=self.model,
             max_tokens=kwargs.get("max_tokens", 4096),
@@ -82,7 +95,20 @@ class LLMClient:
         )
 
     def _call_openai(self, messages: List[Dict], **kwargs) -> LLMResponse:
-        """Call OpenAI / OpenRouter"""
+        """Call OpenAI / OpenRouter API.
+
+        Args:
+            messages: List of message dicts with 'role' and 'content' keys.
+            **kwargs: Additional arguments:
+                - max_tokens (int): Maximum tokens to generate (default: 4096)
+                - temperature (float): Sampling temperature (default: 0.7)
+
+        Returns:
+            LLMResponse with model's reply text, model name, and token usage.
+
+        Raises:
+            Exception: Propagates API errors for caller to handle.
+        """
         response = self._client.chat.completions.create(
             model=self.model,
             max_tokens=kwargs.get("max_tokens", 4096),
