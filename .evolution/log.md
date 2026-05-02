@@ -84,6 +84,7 @@
 | 2026-05-03 06:00 | beaver-agent | Added comprehensive docstrings to all 3 ModelAdapter.__init__ methods (BeaverAdapter, OpenAIAdapter, MiniMaxAdapter) with Args sections | 87 tests passing |
 
 | 2026-05-03 06:20 | beaver-agent | Added comprehensive docstrings to BeaverAgent.run() and _generate_response() with Args/Returns/Raises sections | 87 tests passing |
+| 2026-05-03 07:00 | beaver-agent | Enhanced docstring for CodeReviewTool.review() with Args/Returns (LLM-first, static fallback behavior documented) | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing

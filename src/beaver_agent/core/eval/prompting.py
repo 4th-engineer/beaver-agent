@@ -1,7 +1,6 @@
 """Component 3: Prompting Strategy — how to construct prompts for each task type."""
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 
 @dataclass
@@ -12,8 +11,17 @@ class PromptStrategy:
     user_template: str = "{prompt}"
     few_shot_examples: list[dict] = field(default_factory=list)
 
-    def build(self, task_prompt: str, context: Optional[dict] = None) -> tuple[str, str]:
-        """Return (system_prompt, user_prompt) tuple."""
+    def build(self, task_prompt: str) -> tuple[str, str]:
+        """Build (system_prompt, user_prompt) tuple from task prompt.
+
+        Args:
+            task_prompt: The task-specific prompt text (e.g., "Fix this bug in foo()").
+
+        Returns:
+            A tuple of (system_prompt, user_prompt) where system_prompt provides
+            instructions to the LLM and user_prompt contains the task content.
+            If few-shot examples are configured, they are prepended to the user prompt.
+        """
         system = self.system_template
         user = self.user_template.format(prompt=task_prompt)
 
@@ -70,4 +78,17 @@ STRATEGY_MAP: dict[str, PromptStrategy] = {
 
 
 def get_strategy(task_type: str) -> PromptStrategy:
+    """Get the PromptStrategy for a given task type.
+
+    Args:
+        task_type: The type of task. Supported values:
+            - "code_generation": Expert code generation
+            - "bug_fix": Debugging and bug fixing
+            - "code_review": Code review and feedback
+            - "architecture": System design and architecture
+
+    Returns:
+        The PromptStrategy for the given task type, or
+        CODE_GENERATION_STRATEGY as a default fallback.
+    """
     return STRATEGY_MAP.get(task_type, CODE_GENERATION_STRATEGY)
