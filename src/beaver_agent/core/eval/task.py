@@ -35,6 +35,14 @@ class Benchmark:
     tasks: list[Task] = field(default_factory=list)
 
     def add_task(self, task: Task) -> "Benchmark":
+        """Add a task to the benchmark.
+
+        Args:
+            task: The Task instance to add.
+
+        Returns:
+            self for method chaining.
+        """
         self.tasks.append(task)
         return self
 
@@ -42,6 +50,14 @@ class Benchmark:
         return len(self.tasks)
 
     def get_task(self, task_id: str) -> Optional[Task]:
+        """Retrieve a task by its ID.
+
+        Args:
+            task_id: Unique identifier of the task to find.
+
+        Returns:
+            The Task if found, otherwise None.
+        """
         for t in self.tasks:
             if t.id == task_id:
                 return t
