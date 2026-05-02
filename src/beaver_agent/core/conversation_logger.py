@@ -29,7 +29,12 @@ class ConversationLogger:
         self._session_id: Optional[str] = None
 
     def start_session(self, session_id: str) -> None:
-        """Start a new logging session"""
+        """Start a new logging session.
+
+        Args:
+            session_id: Unique identifier for this session (e.g., short UUID).
+                Used to name the log file and correlate log entries.
+        """
         with self._lock:
             self._session_id = session_id
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -47,7 +52,14 @@ class ConversationLogger:
                    log_file=str(self._session_file))
 
     def log_user_input(self, user_input: str, intent: str = None) -> None:
-        """Log user input"""
+        """Log a user message to the current session.
+
+        Args:
+            user_input: The raw text input from the user. Content exceeding
+                2000 characters is automatically truncated before writing.
+            intent: Optional parsed intent string (e.g., from IntentParser).
+                Defaults to None if intent was not determined.
+        """
         # Truncate very long input for logging
         if len(user_input) > 2000:
             user_input = user_input[:2000] + "... [truncated]"
@@ -61,7 +73,16 @@ class ConversationLogger:
 
     def log_llm_request(self, messages: List[Dict[str, Any]],
                         model: str, provider: str) -> None:
-        """Log LLM API request"""
+        """Log an LLM API request to the current session.
+
+        Args:
+            messages: List of message dicts sent to the LLM API, typically
+                containing 'role' and 'content' keys.
+            model: Model name used for the request (e.g., 'MiniMax-M2.7').
+            provider: Provider name (e.g., 'minimax', 'openai').
+                Content in messages exceeding 2000 characters is
+                automatically truncated before writing.
+        """
         # Truncate very long content for logging
         truncated_messages = []
         for msg in messages:
@@ -80,7 +101,17 @@ class ConversationLogger:
 
     def log_llm_response(self, content: str, model: str,
                           usage: Dict = None, error: str = None) -> None:
-        """Log LLM API response"""
+        """Log an LLM API response to the current session.
+
+        Args:
+            content: The generated text response from the LLM. Content
+                exceeding 5000 characters is automatically truncated.
+            model: Model name that generated the response.
+            usage: Optional dict of token usage statistics (e.g.,
+                {'prompt_tokens': N, 'completion_tokens': M}).
+            error: Optional error message string if the request failed.
+                When provided, 'content' may be empty or partial.
+        """
         # Truncate very long content
         if len(content) > 5000:
             content = content[:5000] + "... [truncated]"
@@ -102,7 +133,22 @@ class ConversationLogger:
     def log_tool_call(self, tool_name: str, action: str,
                       params: Dict = None, result: Any = None,
                       success: bool = True, error: str = None) -> None:
-        """Log tool execution"""
+        """Log a tool invocation to the current session.
+
+        Args:
+            tool_name: Name of the tool that was invoked (e.g., 'file_tool').
+            action: Name of the method called on the tool (e.g., 'read_file').
+            params: Optional dict of keyword arguments passed to the action.
+                If the serialized params exceed 1000 characters, only the first
+                1000 are stored with a truncation marker.
+            result: Optional result returned by the tool. If the serialized
+                result exceeds 2000 characters, only the first 2000 are stored
+                with a truncation marker.
+            success: Whether the tool call succeeded (default True). Used to
+                distinguish between successful executions and errors.
+            error: Optional error message string if the tool call failed.
+                When provided, 'success' should be False.
+        """
         entry = {
             "type": "tool_call",
             "timestamp": datetime.now().isoformat(),
@@ -132,7 +178,15 @@ class ConversationLogger:
 
     def log_skill_invocation(self, skill_name: str, trigger: str,
                             matched: bool = True) -> None:
-        """Log skill invocation"""
+        """Log a skill invocation attempt.
+
+        Args:
+            skill_name: Name of the skill that was invoked.
+            trigger: The user input or pattern that triggered the skill.
+            matched: Whether the skill was successfully matched and invoked.
+                False indicates a near-miss where intent was detected but
+                skill execution was not attempted.
+        """
         self._write_entry({
             "type": "skill_invocation",
             "timestamp": datetime.now().isoformat(),
@@ -142,7 +196,11 @@ class ConversationLogger:
         })
 
     def end_session(self) -> None:
-        """End the current logging session"""
+        """End the current logging session.
+
+        Writes a session_end marker to the log file and clears the session
+        reference. Safe to call even if no session is active (no-op).
+        """
         if self._session_file:
             self._write_entry({
                 "type": "session_end",
@@ -155,7 +213,13 @@ class ConversationLogger:
         self._session_id = None
 
     def _write_entry(self, entry: Dict) -> None:
-        """Write a log entry to the session file"""
+        """Write a log entry to the session file as a JSONL line.
+
+        Args:
+            entry: A dictionary representing the log entry. Serialized to JSON
+                with ensure_ascii=False before writing. Silently drops the
+                entry if no session is active (no session file set).
+        """
         if not self._session_file:
             return
 
@@ -167,7 +231,17 @@ class ConversationLogger:
                 logger.error("conversation_log_write_failed", error=str(e))
 
     def get_recent_logs(self, limit: int = 10) -> List[Dict]:
-        """Get recent log entries from the current session"""
+        """Read the most recent log entries from the current session file.
+
+        Args:
+            limit: Maximum number of entries to return. Reads from the end
+                of the file backward. Defaults to 10.
+
+        Returns:
+            A list of parsed log entry dicts, most recent last.
+            Returns an empty list if no session is active or the log file
+            does not exist.
+        """
         if not self._session_file or not self._session_file.exists():
             return []
 
@@ -187,7 +261,16 @@ class ConversationLogger:
 
     @staticmethod
     def list_log_files(log_dir: str = None) -> List[Path]:
-        """List all conversation log files"""
+        """List all conversation log files on disk.
+
+        Args:
+            log_dir: Directory to scan for log files. Defaults to the
+                project's logs/ directory.
+
+        Returns:
+            A list of Path objects pointing to .jsonl log files in
+            the directory, sorted newest-first (by filename timestamp).
+        """
         if log_dir is None:
             project_root = Path(__file__).parent.parent.parent
             log_dir = project_root / "logs"
