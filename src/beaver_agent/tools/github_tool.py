@@ -92,7 +92,21 @@ class GitHubTool:
             return f"❌ Error: {e}"
 
     def create_issue(self, owner: str, repo: str, title: str, body: str = "") -> str:
-        """Create a new issue"""
+        """Create a new issue in a repository.
+
+        Args:
+            owner: GitHub repository owner (user or organization)
+            repo: Repository name
+            title: Issue title
+            body: Optional issue body/description (default: empty)
+
+        Returns:
+            A formatted success message with issue number and URL,
+            or an error message if creation fails.
+
+        Raises:
+            No explicit raises - errors are logged and returned as string messages.
+        """
         if not self._check_config():
             return "❌ GitHub token not configured. Set github.token in config."
 
@@ -123,7 +137,20 @@ class GitHubTool:
             return f"❌ Error: {e}"
 
     def list_issues(self, owner: str, repo: str, state: str = "open") -> str:
-        """List issues"""
+        """List issues from a repository.
+
+        Args:
+            owner: GitHub repository owner (user or organization)
+            repo: Repository name
+            state: Issue state filter - "open", "closed", or "all" (default: "open")
+
+        Returns:
+            A formatted string listing issues with their numbers and titles,
+            or an error message if the request fails.
+
+        Raises:
+            No explicit raises - errors are logged and returned as string messages.
+        """
         if not self._check_config():
             return "❌ GitHub token not configured. Set github.token in config."
 
@@ -156,7 +183,20 @@ class GitHubTool:
             return f"❌ Error: {e}"
 
     def get_issue(self, owner: str, repo: str, number: int) -> str:
-        """Get a specific issue"""
+        """Get details of a specific issue.
+
+        Args:
+            owner: GitHub repository owner (user or organization)
+            repo: Repository name
+            number: Issue number to retrieve
+
+        Returns:
+            A formatted string containing issue details (title, state, labels,
+            author, URL, and body), or an error message if the issue is not found.
+
+        Raises:
+            No explicit raises - errors are logged and returned as string messages.
+        """
         if not self._check_config():
             return "❌ GitHub token not configured. Set github.token in config."
 

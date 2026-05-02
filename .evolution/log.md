@@ -36,8 +36,8 @@
 | 2026-05-02 05:00 | beaver-agent | Added structlog warning when skipping invalid benchmark files in loader.py + fixed README test count (70→87) | 87 tests passing |
 | 2026-05-02 06:00 | beaver-agent | Fixed bare except in _get_agent_name - was using str(e) without capturing exception variable | 87 tests passing |
 | 2026-05-02 07:00 | beaver-agent | Fixed pixel_pilot.py connect() - structlog used for all status messages when available; removed duplicate _test_connection() call | 87 tests passing |
-| 2026-05-02 08:00 | beaver-agent | Captured exception variable in _test_connection and _post_event handlers | 87 tests passing |
 | 2026-05-02 09:00 | beaver-agent | Removed dead code in SkillManager._parse_phases - second raw_phases read was unreachable after early return | 87 tests passing |
+| 2026-05-02 10:00 | beaver-agent | Fixed connect() - status messages now always printed regardless of verbose flag; removed incorrect verbose guard | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
