@@ -27,7 +27,17 @@ class DebuggerTool:
         language: str = "python",
         stack_trace: Optional[str] = None
     ) -> str:
-        """Analyze code and/or error to provide debugging assistance"""
+        """Analyze code and/or error to provide debugging assistance.
+
+        Args:
+            code: Source code to analyze.
+            error: Optional error message to diagnose.
+            language: Programming language of the code (default: "python").
+            stack_trace: Optional stack trace for context.
+
+        Returns:
+            A string containing the debugging analysis and recommendations.
+        """
 
         logger.info("debugging_code", language=language, has_error=bool(error))
 
@@ -48,7 +58,17 @@ class DebuggerTool:
         language: str,
         stack_trace: Optional[str] = None
     ) -> str:
-        """Analyze a specific error"""
+        """Analyze a specific error using LLM or fallback to basic analysis.
+
+        Args:
+            code: Source code where the error occurred.
+            error: The error message to analyze.
+            language: Programming language of the code.
+            stack_trace: Optional stack trace for additional context.
+
+        Returns:
+            A string containing the error analysis and fix suggestions.
+        """
 
         try:
             response = self.llm.debug_code(
@@ -67,7 +87,15 @@ class DebuggerTool:
             return f"❌ Error analysis failed: {e}"
 
     def _analyze_code_health(self, code: str, language: str) -> str:
-        """Analyze code health without specific error"""
+        """Analyze code health without specific error.
+
+        Args:
+            code: Source code to analyze for potential issues.
+            language: Programming language of the code.
+
+        Returns:
+            A string containing code health analysis and recommendations.
+        """
 
         prompt = f"""Analyze this {language} code for potential issues:
 - Logic errors
@@ -176,7 +204,15 @@ Code:
         return "".join(result)
 
     def _format_debug_response(self, llm_response: str, error: Optional[str]) -> str:
-        """Format LLM debug response"""
+        """Format LLM debug response with consistent header.
+
+        Args:
+            llm_response: The raw response from the LLM.
+            error: Optional error message to include in the header.
+
+        Returns:
+            A formatted string with header and LLM response.
+        """
 
         header = """## 🐛 调试分析
 
@@ -206,7 +242,16 @@ Code:
         issue: str,
         language: str = "python"
     ) -> str:
-        """Suggest fixes for a specific issue"""
+        """Suggest fixes for a specific issue.
+
+        Args:
+            code: Source code containing the issue.
+            issue: Description of the problem to fix.
+            language: Programming language of the code (default: "python").
+
+        Returns:
+            A string containing root cause explanation, fixed code, and prevention tips.
+        """
 
         prompt = f"""The following {language} code has this issue:
 {issue}
