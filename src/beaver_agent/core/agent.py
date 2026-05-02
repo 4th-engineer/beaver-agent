@@ -1,4 +1,4 @@
-"""Beaver Agent Agent Core v2 - With LLM Integration"""
+"""Beaver Agent Core v2 - With LLM Integration"""
 
 import uuid
 from typing import Optional, Dict, Any, List
