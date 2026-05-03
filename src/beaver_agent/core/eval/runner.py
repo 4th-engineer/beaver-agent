@@ -56,7 +56,7 @@ class Runner:
 
         except Exception as e:
             duration_ms = (time.time() - start) * 1000
-            logger.error("task_execution_failed", task_id=task.id, error=str(e))
+            logger.error("task_execution_failed", task_id=task.id, exc_info=e)
             return TaskResult(
                 task_id=task.id,
                 success=False,
