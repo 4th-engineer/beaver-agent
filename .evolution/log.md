@@ -103,6 +103,7 @@
 | 2026-05-04 12:00 | beaver-agent | Full audit — no exc_info gaps, no bare except bugs, no TODO/FIXME, remaining str(e) are legitimate uses (detail fields, API responses, error lists) — project fully compliant | 87 tests passing |
 | 2026-05-04 05:00 | beaver-agent | Added docstring to Benchmark.__len__ — last undocumented dunder method in task.py | 87 tests passing |
 | 2026-05-04 06:00 | beaver-agent | Added docstring to MCPConfig.handle_mcp_servers_key field validator — explains servers/mcp_servers alias handling |
+| 2026-05-04 11:00 | beaver-agent | Added module docstrings and public exports to cli/, core/, and tools/ __init__.py files — all three previously empty inits now documented |
 | ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
