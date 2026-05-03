@@ -79,6 +79,7 @@
 | 2026-05-04 02:00 | Removed redundant str(e) from structlog error calls in TerminalTool and GitHubTool — structlog captures exception automatically | 87 tests passing |
 | 2026-05-04 03:00 | Replaced redundant str(e) with exc_info=e in Runner.run_task exception handler — consistent with other core modules | 87 tests passing |
 | 2026-05-04 04:00 | Replaced str(e) with exc_info=e in CodeGenTool exception handlers (generate, complete_code, refactor) — consistent with recent TerminalTool and Runner fixes | 87 tests passing |
+| 2026-05-04 05:00 | Replaced str(e) with exc_info=e in core module exception handlers (tool_router, agent, skill_manager, conversation_logger, data_store, mcp_manager) — structlog captures exceptions automatically via exc_info | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
