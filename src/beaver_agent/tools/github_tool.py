@@ -221,7 +221,7 @@ class GitHubTool:
                 return f"❌ Failed to list issues: {response.status_code}"
 
         except Exception as e:
-            logger.error("github_list_issues_failed", error=str(e), exc_info=e)
+            logger.error("github_list_issues_failed", exc_info=e)
             return f"❌ Error: {e}"
 
     def get_issue(self, owner: str, repo: str, number: int) -> str:

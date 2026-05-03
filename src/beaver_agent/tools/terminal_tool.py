@@ -187,7 +187,7 @@ class TerminalTool:
             return "No log files found"
 
         except Exception as e:
-            logger.warning("error_log_read_failed", error=str(e), exc_info=e)
+            logger.warning("error_log_read_failed", exc_info=e)
             return f"Error reading log: {e}"
 
     def _read_error_lines(self, path: str, lines: int) -> str:

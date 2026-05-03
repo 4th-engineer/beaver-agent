@@ -90,6 +90,7 @@
 | 2026-05-04 03:00 | beaver-agent | Added comprehensive docstring to TaskPlanner._extract_params (Args/Returns/Example) — one-line placeholder replaced with full numpy-style docstring | 87 tests passing |
 | 2026-05-04 03:00 | beaver-agent | Removed redundant str(e) in code_review (1) and github_tool (2) — exc_info=e captures exception automatically, consistent with full exc_info sweep | 87 tests passing |
 | 2026-05-04 03:00 | beaver-agent | Replaced str(e) with exc_info=e in CodeExecutionScorer.score() in metrics.py — completes full exc_info sweep across all beaver-agent modules | 87 tests passing |
+| 2026-05-04 04:00 | beaver-agent | Added docstrings to Runner.__init__ (Args/Attributes), run_task (Args/Returns), and summarize_results (Args/Returns) — completes docstring coverage for all Runner methods | 87 tests passing |
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
