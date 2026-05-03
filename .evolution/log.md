@@ -115,6 +115,8 @@
 | 2026-05-04 08:00 | beaver-agent | Added Scorer, ExactMatchScorer, SimilarityScorer, CodeExecutionScorer, CodeReviewScorer, get_scorer exports to eval/__init__.py — now consistent with tools/core/cli packages which export their key classes |
 | 2026-05-04 15:00 | beaver-agent | Enhanced BeaverHarness.run_single docstring — added Raises section, improved Args/Returns consistency with Runner.run_task |
 
+| 2026-05-04 06:00 | Added DataStore, get_data_store, init_data_store to core/__all__ and imports — consistent with tools/core/__init__.py public API pattern | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
