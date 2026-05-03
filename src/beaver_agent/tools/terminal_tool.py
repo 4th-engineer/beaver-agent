@@ -85,7 +85,7 @@ class TerminalTool:
         except subprocess.TimeoutExpired:
             return f"❌ Command timed out after {timeout}s"
         except Exception as e:
-            logger.error("command_execution_failed", command=command, error=str(e))
+            logger.error("command_execution_failed", command=command)
             return f"❌ Error: {e}"
 
     def _is_blocked(self, command: str) -> bool:

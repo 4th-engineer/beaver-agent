@@ -130,7 +130,7 @@ class GitHubTool:
                 return f"❌ Failed to get repo info: {response.status_code} - {response.text}"
 
         except Exception as e:
-            logger.error("github_api_failed", error=str(e))
+            logger.error("github_api_failed")
             return f"❌ Error: {e}"
 
     def create_issue(self, owner: str, repo: str, title: str, body: str = "") -> str:
@@ -175,7 +175,7 @@ class GitHubTool:
                 return f"❌ Failed to create issue: {response.status_code} - {response.text}"
 
         except Exception as e:
-            logger.error("github_create_issue_failed", error=str(e))
+            logger.error("github_create_issue_failed")
             return f"❌ Error: {e}"
 
     def list_issues(self, owner: str, repo: str, state: str = "open") -> str:
