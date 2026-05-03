@@ -177,7 +177,7 @@ class DataStore:
             content = self.applied_file.read_text().strip()
             return json.loads(content) if content else []
         except (json.JSONDecodeError, IOError) as e:
-            logger.warning("applied_migrations_read_failed", error=str(e), path=str(self.applied_file))
+            logger.warning("applied_migrations_read_failed", exc_info=e, path=str(self.applied_file))
             return []
     
     def _save_applied(self, names: List[str]) -> None:
@@ -258,7 +258,7 @@ class DataStore:
                 logger.error("migration_failed",
                            version=str(migration.version),
                            name=migration.name,
-                           error=str(e))
+                           exc_info=e)
                 return False
             
             if not success:
@@ -395,7 +395,7 @@ class DataStore:
                 with open(f) as fh:
                     total_entries += sum(1 for _ in fh if _.strip())
             except IOError as e:
-                logger.warning("log_file_read_failed_for_stats", path=str(f), error=str(e))
+                logger.warning("log_file_read_failed_for_stats", path=str(f), exc_info=e)
         
         builtin_skills = 0
         if self.skills_builtin.exists():

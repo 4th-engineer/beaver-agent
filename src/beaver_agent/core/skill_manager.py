@@ -223,7 +223,7 @@ class SkillManager:
                 examples=examples,
             )
         except Exception as e:
-            logger.error("skill_parse_failed", file=str(file_path), error=str(e))
+            logger.error("skill_parse_failed", file=str(file_path), exc_info=e)
             return None
 
     def _parse_phases(self, frontmatter: Dict[str, Any]) -> List[SkillPhase]:

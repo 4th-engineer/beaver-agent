@@ -234,7 +234,7 @@ class ConversationLogger:
                 with open(self._session_file, "a", encoding="utf-8") as f:
                     f.write(json.dumps(entry, ensure_ascii=False) + "\n")
             except Exception as e:
-                logger.error("conversation_log_write_failed", error=str(e))
+                logger.error("conversation_log_write_failed", exc_info=e)
 
     def get_recent_logs(self, limit: int = 10) -> List[Dict]:
         """Read the most recent log entries from the current session file.
@@ -261,7 +261,7 @@ class ConversationLogger:
                     except json.JSONDecodeError:
                         continue
         except Exception as e:
-            logger.error("conversation_log_read_failed", error=str(e))
+            logger.error("conversation_log_read_failed", exc_info=e)
 
         return entries
 

@@ -41,7 +41,7 @@ class ToolRouter:
             self._llm_client = LLMClient(self.config.model)
             logger.info("llm_client_ready", provider=self.config.model.provider)
         except Exception as e:
-            logger.error("llm_init_failed", error=str(e))
+            logger.error("llm_init_failed", exc_info=e)
 
     def _register_tools(self) -> None:
         """Register all available tools in the tool registry.
@@ -74,7 +74,7 @@ class ToolRouter:
             try:
                 self._tool_registry[name] = factory()
             except Exception as e:
-                logger.warning("tool_registration_failed", tool=name, error=str(e))
+                logger.warning("tool_registration_failed", tool=name, exc_info=e)
 
         logger.info("tools_registered", count=len(self._tool_registry))
 
@@ -124,7 +124,7 @@ class ToolRouter:
                 return {"success": False, "error": f"Tool {tool_name} has no action: {action}",
                         "error_code": self.ERR_NO_ACTION, "tool": tool_name, "action": action}
         except Exception as e:
-            logger.error("tool_execution_failed", tool=tool_name, action=action, error=str(e))
+            logger.error("tool_execution_failed", tool=tool_name, action=action, exc_info=e)
             return {"success": False, "error": str(e), "error_code": self.ERR_TOOL_EXECUTION,
                     "tool": tool_name, "action": action}
 

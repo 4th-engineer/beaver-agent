@@ -40,7 +40,7 @@ class BeaverAgent:
                        version=self.data_store.get_version().raw,
                        stats=self.data_store.get_stats())
         except Exception as e:
-            logger.error("data_store_init_failed", error=str(e))
+            logger.error("data_store_init_failed", exc_info=e)
             raise
         
         self.session_id = str(uuid.uuid4())[:8]
@@ -55,7 +55,7 @@ class BeaverAgent:
         try:
             self.llm = self.tool_router.get_llm_client()
         except Exception as e:
-            logger.warning("llm_init_failed", error=str(e))
+            logger.warning("llm_init_failed", exc_info=e)
             self.llm = None
 
         # Start conversation logging
@@ -116,7 +116,7 @@ class BeaverAgent:
             return response
 
         except Exception as e:
-            logger.error("agent_run_failed", error=str(e), input=user_input[:100])
+            logger.error("agent_run_failed", exc_info=e, input=user_input[:100])
             return f"❌ An unexpected error occurred: {e}"
 
     def _generate_response(
@@ -188,7 +188,7 @@ Always provide actionable suggestions."""
 
             return response.content
         except Exception as e:
-            logger.error("llm_response_failed", error=str(e))
+            logger.error("llm_response_failed", exc_info=e)
 
             # Log error
             self.logger.log_llm_response(

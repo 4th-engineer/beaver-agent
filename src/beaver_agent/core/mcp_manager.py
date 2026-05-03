@@ -115,7 +115,7 @@ class MCPManager:
                 await self._connect_server(server_name, server_config)
             except Exception as e:
                 logger.warning("mcp_server_connect_failed",
-                               server=server_name, error=str(e))
+                               server=server_name, exc_info=e)
 
     def _load_configs_from_directory(self, configs_path: Path) -> None:
         """Load all MCP server configs from a directory of YAML files"""
@@ -132,7 +132,7 @@ class MCPManager:
                 logger.debug("mcp_config_loaded", server=server_name, file=str(config_file))
             except Exception as e:
                 logger.warning("mcp_config_load_failed",
-                             file=str(config_file), error=str(e))
+                             file=str(config_file), exc_info=e)
 
     async def _connect_server(self, server_name: str,
                              server_config: MCPServerConfig) -> None:
@@ -199,7 +199,7 @@ class MCPManager:
 
         except Exception as e:
             logger.error("mcp_stdio_connect_failed",
-                        server=server_name, error=str(e))
+                        server=server_name, exc_info=e)
             raise
 
     def _build_env(self, user_env: dict) -> dict:
@@ -379,7 +379,7 @@ class MCPManager:
                 logger.debug("mcp_server_stopped", server=server_name)
             except Exception as e:
                 logger.error("mcp_server_stop_failed",
-                           server=server_name, error=str(e))
+                           server=server_name, exc_info=e)
 
         self._server_processes.clear()
         self._tools.clear()
