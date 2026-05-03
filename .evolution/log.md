@@ -120,6 +120,7 @@
 | 2026-05-04 08:00 | beaver-agent | Added comprehensive docstring to DebuggerTool._basic_error_analysis — replaced one-line placeholder with full Args/Returns/Example documenting built-in error pattern-matching | 87 tests passing |
 | 2026-05-04 09:00 | beaver-agent | Added comprehensive docstrings to TerminalTool.__init__, _is_blocked, and _read_error_lines — all three undocumented methods now have Args/Returns sections | 87 tests passing |
 | 2026-05-04 07:30 | beaver-agent | Enhanced docstring for CodeReviewIssue.format() with Returns section documenting emoji severity, severity level, line number, message, and suggestion | 87 tests passing |
+| 2026-05-04 08:00 | beaver-agent | Added IntentParser, TaskPlanner, SkillManager, MCPManager, SessionMemory to core/__init__.py exports — now consistent with tools/ and eval/ public API patterns | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
