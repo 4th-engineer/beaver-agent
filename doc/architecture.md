@@ -90,13 +90,29 @@ beaver-agent/
 │   │   ├── commands.py         # 内置命令（/help /exit /model）
 │   │   └── interactive.py      # 交互式 REPL
 │   ├── core/
+│   │   ├── __init__.py
 │   │   ├── agent.py            # Agent 主循环
 │   │   ├── intent_parser.py   # 意图识别
 │   │   ├── task_planner.py    # 任务拆解
 │   │   ├── tool_router.py     # 工具路由
-│   │   └── memory/
-│   │       ├── session.py     # 会话记忆
-│   │       └── persistent.py  # 持久记忆
+│   │   ├── llm_client.py      # LLM 调用 (MiniMax/Claude/OpenAI)
+│   │   ├── skill_manager.py   # 技能系统
+│   │   ├── mcp_manager.py     # MCP 服务器管理
+│   │   ├── conversation_logger.py  # 对话持久化
+│   │   ├── data_store.py      # 版本与迁移管理
+│   │   ├── config.py          # Pydantic 配置模型
+│   │   ├── memory/
+│   │   │   ├── __init__.py
+│   │   │   └── session.py     # 会话记忆
+│   │   └── eval/
+│   │       ├── __init__.py
+│   │       ├── harness.py     # BeaverHarness 评估框架
+│   │       ├── task.py        # Benchmark/Task 数据模型
+│   │       ├── loader.py      # 基准测试加载器
+│   │       ├── runner.py      # 基准测试执行器
+│   │       ├── metrics.py      # 评分指标 (ExactMatch/CodeExecution)
+│   │       ├── prompting.py    # 提示词策略
+│   │       └── adapter.py     # 模型适配器 (Beaver/OpenAI/MiniMax)
 │   ├── tools/
 │   │   ├── __init__.py
 │   │   ├── code_gen.py         # 代码生成工具
@@ -105,7 +121,8 @@ beaver-agent/
 │   │   ├── github_tool.py     # GitHub API 封装
 │   │   ├── file_tool.py       # 文件读写搜索
 │   │   ├── terminal_tool.py   # 终端执行（安全沙箱）
-│   │   └── web_tool.py        # 网页搜索/爬取
+│   │   ├── code_analyzer.py   # 代码仓库分析
+│   │   └── browser_tool.py    # 浏览器自动化
 │   └── gateway/
 │       ├── router.py          # 消息路由器
 │       └── platforms/
@@ -253,7 +270,7 @@ github_operation →  github_tool.py
 
 ---
 
-## 十二、当前状态 (2026-04-28)
+## 十二、当前状态 (2026-05-04)
 
 | 项目 | 状态 |
 |------|------|
@@ -275,10 +292,18 @@ github_operation →  github_tool.py
 | Debugger | `src/beaver_agent/tools/debugger.py` | 错误调试 |
 | Terminal | `src/beaver_agent/tools/terminal_tool.py` | 命令执行 |
 | Code Analyzer | `src/beaver_agent/tools/code_analyzer.py` | 代码仓库分析 |
+| Browser Tool | `src/beaver_agent/tools/browser_tool.py` | 浏览器自动化 |
+| MCP Manager | `src/beaver_agent/core/mcp_manager.py` | MCP 服务器管理 |
+| Skill Manager | `src/beaver_agent/core/skill_manager.py` | 技能系统 |
+| Conversation Logger | `src/beaver_agent/core/conversation_logger.py` | 对话持久化 |
+| Data Store | `src/beaver_agent/core/data_store.py` | 版本与迁移管理 |
 | BeaverHarness | `src/beaver_agent/core/eval/harness.py` | 评估测试框架 |
 | Benchmark/Task | `src/beaver_agent/core/eval/task.py` | 基准测试数据模型 |
 | TaskLoader | `src/beaver_agent/core/eval/loader.py` | 基准测试加载器 |
+| Runner | `src/beaver_agent/core/eval/runner.py` | 基准测试执行器 |
 | Scorers | `src/beaver_agent/core/eval/metrics.py` | 评分指标 |
+| Prompting | `src/beaver_agent/core/eval/prompting.py` | 提示词策略 |
+| Session Memory | `src/beaver_agent/core/memory/session.py` | 会话记忆 |
 
 ### 自我进化
 
