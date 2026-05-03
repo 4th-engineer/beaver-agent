@@ -130,7 +130,7 @@ class GitHubTool:
                 return f"❌ Failed to get repo info: {response.status_code} - {response.text}"
 
         except Exception as e:
-            logger.error("github_api_failed")
+            logger.error("github_api_failed", exc_info=e)
             return f"❌ Error: {e}"
 
     def create_issue(self, owner: str, repo: str, title: str, body: str = "") -> str:
@@ -175,7 +175,7 @@ class GitHubTool:
                 return f"❌ Failed to create issue: {response.status_code} - {response.text}"
 
         except Exception as e:
-            logger.error("github_create_issue_failed")
+            logger.error("github_create_issue_failed", exc_info=e)
             return f"❌ Error: {e}"
 
     def list_issues(self, owner: str, repo: str, state: str = "open") -> str:
@@ -221,7 +221,7 @@ class GitHubTool:
                 return f"❌ Failed to list issues: {response.status_code}"
 
         except Exception as e:
-            logger.error("github_list_issues_failed", error=str(e))
+            logger.error("github_list_issues_failed", error=str(e), exc_info=e)
             return f"❌ Error: {e}"
 
     def get_issue(self, owner: str, repo: str, number: int) -> str:
@@ -272,7 +272,7 @@ class GitHubTool:
                 return f"❌ Issue not found: {response.status_code}"
 
         except Exception as e:
-            logger.error("github_get_issue_failed", error=str(e))
+            logger.error("github_get_issue_failed", error=str(e), exc_info=e)
             return f"❌ Error: {e}"
 
     def create_pr(
@@ -316,5 +316,5 @@ class GitHubTool:
                 return f"❌ Failed to create PR: {response.status_code} - {response.text}"
 
         except Exception as e:
-            logger.error("github_create_pr_failed", error=str(e))
+            logger.error("github_create_pr_failed", error=str(e), exc_info=e)
             return f"❌ Error: {e}"

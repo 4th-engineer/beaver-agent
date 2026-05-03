@@ -85,7 +85,7 @@ class TerminalTool:
         except subprocess.TimeoutExpired:
             return f"❌ Command timed out after {timeout}s"
         except Exception as e:
-            logger.error("command_execution_failed", command=command)
+            logger.error("command_execution_failed", command=command, exc_info=e)
             return f"❌ Error: {e}"
 
     def _is_blocked(self, command: str) -> bool:
@@ -154,7 +154,7 @@ class TerminalTool:
                     return result.stdout
                 return "No Windows System log errors found"
             except Exception as e:
-                logger.warning("error_reading_windows_log", error=str(e))
+                logger.warning("error_reading_windows_log", error=str(e), exc_info=e)
                 return f"Error reading Windows log: {e}"
 
         # Linux / macOS / other Unix
@@ -187,7 +187,7 @@ class TerminalTool:
             return "No log files found"
 
         except Exception as e:
-            logger.warning("error_log_read_failed", error=str(e))
+            logger.warning("error_log_read_failed", error=str(e), exc_info=e)
             return f"Error reading log: {e}"
 
     def _read_error_lines(self, path: str, lines: int) -> str:

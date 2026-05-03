@@ -82,7 +82,7 @@ class CodeAnalyzer:
         try:
             content = path.read_text(encoding="utf-8")
         except Exception as e:
-            logger.error("code_analyzer_read_error", path=str(path), error=str(e))
+            logger.error("code_analyzer_read_error", path=str(path), error=str(e), exc_info=e)
             return
 
         lines = content.split("\n")
