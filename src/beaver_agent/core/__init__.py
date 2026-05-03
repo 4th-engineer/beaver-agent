@@ -1,5 +1,7 @@
 """Core package — BeaverAgent, ToolRouter, LLM client, and related core components."""
 
+__all__ = ["BeaverAgent", "ToolRouter", "LLMClient", "LLMResponse", "BeaverConfig", "load_config"]
+
 from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.core.tool_router import ToolRouter
 from beaver_agent.core.llm_client import LLMClient, LLMResponse

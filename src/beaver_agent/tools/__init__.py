@@ -1,5 +1,16 @@
 """Tools package — BeaverAgent tool implementations."""
 
+__all__ = [
+    "FileTool",
+    "TerminalTool",
+    "CodeGenTool",
+    "CodeReviewTool",
+    "GitHubTool",
+    "BrowserTool",
+    "DebuggerTool",
+    "CodeAnalyzer",
+]
+
 from beaver_agent.tools.file_tool import FileTool
 from beaver_agent.tools.terminal_tool import TerminalTool
 from beaver_agent.tools.code_gen import CodeGenTool
