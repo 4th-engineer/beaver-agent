@@ -20,7 +20,7 @@ logger = structlog.get_logger()
 
 
 class BeaverAgent:
-    """Beaver Agent Agent - Main orchestration class with LLM"""
+    """Beaver Agent - Main orchestration class with LLM"""
 
     def __init__(self, config: BeaverConfig):
         """Initialize the BeaverAgent with configuration.
