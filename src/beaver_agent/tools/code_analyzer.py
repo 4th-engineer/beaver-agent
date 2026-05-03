@@ -325,7 +325,27 @@ class CodeAnalyzer:
         return calls
 
     def generate_tree(self) -> str:
-        """Generate text tree of the codebase"""
+        """Generate a text tree visualization of the codebase structure.
+
+        Produces a formatted ASCII tree showing:
+        - Module hierarchy with directory groupings
+        - Class definitions with bases, methods, and line numbers
+        - Top-level functions with line numbers
+        - Call graph connectivity indicators
+
+        Returns:
+            A formatted multi-line string representing the codebase map.
+            The output includes a summary header (modules/classes/functions counts),
+            the module tree, class details, call graph, and public API listings.
+
+        Example:
+            >>> analyzer = CodeAnalyzer("/path/to/project")
+            >>> analyzer.analyze()
+            >>> print(analyzer.generate_tree())
+            🦫 Beaver Agent - Code Repository Map
+            ============================================================
+            <...module tree...>
+        """
         lines = []
         lines.append("🦫 Beaver Agent - Code Repository Map")
         lines.append("=" * 60)
@@ -455,7 +475,31 @@ class CodeAnalyzer:
 
 
 def analyze_repository(root_path: str) -> str:
-    """Main entry point - analyze repo and return tree"""
+    """Analyze a repository and return a formatted code map.
+
+    This is the main entry point for the CodeAnalyzer module. It:
+    1. Discovers all Python source files under root_path (recursive)
+    2. Parses each file for imports, classes, functions, and docstrings
+    3. Builds a cross-module call graph
+    4. Produces a formatted tree visualization
+
+    Args:
+        root_path: Absolute or relative path to the repository root.
+            Must be a directory containing Python source files.
+
+    Returns:
+        A formatted multi-line string (same as CodeAnalyzer.generate_tree())
+        containing the complete code map with summary stats, module tree,
+        class details, call graph, and public API listings.
+
+    Example:
+        >>> result = analyze_repository("/path/to/project")
+        >>> print(result)
+        🦫 Beaver Agent - Code Repository Map
+        ============================================================
+        📊 Summary: 42 modules | 156 classes | 203 functions
+        <...full tree output...>
+    """
     analyzer = CodeAnalyzer(root_path)
     analyzer.analyze()
     return analyzer.generate_tree()
