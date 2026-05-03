@@ -11,6 +11,12 @@ class CodeGenTool:
     """Tool for generating code using LLM"""
 
     def __init__(self, config, llm_client):
+        """Initialize the CodeGenTool.
+
+        Args:
+            config: Application configuration object.
+            llm_client: LLM client instance for code generation.
+        """
         self.config = config
         self.llm = llm_client
 
