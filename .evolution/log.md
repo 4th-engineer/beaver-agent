@@ -108,6 +108,7 @@
 | 2026-05-04 11:00 | beaver-agent | Removed misleading Args/Returns docstrings from OpenAIAdapter.generate() and MiniMaxAdapter.generate() — both unconditionally raise NotImplementedError, so documenting fake parameters/return values was misleading | 87 tests passing |
 | 2026-05-04 12:00 | beaver-agent | Enhanced docstring for TaskPlanner.validate_plan — one-line placeholder replaced with full Args/Returns/Example sections documenting validation logic | 87 tests passing |
 | 2026-05-04 12:00 | beaver-agent | Added __all__ exports to cli/, core/, and tools/ __init__.py — consistent with eval/ and memory/ packages; explicit public API surface for each package | 87 tests passing |
+| 2026-05-04 13:00 | beaver-agent | Fixed architecture.md — replaced TaskLoader with BenchmarkRegistry (correct class name exported from loader.py) | 87 tests passing |
 | ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
