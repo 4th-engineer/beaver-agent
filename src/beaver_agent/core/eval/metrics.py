@@ -89,7 +89,7 @@ class CodeExecutionScorer(Scorer):
                 if str(result) == str(tc.get("expected", "")):
                     passed += 1
             except Exception as e:
-                logger.warning("code_execution_scoring_failed", error=str(e))
+                logger.warning("code_execution_scoring_failed", exc_info=e)
                 errors.append(str(e))
         score = passed / len(self.test_cases) if self.test_cases else 0.0
         return score, {"passed": passed, "total": len(self.test_cases), "errors": errors}
