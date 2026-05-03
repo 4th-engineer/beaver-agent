@@ -3,5 +3,16 @@
 from .harness import BeaverHarness
 from .task import Task, Benchmark, TaskResult
 from .runner import Runner
+from .loader import BenchmarkRegistry, get_benchmark_registry, register_benchmark, list_benchmarks
 
-__all__ = ["BeaverHarness", "Task", "Benchmark", "TaskResult", "Runner"]
+__all__ = [
+    "BeaverHarness",
+    "Task",
+    "Benchmark",
+    "TaskResult",
+    "Runner",
+    "BenchmarkRegistry",
+    "get_benchmark_registry",
+    "register_benchmark",
+    "list_benchmarks",
+]
