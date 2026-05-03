@@ -114,7 +114,8 @@
 | 2026-05-04 07:00 | beaver-agent | Removed misleading Args/Returns docstrings from OpenAIAdapter.generate() and MiniMaxAdapter.generate() — both unconditionally raise NotImplementedError, so documenting fake parameters/return values was misleading | 87 tests passing |
 | 2026-05-04 08:00 | beaver-agent | Added Scorer, ExactMatchScorer, SimilarityScorer, CodeExecutionScorer, CodeReviewScorer, get_scorer exports to eval/__init__.py — now consistent with tools/core/cli packages which export their key classes |
 | 2026-05-04 15:00 | beaver-agent | Enhanced BeaverHarness.run_single docstring — added Raises section, improved Args/Returns consistency with Runner.run_task |
-
+| 2026-05-04 06:00 | beaver-agent | Added DataStore, get_data_store, init_data_store to core/__all__ and imports — consistent with tools/core/__init__.py public API pattern | 87 tests passing |
+| 2026-05-04 16:00 | beaver-agent | Removed redundant str(e) in terminal_tool._get_windows_log (error_reading_windows_log) and code_analyzer._read_file (code_analyzer_read_error) — exc_info=e already captures exception in structlog | 87 tests passing |
 | 2026-05-04 06:00 | Added DataStore, get_data_store, init_data_store to core/__all__ and imports — consistent with tools/core/__init__.py public API pattern | 87 tests passing |
 
 ## Current Stage
