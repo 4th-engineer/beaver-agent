@@ -81,6 +81,7 @@
 | 2026-05-04 04:00 | Replaced str(e) with exc_info=e in CodeGenTool exception handlers (generate, complete_code, refactor) — consistent with recent TerminalTool and Runner fixes | 87 tests passing |
 | 2026-05-04 05:00 | Replaced str(e) with exc_info=e in core module exception handlers (tool_router, agent, skill_manager, conversation_logger, data_store, mcp_manager) — structlog captures exceptions automatically via exc_info | 87 tests passing |
 | 2026-05-04 06:00 | Replaced str(e) with exc_info=e in interactive.py REPL exception handler — consistent with recent core module fixes | 87 tests passing |
+| 2026-05-04 07:00 | Replaced str(e) with exc_info=e in FileTool (6 handlers) and DebuggerTool (4 handlers) — completes the exc_info consistency sweep across all tool modules | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
