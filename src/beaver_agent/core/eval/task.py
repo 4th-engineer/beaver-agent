@@ -73,6 +73,11 @@ class Benchmark:
         return self
 
     def __len__(self) -> int:
+        """Return the number of tasks in the benchmark.
+
+        Returns:
+            The count of tasks currently stored in this benchmark.
+        """
         return len(self.tasks)
 
     def get_task(self, task_id: str) -> Optional[Task]:
