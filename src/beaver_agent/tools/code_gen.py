@@ -56,7 +56,7 @@ class CodeGenTool:
 
         except Exception as e:
             logger.error("code_generation_failed", language=language, exc_info=e)
-            return f"❌ Code generation failed: {e}"
+            return "❌ Code generation failed. Check logs for details."
 
     def _generate_skeleton(self, description: str, language: str) -> str:
         """Generate code skeleton without LLM"""
@@ -130,7 +130,7 @@ Description: {description}
             return response.content
         except Exception as e:
             logger.error("code_completion_failed", language=language, exc_info=e)
-            return f"❌ Code completion failed: {e}"
+            return "❌ Code completion failed. Check logs for details."
 
     def refactor(
         self,
@@ -161,4 +161,4 @@ Description: {description}
             return response.content
         except Exception as e:
             logger.error("code_refactor_failed", language=language, style=style, exc_info=e)
-            return f"❌ Refactoring failed: {e}"
+            return "❌ Refactoring failed. Check logs for details."
