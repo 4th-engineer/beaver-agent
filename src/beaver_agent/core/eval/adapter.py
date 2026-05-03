@@ -72,13 +72,6 @@ class OpenAIAdapter(ModelAdapter):
     def generate(self, prompt: str, **kwargs) -> str:
         """Generate text using OpenAI-compatible API.
 
-        Args:
-            prompt: The input prompt to send to the LLM.
-            **kwargs: Additional keyword arguments (e.g., temperature, max_tokens).
-
-        Returns:
-            The generated text response from the LLM.
-
         Raises:
             NotImplementedError: OpenAI adapter is not yet implemented.
         """
@@ -108,13 +101,6 @@ class MiniMaxAdapter(ModelAdapter):
 
     def generate(self, prompt: str, **kwargs) -> str:
         """Generate text using MiniMax API.
-
-        Args:
-            prompt: The input prompt to send to the LLM.
-            **kwargs: Additional keyword arguments passed to the API.
-
-        Returns:
-            The generated text response from the LLM.
 
         Raises:
             NotImplementedError: MiniMax adapter is not yet implemented.
