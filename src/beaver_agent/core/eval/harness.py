@@ -106,10 +106,14 @@ class BeaverHarness:
         """Run one task immediately and return its result.
 
         Args:
-            task: The Task to execute.
+            task: The Task to execute (contains prompt, reference, task_type).
 
         Returns:
-            A TaskResult with the execution outcome.
+            A TaskResult with prediction, score, metrics, and duration.
+            On exception, returns TaskResult with success=False and error message.
+
+        Raises:
+            See Runner.run_task for task-level exceptions that may propagate.
         """
         return self.runner.run_task(task)
 
