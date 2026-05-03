@@ -121,7 +121,28 @@ Code:
         error: str,
         stack_trace: Optional[str] = None
     ) -> str:
-        """Basic error analysis without LLM"""
+        """Perform basic error analysis without LLM by pattern-matching common errors.
+
+        Uses a built-in dictionary of common Python error types to provide
+        instant Chinese-language diagnosis and fix suggestions when the LLM
+        is unavailable or an error matches a known pattern.
+
+        Args:
+            error: The error message or exception string to analyze.
+            stack_trace: Optional stack trace string for deeper context.
+
+        Returns:
+            A formatted markdown string with error details, detected type
+            (if any), cause explanation, and fix suggestions in Chinese.
+
+        Example:
+            >>> result = tool._basic_error_analysis(
+            ...     "KeyError: 'config'",
+            ...     stack_trace=None
+            ... )
+            >>> "KeyError" in result
+            True
+        """
 
         error_lower = error.lower()
 
