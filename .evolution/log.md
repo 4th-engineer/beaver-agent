@@ -111,7 +111,9 @@
 | 2026-05-04 13:00 | beaver-agent | Fixed architecture.md — replaced TaskLoader with BenchmarkRegistry (correct class name exported from loader.py) | 87 tests passing |
 | 2026-05-04 06:00 | beaver-agent | Added comprehensive docstrings to CodeAnalyzer.generate_tree and analyze_repository — replaced one-line placeholders with full Args/Returns/Example sections documenting the full code map generation pipeline | 87 tests passing |
 | 2026-05-04 14:00 | beaver-agent | Added BenchmarkRegistry, get_benchmark_registry, register_benchmark, list_benchmarks to eval/__init__.py exports — consistent with tools/core/cli packages which export their key classes | 87 tests passing |
-| ## Current Stage
+| 2026-05-04 07:00 | beaver-agent | Removed nonexistent adapter.py from architecture.md directory tree — doc now matches actual project structure | 87 tests passing |
+
+## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
 
