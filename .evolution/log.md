@@ -76,6 +76,7 @@
 | 2026-05-03 08:00 | Enhanced docstrings for DataStore.set_version and get_applied_migrations with Args/Returns/Raises sections | 87 tests passing |
 | 2026-05-04 00:00 | Added per-task timeout to Runner.run_benchmark (120s default) with TimeoutError → TaskResult fallback; prevents hung tasks from blocking entire benchmark runs |
 | 2026-05-04 01:00 | Fixed class docstring typo: 'Beaver Agent Agent' → 'Beaver Agent' in core/agent.py | 87 tests passing |
+| 2026-05-04 02:00 | Removed redundant str(e) from structlog error calls in TerminalTool and GitHubTool — structlog captures exception automatically | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
