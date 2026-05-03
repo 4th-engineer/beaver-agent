@@ -105,6 +105,7 @@
 | 2026-05-04 06:00 | beaver-agent | Added docstring to MCPConfig.handle_mcp_servers_key field validator — explains servers/mcp_servers alias handling |
 | 2026-05-04 06:00 | beaver-agent | Updated architecture.md — fixed module list (added BrowserTool, MCPManager, SkillManager, ConversationLogger, DataStore, Runner, Prompting; removed nonexistent persistent.py and web_tool.py), synced eval/ directory structure, updated date to 2026-05-04 | 87 tests passing |
 | 2026-05-04 11:00 | beaver-agent | Added module docstrings and public exports to cli/, core/, and tools/ __init__.py files — all three previously empty inits now documented | 87 tests passing |
+| 2026-05-04 11:00 | beaver-agent | Removed misleading Args/Returns docstrings from OpenAIAdapter.generate() and MiniMaxAdapter.generate() — both unconditionally raise NotImplementedError, so documenting fake parameters/return values was misleading | 87 tests passing |
 | ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
