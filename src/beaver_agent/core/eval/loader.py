@@ -86,8 +86,8 @@ class BenchmarkRegistry:
             try:
                 bm = TaskLoader.from_harness_format(str(fp))
                 self.register(bm)
-            except Exception:
-                logger.warning("skipped_invalid_benchmark_file", path=str(fp))
+            except Exception as e:
+                logger.warning("skipped_invalid_benchmark_file", path=str(fp), exc_info=e)
         return self
 
 
