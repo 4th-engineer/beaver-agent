@@ -92,6 +92,7 @@
 | 2026-05-04 03:00 | beaver-agent | Replaced str(e) with exc_info=e in CodeExecutionScorer.score() in metrics.py — completes full exc_info sweep across all beaver-agent modules | 87 tests passing |
 | 2026-05-04 04:00 | beaver-agent | Added docstrings to Runner.__init__ (Args/Attributes), run_task (Args/Returns), and summarize_results (Args/Returns) — completes docstring coverage for all Runner methods | 87 tests passing |
 | 2026-05-04 05:00 | beaver-agent | Removed redundant str(e) where exc_info=e already captures exception in terminal_tool (2), browser_tool (1), github_tool (1) | 87 tests passing |
+| 2026-05-04 06:00 | beaver-agent | Enhanced docstring for run_repl() — added Args/Raises/Example sections, documents REPL behavior for new contributors | 87 tests passing |
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
