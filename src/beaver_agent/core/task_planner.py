@@ -146,7 +146,29 @@ class TaskPlanner:
         return params
 
     def validate_plan(self, tasks: List[Dict[str, Any]]) -> bool:
-        """Validate that a task plan is executable"""
+        """Validate that a task plan is executable.
+
+        Checks that the task list is non-empty and that each task dict
+        contains both ``tool`` and ``action`` keys required for execution.
+
+        Args:
+            tasks: A list of task dictionaries, each representing a step
+                in the execution plan (e.g., ``[{"tool": "file_tool",
+                "action": "read_file", ...}, ...]``).
+
+        Returns:
+            True if the plan is valid (non-empty and all tasks have
+            ``tool`` and ``action`` fields); False otherwise.
+
+        Example:
+            >>> planner = TaskPlanner()
+            >>> planner.validate_plan([])
+            False
+            >>> planner.validate_plan([{"tool": "file_tool", "action": "read"}])
+            True
+            >>> planner.validate_plan([{"tool": "file_tool"}])
+            False
+        """
         if not tasks:
             return False
 
