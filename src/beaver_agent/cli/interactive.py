@@ -71,7 +71,7 @@ def run_repl(config: BeaverConfig) -> None:
         except EOFError:
             break
         except Exception as e:
-            logger.error("repl_error", error=str(e))
+            logger.error("repl_error", exc_info=e)
             console.print(f"[red]✗ 错误:[/red] {e}")
             if config.app.debug:
                 import traceback

@@ -51,7 +51,7 @@ class FileTool:
                 return f"📄 {path} ({len(content.splitlines())} 行):\n{content}"
 
         except Exception as e:
-            logger.error("read_file_failed", path=file_path, error=str(e))
+            logger.error("read_file_failed", path=file_path, exc_info=e)
             return f"Error reading file: {e}"
 
     def write_file(self, file_path: str, content: str) -> str:
