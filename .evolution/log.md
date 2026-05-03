@@ -77,6 +77,7 @@
 | 2026-05-04 00:00 | Added per-task timeout to Runner.run_benchmark (120s default) with TimeoutError → TaskResult fallback; prevents hung tasks from blocking entire benchmark runs |
 | 2026-05-04 01:00 | Fixed class docstring typo: 'Beaver Agent Agent' → 'Beaver Agent' in core/agent.py | 87 tests passing |
 | 2026-05-04 02:00 | Removed redundant str(e) from structlog error calls in TerminalTool and GitHubTool — structlog captures exception automatically | 87 tests passing |
+| 2026-05-04 03:00 | Replaced redundant str(e) with exc_info=e in Runner.run_task exception handler — consistent with other core modules | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
