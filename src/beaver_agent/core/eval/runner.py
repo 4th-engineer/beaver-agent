@@ -24,12 +24,34 @@ class Runner:
         max_workers: int = 4,
         timeout_per_task: int = 120,
     ):
+        """Initialize the Runner with a model adapter and execution settings.
+
+        Args:
+            adapter: A ModelAdapter instance (e.g., BeaverAdapter) used to
+                generate LLM responses for each task.
+            max_workers: Maximum number of tasks to run concurrently (default: 4).
+            timeout_per_task: Per-task timeout in seconds (default: 120). Tasks
+                that exceed this limit return a TaskResult with an error.
+
+        Attributes:
+            adapter: The model adapter used for generation.
+            max_workers: Concurrency limit for task execution.
+            timeout: Per-task timeout in seconds.
+        """
         self.adapter = adapter
         self.max_workers = max_workers
         self.timeout = timeout_per_task
 
     def run_task(self, task: Task) -> TaskResult:
-        """Run a single task and return the result."""
+        """Run a single task and return the result.
+
+        Args:
+            task: The Task to execute (contains prompt, reference, task_type).
+
+        Returns:
+            A TaskResult with prediction, score, metrics, and duration.
+            On exception, returns TaskResult with success=False and error message.
+        """
         start = time.time()
         try:
             # Build prompt using strategy
@@ -107,7 +129,15 @@ class Runner:
         return results
 
     def summarize_results(self, results: list[TaskResult]) -> dict[str, Any]:
-        """Aggregate results into a summary dict."""
+        """Aggregate results into a summary dict.
+
+        Args:
+            results: List of TaskResult objects from a benchmark run.
+
+        Returns:
+            A dict with keys: total, passed, failed, pass_rate, avg_score,
+            avg_duration_ms, and results (the original list).
+        """
         total = len(results)
         passed = sum(1 for r in results if r.success)
         avg_score = sum(r.score for r in results) / total if total else 0.0
