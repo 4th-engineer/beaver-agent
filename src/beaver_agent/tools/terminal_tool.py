@@ -18,6 +18,13 @@ class TerminalTool:
     ]
 
     def __init__(self, config):
+        """Initialize the TerminalTool with configuration.
+
+        Args:
+            config: Configuration object for the tool. Must provide any
+                settings needed for command execution (e.g., allowed directories,
+                environment variables, timeout defaults).
+        """
         self.config = config
 
     def execute(
@@ -89,7 +96,17 @@ class TerminalTool:
             return f"❌ Error: {e}"
 
     def _is_blocked(self, command: str) -> bool:
-        """Check if command contains blocked patterns"""
+        """Check if command contains blocked security patterns.
+
+        Scans the command string for known dangerous patterns (e.g., recursive
+        rm, fork bombs, disk operations) defined in BLOCKED_COMMANDS.
+
+        Args:
+            command: The raw command string to check (case-insensitive scan).
+
+        Returns:
+            True if the command matches any blocked pattern, False otherwise.
+        """
         command_lower = command.lower()
         for blocked in self.BLOCKED_COMMANDS:
             if blocked.lower() in command_lower:
@@ -191,7 +208,19 @@ class TerminalTool:
             return f"Error reading log: {e}"
 
     def _read_error_lines(self, path: str, lines: int) -> str:
-        """Read and filter error lines from a log file."""
+        """Read and filter error lines from a log file.
+
+        Opens the log file at the given path, reads the most recent N lines,
+        and filters for lines containing 'error', 'exception', or 'fail'.
+
+        Args:
+            path: Absolute path to the log file to read.
+            lines: Maximum number of lines to read from the end of the file.
+
+        Returns:
+            A formatted string of matching error lines prefixed with the file path,
+            or an empty string if no errors are found or on PermissionError.
+        """
         import os
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as f:
