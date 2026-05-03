@@ -94,7 +94,8 @@
 | 2026-05-04 05:00 | beaver-agent | Removed redundant str(e) where exc_info=e already captures exception in terminal_tool (2), browser_tool (1), github_tool (1) | 87 tests passing |
 | 2026-05-04 06:00 | beaver-agent | Enhanced docstring for run_repl() — added Args/Raises/Example sections, documents REPL behavior for new contributors | 87 tests passing |
 | 2026-05-04 07:00 | beaver-agent | Full audit: no TODO/FIXME remaining, no bare except bugs, pixel_pilot.py fallback pattern correct, print() in docstrings are documentation — all 87 tests passing, exc_info sweep complete | 87 tests passing |
-## Current Stage
+| 2026-05-04 08:00 | beaver-agent | Added docstrings to SkillManager.__init__ (Args/project_root, skills_dirs, loading order) and IntentParser.__init__ (Args/skill_manager) — last two undocumented __init__ methods now documented | 87 tests passing |
+|## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
 
