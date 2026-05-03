@@ -33,7 +33,13 @@ class CodeReviewIssue:
         self.suggestion = suggestion
 
     def format(self) -> str:
-        """Format issue as string"""
+        """Format issue as a human-readable string with emoji severity indicator.
+
+        Returns:
+            A formatted string representing the code review issue, including
+            emoji severity indicator, severity level, line number (if applicable),
+            issue message, and an optional suggestion.
+        """
         emoji = {
             "critical": "🔴",
             "major": "🟠",
