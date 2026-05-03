@@ -74,7 +74,7 @@ class LLMClient:
             logger.info("llm_client_initialized", provider=self.provider, model=self.model)
 
         except ImportError as e:
-            logger.error("llm_client_import_failed", error=str(e))
+            logger.error("llm_client_import_failed", exc_info=e)
             self._call = self._call_fallback
 
     def _call_anthropic(self, messages: List[Dict], **kwargs) -> LLMResponse:
@@ -175,19 +175,19 @@ class LLMClient:
                 # Authentication error - let it propagate so fallback kicks in
                 logger.warning("minimax_auth_failed", status_code=401)
                 raise
-            logger.error("minimax_http_error", status_code=e.response.status_code, detail=str(e))
+            logger.error("minimax_http_error", status_code=e.response.status_code, detail=str(e), exc_info=e)
             return LLMResponse(
                 content=f"HTTP error {e.response.status_code}: {e.response.text}",
                 model=self.model
             )
         except httpx.RequestError as e:
-            logger.error("minimax_request_error", error=str(e))
+            logger.error("minimax_request_error", exc_info=e)
             return LLMResponse(
                 content=f"Request error: {e}",
                 model=self.model
             )
         except Exception as e:
-            logger.error("minimax_unknown_error", error=str(e))
+            logger.error("minimax_unknown_error", exc_info=e)
             return LLMResponse(
                 content=f"Unexpected error: {e}",
                 model=self.model
