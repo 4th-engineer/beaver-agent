@@ -73,8 +73,35 @@ class TaskPlanner:
         return planned_tasks
 
     def _extract_params(self, user_input: str, intent: str) -> Dict[str, Any]:
-        """Extract parameters from user input"""
+        """Extract structured parameters from user input for task planning.
 
+        Parses the user input to extract actionable parameters based on the
+        detected intent — file paths, language hints, error messages, and
+        GitHub references. Falls back to sensible defaults (e.g., Python)
+        when specific values are not found.
+
+        Args:
+            user_input: Raw user input string to parse.
+            intent: The intent type detected by parse() (e.g., "code_generation",
+                "code_refactor", "debug"). Different intents extract different
+                parameter sets — code_generation saves the full description.
+
+        Returns:
+            A dictionary of extracted parameters. Common keys include:
+            - description (str): Full user input, set for code_generation intent.
+            - file_path (str): First matched file path from input.
+            - language (str): Detected programming language, defaults to "python".
+            - error (str): First matched error message from input.
+            - repo (str): GitHub repository in "owner/repo" format.
+
+        Example:
+            >>> planner = TaskPlanner()
+            >>> planner._extract_params(
+            ...     "帮我写一个 Python 函数来处理文件",
+            ...     "code_generation"
+            ... )
+            {'description': '帮我写一个 Python 函数来处理文件', 'language': 'python'}
+        """
         params: Dict[str, Any] = {}
 
         # For code generation, save the full description
