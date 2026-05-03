@@ -50,6 +50,12 @@ class Skill:
     # Backward compatibility: if no phases, use the whole content as one phase
     @property
     def is_structured(self) -> bool:
+        """Check if this skill uses the structured multi-phase format.
+
+        Returns:
+            True if the skill has phases defined (structured format),
+            False if it uses the legacy single-content format.
+        """
         return len(self.phases) > 0
 
     def matches(self, user_input: str) -> bool:
@@ -61,6 +67,14 @@ class Skill:
         return trigger_lower in input_lower
 
     def to_dict(self) -> Dict[str, Any]:
+        """Serialize the skill to a dictionary for JSON export.
+
+        Converts the skill's fields (name, category, description, trigger,
+        when_to_use, phases, steps) into a nested dict structure.
+
+        Returns:
+            A dictionary representation of the skill suitable for JSON serialization.
+        """
         return {
             "name": self.name,
             "category": self.category,
