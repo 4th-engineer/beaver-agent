@@ -41,6 +41,13 @@ class ModuleInfo:
 class CodeAnalyzer:
     """Analyze Python repository and build dependency graph"""
 
+    # Compiled regex patterns (class-level, compiled once)
+    _RE_FROM_IMPORT = re.compile(r"from\s+(\.[+]?\w*)\s+import\s+(.+)")
+    _RE_CLASS_DEF = re.compile(r"class\s+(\w+)\s*(\([^)]*\))?\s*:")
+    _RE_FUNC_DEF = re.compile(r"def\s+(\w+)\s*\(([^)]*)\)")
+    _RE_FUNC_DEF_SIMPLE = re.compile(r"def\s+(\w+)\s*\(")
+    _RE_FUNC_CALLS = re.compile(r"(?:(\w+)\.)?(\w+)\s*\(")
+
     def __init__(self, root_path: str):
         """Initialize the CodeAnalyzer with a project root path.
 
@@ -132,7 +139,7 @@ class CodeAnalyzer:
                 name = line.replace("import ", "").split(" as ")[0].strip()
                 imports.append(name)
             elif line.startswith("from "):
-                match = re.match(r"from\s+(\.[+]?\w*)\s+import\s+(.+)", line)
+                match = self._RE_FROM_IMPORT.match(line)
                 if match:
                     from_module = match.group(1)
                     items = [x.strip().split(" as ")[0] for x in match.group(2).split(",")]
@@ -147,7 +154,7 @@ class CodeAnalyzer:
 
         for i, line in enumerate(lines):
             # Class definition
-            match = re.match(r"class\s+(\w+)\s*(\([^)]*\))?\s*:", line)
+            match = self._RE_CLASS_DEF.match(line)
             if match:
                 name = match.group(1)
                 bases = match.group(2).strip("() ").split(",") if match.group(2) else []
@@ -180,7 +187,7 @@ class CodeAnalyzer:
 
             # Check for decorated or normal function
             if line.startswith("def "):
-                match = re.match(r"def\s+(\w+)\s*\(([^)]*)\)", line)
+                match = self._RE_FUNC_DEF.match(line)
                 if match:
                     name = match.group(1)
                     decorators = self._get_decorators(lines, i)
@@ -262,7 +269,7 @@ class CodeAnalyzer:
             if line.strip() and not line.startswith(" " * (class_indent + 1)):
                 break
             if line.strip().startswith("def "):
-                match = re.match(r"def\s+(\w+)\s*\(", line.strip())
+                match = self._RE_FUNC_DEF_SIMPLE.match(line.strip())
                 if match:
                     methods.append(match.group(1))
             i += 1
@@ -273,7 +280,7 @@ class CodeAnalyzer:
         """Find function calls in a code block"""
         calls = []
         # Match function calls like foo() or module.foo()
-        matches = re.findall(r"(?:(\w+)\.)?(\w+)\s*\(", body)
+        matches = self._RE_FUNC_CALLS.findall(body)
         for match in matches:
             if match[1] not in ("if", "else", "for", "while", "try", "except", "finally",
                                 "with", "as", "in", "is", "not", "and", "or", "True",
