@@ -67,7 +67,17 @@ class Runner:
             )
 
     def run_benchmark(self, benchmark_name: str) -> list[TaskResult]:
-        """Run all tasks in a benchmark."""
+        """Run all tasks in a benchmark with per-task timeout.
+
+        Args:
+            benchmark_name: Name of the benchmark to run (must be registered).
+
+        Returns:
+            A list of TaskResult objects, one per task in the benchmark.
+
+        Raises:
+            ValueError: If the benchmark is not found in the registry.
+        """
         registry = get_benchmark_registry()
         benchmark = registry.get(benchmark_name)
         if not benchmark:
@@ -78,7 +88,20 @@ class Runner:
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             futures = {executor.submit(self.run_task, task): task for task in benchmark.tasks}
             for future in as_completed(futures):
-                results.append(future.result())
+                task = futures[future]
+                try:
+                    result = future.result(timeout=self.timeout)
+                    results.append(result)
+                except TimeoutError:
+                    logger.warning("task_timeout", task_id=task.id, timeout_s=self.timeout)
+                    results.append(TaskResult(
+                        task_id=task.id,
+                        success=False,
+                        prediction="",
+                        score=0.0,
+                        error=f"Task timed out after {self.timeout}s",
+                        duration_ms=self.timeout * 1000,
+                    ))
 
         logger.info("benchmark_completed", benchmark=benchmark_name, result_count=len(results))
         return results
