@@ -214,7 +214,20 @@ class DataStore:
         )
     
     def get_pending_migrations(self) -> List[Migration]:
-        """Get migrations that need to run"""
+        """Get migrations that need to run.
+
+        Compares the current data version against all registered migrations
+        and returns those that are newer than the current version and have
+        not yet been applied.
+
+        Returns:
+            List of Migration objects that are pending, sorted by version
+            in ascending order. Returns empty list if no migrations are
+            pending or all have been applied.
+
+        Raises:
+            No explicit raises — failures are logged and return [].
+        """
         current = self.get_version()
         applied = self.get_applied_migrations()
         
@@ -377,7 +390,19 @@ class DataStore:
         }
     
     def get_log_files(self) -> List[Path]:
-        """Get all log files sorted by modification time (newest first)"""
+        """Get all log files sorted by modification time (newest first).
+
+        Searches the logs directory for conversation log files matching
+        the pattern 'conversation_*.jsonl'.
+
+        Returns:
+            List of Path objects for log files, sorted by modification
+            time in descending order (newest first). Returns empty list
+            if the logs directory does not exist or contains no log files.
+
+        Raises:
+            No explicit raises — missing directory returns [].
+        """
         if not self.logs_dir.exists():
             return []
         return sorted(
@@ -419,11 +444,31 @@ class DataStore:
         }
     
     def is_legacy(self) -> bool:
-        """Check if this is a legacy installation (before user/system separation)"""
+        """Check if this is a legacy installation (before user/system separation).
+
+        A legacy installation is detected by the absence of a version file,
+        indicating the data store predates the migration system.
+
+        Returns:
+            True if no version file exists (legacy), False otherwise.
+
+        Raises:
+            No explicit raises.
+        """
         return not self.version_file.exists()
     
     def is_migration_needed(self) -> bool:
-        """Check if any migration is pending"""
+        """Check if any migration is pending.
+
+        Convenience method that returns whether there are pending migrations
+        that need to be applied to bring the data store up to date.
+
+        Returns:
+            True if there are pending migrations, False otherwise.
+
+        Raises:
+            No explicit raises.
+        """
         return len(self.get_pending_migrations()) > 0
 
 
