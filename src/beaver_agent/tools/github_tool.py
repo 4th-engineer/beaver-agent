@@ -131,7 +131,7 @@ class GitHubTool:
 
         except Exception as e:
             logger.error("github_api_failed", exc_info=e)
-            return f"❌ Error: {e}"
+            return "❌ Error: Check logs for details."
 
     def create_issue(self, owner: str, repo: str, title: str, body: str = "") -> str:
         """Create a new issue in a repository.
@@ -176,7 +176,7 @@ class GitHubTool:
 
         except Exception as e:
             logger.error("github_create_issue_failed", exc_info=e)
-            return f"❌ Error: {e}"
+            return "❌ Error: Check logs for details."
 
     def list_issues(self, owner: str, repo: str, state: str = "open") -> str:
         """List issues from a repository.
@@ -222,7 +222,7 @@ class GitHubTool:
 
         except Exception as e:
             logger.error("github_list_issues_failed", exc_info=e)
-            return f"❌ Error: {e}"
+            return "❌ Error: Check logs for details."
 
     def get_issue(self, owner: str, repo: str, number: int) -> str:
         """Get details of a specific issue.
@@ -273,7 +273,7 @@ class GitHubTool:
 
         except Exception as e:
             logger.error("github_get_issue_failed", exc_info=e)
-            return f"❌ Error: {e}"
+            return "❌ Error: Check logs for details."
 
     def create_pr(
         self,
@@ -317,4 +317,4 @@ class GitHubTool:
 
         except Exception as e:
             logger.error("github_create_pr_failed", exc_info=e)
-            return f"❌ Error: {e}"
+            return "❌ Error: Check logs for details."
