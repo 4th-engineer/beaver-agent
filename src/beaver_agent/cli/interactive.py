@@ -21,7 +21,26 @@ logger = structlog.get_logger()
 
 
 def run_repl(config: BeaverConfig) -> None:
-    """Run the interactive REPL loop"""
+    """Run the interactive REPL loop.
+
+    Initializes a BeaverAgent instance and enters a read-eval-print loop,
+    processing user input until EOF, /exit command, or KeyboardInterrupt.
+
+    Args:
+        config: BeaverConfig instance with CLI, app, and agent settings.
+            Controls welcome banner, prompt symbol, and debug mode.
+
+    Raises:
+        KeyboardInterrupt: User pressed Ctrl+C to exit.
+        EOFError: User sent end-of-file (Ctrl+D on Unix).
+        Exception: Any unhandled exception in the agent or tool layer is
+            logged with structlog and displayed via Rich console.
+
+    Example:
+        >>> from beaver_agent.core.config import BeaverConfig
+        >>> config = BeaverConfig.from_env()
+        >>> run_repl(config)  # Blocks until user exits
+    """
 
     # Print welcome banner
     if config.cli.welcome_banner:
