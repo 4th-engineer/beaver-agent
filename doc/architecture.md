@@ -299,7 +299,7 @@ github_operation →  github_tool.py
 | Data Store | `src/beaver_agent/core/data_store.py` | 版本与迁移管理 |
 | BeaverHarness | `src/beaver_agent/core/eval/harness.py` | 评估测试框架 |
 | Benchmark/Task | `src/beaver_agent/core/eval/task.py` | 基准测试数据模型 |
-| TaskLoader | `src/beaver_agent/core/eval/loader.py` | 基准测试加载器 |
+| BenchmarkRegistry | `src/beaver_agent/core/eval/loader.py` | 基准测试注册表 |
 | Runner | `src/beaver_agent/core/eval/runner.py` | 基准测试执行器 |
 | Scorers | `src/beaver_agent/core/eval/metrics.py` | 评分指标 |
 | Prompting | `src/beaver_agent/core/eval/prompting.py` | 提示词策略 |
