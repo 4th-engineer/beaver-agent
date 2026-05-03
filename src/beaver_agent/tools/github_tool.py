@@ -272,7 +272,7 @@ class GitHubTool:
                 return f"❌ Issue not found: {response.status_code}"
 
         except Exception as e:
-            logger.error("github_get_issue_failed", error=str(e), exc_info=e)
+            logger.error("github_get_issue_failed", exc_info=e)
             return f"❌ Error: {e}"
 
     def create_pr(
@@ -316,5 +316,5 @@ class GitHubTool:
                 return f"❌ Failed to create PR: {response.status_code} - {response.text}"
 
         except Exception as e:
-            logger.error("github_create_pr_failed", error=str(e), exc_info=e)
+            logger.error("github_create_pr_failed", exc_info=e)
             return f"❌ Error: {e}"
