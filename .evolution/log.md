@@ -94,7 +94,7 @@
 | 2026-05-04 04:00 | beaver-agent | Added docstrings to Runner.__init__ (Args/Attributes), run_task (Args/Returns), and summarize_results (Args/Returns) — completes docstring coverage for all Runner methods | 87 tests passing |
 | 2026-05-04 05:00 | beaver-agent | Removed redundant str(e) where exc_info=e already captures exception in terminal_tool (2), browser_tool (1), github_tool (1) | 87 tests passing |
 | 2026-05-04 06:00 | beaver-agent | Enhanced docstring for run_repl() — added Args/Raises/Example sections, documents REPL behavior for new contributors | 87 tests passing |
-| 2026-05-04 07:00 | beaver-agent | Full audit: no TODO/FIXME remaining, no bare except bugs, pixel_pilot.py fallback pattern correct, print() in docstrings are documentation — all 87 tests passing, exc_info sweep complete | 87 tests passing |
+| 2026-05-04 07:00 | Full audit: no TODO/FIXME remaining, no bare except bugs, pixel_pilot.py fallback pattern correct, print() in docstrings are documentation — all 87 tests passing, exc_info sweep complete | 87 tests passing |
 | 2026-05-04 08:00 | beaver-agent | Added docstrings to SkillManager.__init__ (Args/project_root, skills_dirs, loading order) and IntentParser.__init__ (Args/skill_manager) — last two undocumented __init__ methods now documented | 87 tests passing |
 | 2026-05-04 09:00 | beaver-agent | Removed redundant str(e) in CodeGenTool error messages (generate, complete_code, refactor) — exc_info=e already captures exception in logs | 87 tests passing |
 | 2026-05-04 04:00 | beaver-agent | Replaced str(e) with exc_info=e in LLMClient exception handlers (minimax_http_error, minimax_request_error, minimax_unknown_error, llm_client_import_failed) — consistent with full exc_info sweep | 87 tests passing |
@@ -113,6 +113,7 @@
 | 2026-05-04 14:00 | beaver-agent | Added BenchmarkRegistry, get_benchmark_registry, register_benchmark, list_benchmarks to eval/__init__.py exports — consistent with tools/core/cli packages which export their key classes | 87 tests passing |
 | 2026-05-04 07:00 | beaver-agent | Removed misleading Args/Returns docstrings from OpenAIAdapter.generate() and MiniMaxAdapter.generate() — both unconditionally raise NotImplementedError, so documenting fake parameters/return values was misleading | 87 tests passing |
 | 2026-05-04 08:00 | beaver-agent | Added Scorer, ExactMatchScorer, SimilarityScorer, CodeExecutionScorer, CodeReviewScorer, get_scorer exports to eval/__init__.py — now consistent with tools/core/cli packages which export their key classes |
+| 2026-05-04 15:00 | beaver-agent | Enhanced BeaverHarness.run_single docstring — added Raises section, improved Args/Returns consistency with Runner.run_task |
 
 ## Current Stage
 - 87 tests passing
