@@ -142,6 +142,18 @@ class SkillManager:
     SKILL_FILE = "SKILL.md"
 
     def __init__(self, project_root: Path, skills_dirs: Dict[str, Path] = None):
+        """Initialize SkillManager and load all skills from disk.
+
+        Args:
+            project_root: Root directory of the project (used to resolve
+                relative skill directories).
+            skills_dirs: Optional dict mapping category names to directories.
+                Defaults to ``{"builtin": project_root/data/skills/builtin",
+                "user": project_root/data/skills/user"}``.
+
+        Loads builtin skills first, then user skills. User skills with the
+        same name as builtin skills override them.
+        """
         self.project_root = project_root
         self._skills: Dict[str, Skill] = {}
         
