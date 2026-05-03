@@ -86,7 +86,6 @@ beaver-agent/
 │   ├── main.py                # CLI 入口 beaver run
 │   ├── cli/
 │   │   ├── __init__.py
-│   │   ├── adapter.py          # CLI 适配器（命令解析/补全/彩色输出）
 │   │   ├── commands.py         # 内置命令（/help /exit /model）
 │   │   └── interactive.py      # 交互式 REPL
 │   ├── core/
