@@ -161,7 +161,7 @@ def _test_connection() -> bool:
             return resp.status == 200
     except Exception as e:
         if _has_structlog:
-            _logger.warning("connection_test_failed", url=_viewer_url, error=str(e))
+            _logger.warning("connection_test_failed", url=_viewer_url, exc_info=e)
         else:
             print(f"[PixelPilot] ⚠️  Connection test failed for {_viewer_url}: {e}")
         return False
@@ -189,7 +189,7 @@ def _post_event(event: Dict[str, Any]) -> bool:
         return False
     except Exception as e:
         if _has_structlog:
-            _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"), error=str(e))
+            _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"), exc_info=e)
         else:
             print(f"[PixelPilot] ⚠️  Failed to post event ({event.get('type')}) to {_viewer_url}: {e}")
         return False
@@ -202,7 +202,7 @@ def _get_agent_name(self) -> str:
         return getattr(app, "name", "beaver") if app else "beaver"
     except Exception as e:
         if _has_structlog:
-            _logger.warning("get_agent_name_failed", error=str(e))
+            _logger.warning("get_agent_name_failed", exc_info=e)
         return "beaver"
 
 
@@ -306,11 +306,11 @@ def _patch_tool_router() -> None:
 
     except ImportError as e:
         if _has_structlog:
-            _logger.warning("could_not_patch_toolrouter", error=str(e))
+            _logger.warning("could_not_patch_toolrouter", exc_info=e)
         else:
             print(f"[PixelPilot] Warning: Could not patch ToolRouter: {e}")
     except Exception as e:
         if _has_structlog:
-            _logger.warning("patching_failed", error=str(e))
+            _logger.warning("patching_failed", exc_info=e)
         else:
             print(f"[PixelPilot] Warning: Patching failed: {e}")

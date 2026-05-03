@@ -85,6 +85,7 @@
 | 2026-05-04 01:00 | beaver-agent | Added exc_info=e to remaining 4 tool modules (github_tool 5, terminal_tool 3, browser_tool 1, code_analyzer 1) — completes full exc_info sweep across all beaver-agent modules | 87 tests passing |
 | 2026-05-04 02:00 | beaver-agent | Added docstrings to Skill.is_structured (property, explains structured vs legacy format) and to_dict (Args/Returns sections for JSON serialization) | 87 tests passing |
 | 2026-05-04 03:00 | beaver-agent | Added docstrings to 4 undocumented DataStore methods (get_pending_migrations, get_log_files, is_legacy, is_migration_needed) | 87 tests passing |
+| 2026-05-04 04:00 | beaver-agent | Replaced str(e) with exc_info=e in pixel_pilot.py 5 exception handlers — completes full exc_info sweep across all beaver-agent modules | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
