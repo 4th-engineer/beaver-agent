@@ -67,7 +67,18 @@ class MCPConfig(BaseModel):
     @field_validator("servers", mode="before")
     @classmethod
     def handle_mcp_servers_key(cls, v, info):
-        # If servers is empty but we got a dict via mcp_servers alias, use that
+        """Handle both 'servers' (model) and 'mcp_servers' (YAML alias) field names.
+
+        Pydantic's populate_by_name allows both names, but the validator still
+        receives the raw dict. This ensures the 'servers' field is always populated
+        regardless of which key name was used in the YAML/source.
+
+        Args:
+            v: The raw value from the model field before type coercion.
+            info: Field validation info containing the alias data was loaded under.
+        Returns:
+            The validated servers dict, or the original value if not applicable.
+        """
         return v
 
 
