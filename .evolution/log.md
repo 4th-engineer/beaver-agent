@@ -116,7 +116,7 @@
 | 2026-05-04 15:00 | beaver-agent | Enhanced BeaverHarness.run_single docstring — added Raises section, improved Args/Returns consistency with Runner.run_task |
 | 2026-05-04 06:00 | beaver-agent | Added DataStore, get_data_store, init_data_store to core/__all__ and imports — consistent with tools/core/__init__.py public API pattern | 87 tests passing |
 | 2026-05-04 16:00 | beaver-agent | Removed redundant str(e) in terminal_tool._get_windows_log (error_reading_windows_log) and code_analyzer._read_file (code_analyzer_read_error) — exc_info=e already captures exception in structlog | 87 tests passing |
-| 2026-05-04 06:00 | Added DataStore, get_data_store, init_data_store to core/__all__ and imports — consistent with tools/core/__init__.py public API pattern | 87 tests passing |
+| 2026-05-04 08:00 | beaver-agent | Added comprehensive docstring to DebuggerTool._basic_error_analysis — replaced one-line placeholder with full Args/Returns/Example documenting built-in error pattern-matching | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
