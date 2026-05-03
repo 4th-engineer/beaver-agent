@@ -307,7 +307,7 @@ class SkillManager:
             try:
                 return yaml.safe_load(match.group(1)) or {}
             except yaml.YAMLError as e:
-                logger.warning("yaml_parse_failed", error=str(e))
+                logger.warning("yaml_parse_failed", error=str(e), exc_info=e)
         return {}
 
     def find_matching_skill(self, user_input: str) -> Optional[Skill]:
