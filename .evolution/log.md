@@ -180,3 +180,5 @@
 | 2026-05-05 11:00 | beaver-agent | Replaced exc_info=e with exc_info=True in code_gen (3 handlers) and code_review (1 handler) — consistent with full exc_info=True sweep across all modules | 125 tests passing |
 
 | 2026-05-05 04:00 | beaver-agent | Added docstrings to 4 PromptStrategy module-level constants (CODE_GENERATION_STRATEGY, BUG_FIX_STRATEGY, CODE_REVIEW_STRATEGY, ARCHITECTURE_STRATEGY) — all eval prompting strategies now documented | 125 tests passing |
+
+| 2026-05-05 04:00 | beaver-agent | Enhanced docstrings for _print_response and print_welcome in interactive.py — both previously had one-line placeholders, now have Args/Returns documenting their behavior | 125 tests passing |
