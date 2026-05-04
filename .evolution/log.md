@@ -158,3 +158,5 @@
 | 2026-05-05 03:00 | beaver-agent | Fixed remaining 2 stale doc/evolution.md references in README.md (Self-Evolution section line 87 and Project Structure section line 117) — previous fix at 02:00 only corrected the Architecture doc link | 87 tests passing |
 
 | 2026-05-05 02:40 | beaver-agent | Added 2 tests for setup CLI command (test_setup_command_already_exists, test_setup_command_missing_env_example) — untested code paths now covered, 89 tests passing | 89 tests passing |
+
+| 2026-05-05 03:00 | beaver-agent | Added __all__ exports to pixel_pilot.py (connect, disconnect, send, is_enabled) — consistent with tools/core/eval/memory packages which all export their public API explicitly | 89 tests passing |

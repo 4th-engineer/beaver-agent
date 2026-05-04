@@ -25,7 +25,6 @@ import os
 import sys
 import json
 import time
-import uuid
 import functools
 from datetime import datetime
 from threading import Lock
