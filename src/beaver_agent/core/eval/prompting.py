@@ -36,6 +36,7 @@ class PromptStrategy:
 
 
 # Built-in strategies per task type
+
 CODE_GENERATION_STRATEGY = PromptStrategy(
     name="code_generation",
     system_template=(
@@ -43,6 +44,7 @@ CODE_GENERATION_STRATEGY = PromptStrategy(
         "based on the description. Only output the code, no explanations."
     ),
 )
+"""Strategy for code generation tasks — generates clean, working code from description."""
 
 BUG_FIX_STRATEGY = PromptStrategy(
     name="bug_fix",
@@ -51,6 +53,7 @@ BUG_FIX_STRATEGY = PromptStrategy(
         "identify the bug and provide the fixed code. Only output the fixed code."
     ),
 )
+"""Strategy for bug fix tasks — identifies bugs and outputs fixed code."""
 
 CODE_REVIEW_STRATEGY = PromptStrategy(
     name="code_review",
@@ -59,6 +62,7 @@ CODE_REVIEW_STRATEGY = PromptStrategy(
         "Focus on: correctness, security, performance, and readability."
     ),
 )
+"""Strategy for code review tasks — analyzes code and provides feedback on quality."""
 
 ARCHITECTURE_STRATEGY = PromptStrategy(
     name="architecture",
@@ -67,6 +71,7 @@ ARCHITECTURE_STRATEGY = PromptStrategy(
         "based on the requirements. Output a markdown description with key components."
     ),
 )
+"""Strategy for architecture tasks — designs scalable system architecture."""
 
 
 STRATEGY_MAP: dict[str, PromptStrategy] = {
