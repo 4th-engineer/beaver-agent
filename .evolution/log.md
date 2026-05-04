@@ -125,6 +125,8 @@
 
 | 2026-05-05 | beaver-agent | Added explicit import of CodeReviewIssue in debugger.py — ensures proper type annotation support and IDE auto-complete for the shared issue class | 87 tests passing |
 
+| 2026-05-05 | beaver-agent | Removed dead code in model_command — else branch was identical to if branch (both called show_model_info); simplified to single call | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
