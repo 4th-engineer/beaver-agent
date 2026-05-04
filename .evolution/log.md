@@ -127,6 +127,8 @@
 
 | 2026-05-05 | beaver-agent | Removed dead code in model_command — else branch was identical to if branch (both called show_model_info); simplified to single call | 87 tests passing |
 
+| 2026-05-05 | beaver-agent | Moved inline fnmatch import to class-level in FileTool — _FN_MATCH class constant eliminates per-call import overhead in search_files and search_content | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
