@@ -129,6 +129,8 @@
 
 | 2026-05-05 | beaver-agent | Removed dead duplicate __init__ in IntentParser (lines 15-23 were shadowed by lines 53-54); added docstring to remaining __init__ | 87 tests passing |
 
+| 2026-05-05 01:00 | beaver-agent | Removed dead code in browser_tool.py — redundant AGENT_BROWSER_BIN hardcoded path on line 15 was immediately overwritten by line 23 (None init); both still present but now line 15 is unreachable dead code | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
