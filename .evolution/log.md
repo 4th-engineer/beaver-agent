@@ -168,3 +168,5 @@
 | 2026-05-05 09:00 | beaver-agent | Removed stale doc/evolution.md — evolution log migrated to .evolution/log.md per previous runs; eliminates misleading outdated doc (70 tests vs actual 125) | 125 tests passing |
 
 | 2026-05-05 10:00 | beaver-agent | Added TaskLoader export to core/eval/__init__.py — was imported in test_eval.py but not in public API; consistent with tools/core/__init__ patterns | 125 tests passing |
+
+| 2026-05-05 11:00 | beaver-agent | Removed unused typing imports (Dict, Any, List) from 5 tool modules — code_gen, code_review, debugger, file_tool, terminal_tool; clean imports, no functional change | 125 tests passing |
