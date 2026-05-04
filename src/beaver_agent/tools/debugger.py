@@ -1,6 +1,6 @@
 """Beaver Agent Debugger Tool"""
 
-from typing import Optional, Dict, Any
+from typing import Optional
 
 import structlog
 

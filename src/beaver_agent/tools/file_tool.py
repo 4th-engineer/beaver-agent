@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional
 
 import structlog
 

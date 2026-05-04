@@ -1,6 +1,6 @@
 """Beaver Agent Code Review Tool"""
 
-from typing import Optional, List, Dict, Any
+from typing import Optional, List
 
 import structlog
 

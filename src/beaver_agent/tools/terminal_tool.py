@@ -1,7 +1,7 @@
 """Beaver Agent Terminal Tool"""
 
 import subprocess
-from typing import Optional, Dict, Any
+from typing import Optional
 
 import structlog
 
