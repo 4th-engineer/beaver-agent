@@ -12,16 +12,6 @@ logger = structlog.get_logger()
 class IntentParser:
     """Parse user input to determine intent, with skill support"""
 
-    def __init__(self, skill_manager: SkillManager = None):
-        """Initialize IntentParser with optional SkillManager.
-
-        Args:
-            skill_manager: Optional SkillManager instance for skill-based
-                intent routing. When provided, the parser will check skills
-                before falling back to keyword pattern matching.
-        """
-        self.skill_manager = skill_manager
-
     INTENT_PATTERNS = {
         "code_generation": [
             "写", "生成", "创建", "编写", "implement", "write", "generate", "create",
@@ -51,6 +41,13 @@ class IntentParser:
     }
 
     def __init__(self, skill_manager: Optional[SkillManager] = None):
+        """Initialize IntentParser with optional SkillManager.
+
+        Args:
+            skill_manager: Optional SkillManager instance for skill-based
+                intent routing. When provided, the parser will check skills
+                before falling back to keyword pattern matching.
+        """
         self.skill_manager = skill_manager
 
     def parse(self, user_input: str) -> str:
