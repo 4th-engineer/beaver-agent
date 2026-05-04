@@ -19,6 +19,15 @@ class MCPTool:
 
     def __init__(self, name: str, server_name: str, description: str,
                  input_schema: dict, mcp_manager: "MCPManager"):
+        """Initialize an MCP tool wrapper.
+
+        Args:
+            name: Name of the tool exposed by the MCP server.
+            server_name: Name of the MCP server exposing this tool.
+            description: Human-readable description of the tool's purpose.
+            input_schema: JSON schema describing the tool's input parameters.
+            mcp_manager: The MCPManager instance used to call this tool.
+        """
         self.name = name
         self.server_name = server_name
         self.description = description
