@@ -197,3 +197,5 @@
 | 2026-05-05 06:00 | beaver-agent | Fixed architecture.md — removed nonexistent gateway/ module (Phase 2 aspirational), updated LLM stack (OpenRouter→MiniMax/Claude/OpenAI), simplified diagram to reflect actual CLI-based architecture | 125 tests passing |
 
 | 2026-05-06 06:00 | beaver-agent | Added fallback print() to _get_agent_name() in pixel_pilot.py — last silent exception handler now logs when structlog unavailable (consistent with all other pixel_pilot exception handlers) | 125 tests passing |
+
+| 2026-05-06 07:00 | beaver-agent | Added error logging to TaskLoader.from_json_file and from_harness_format — silent file I/O and JSON parse failures now logged with exc_info, returning [] on failure for graceful degradation | 125 tests passing |
