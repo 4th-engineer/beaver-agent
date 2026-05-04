@@ -143,6 +143,8 @@
 | 2026-05-05 04:00 | beaver-agent | Fixed pixel_pilot connect() verbose flag — print() messages now only print when verbose=True (previously ignored verbose parameter entirely); all 125 tests passing | 125 tests passing |
 | 2026-05-06 05:00 | beaver-agent | Removed unused threading.Lock import from pixel_pilot.py — clean imports, no functional change | 125 tests passing |
 
+| 2026-05-06 06:00 | beaver-agent | Added __all__ exports to eval/prompting.py — consistent with tools/core/eval packages which all export their public API explicitly | 125 tests passing |
+
 ## Current Stage
 - 125 tests passing
 - Next: Error handling improvements
