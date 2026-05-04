@@ -147,6 +147,8 @@
 
 | 2026-05-06 07:00 | beaver-agent | Added docstring to MCPTool.__init__ (Args/name, server_name, description, input_schema, mcp_manager) — last undocumented __init__ in mcp_manager.py | 125 tests passing |
 
+| 2026-05-06 08:00 | beaver-agent | Removed dead Lock() usage from pixel_pilot.py — threading.Lock import was removed in a prior run but the _lock = Lock() call on line 47 was left dangling, causing NameError at runtime when structlog unavailable | 125 tests passing |
+
 ## Current Stage
 - 125 tests passing
 - Next: Error handling improvements

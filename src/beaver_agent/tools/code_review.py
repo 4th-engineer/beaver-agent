@@ -107,7 +107,7 @@ class CodeReviewTool:
             return self._format_review_response(response.content, file_path)
 
         except Exception as e:
-            logger.error("code_review_failed", exc_info=True)
+            logger.error("code_review_failed", exc_info=e)
             return f"❌ Code review failed: {e}"
 
     def _basic_review(self, code: str, language: str, file_path: Optional[str]) -> str:
