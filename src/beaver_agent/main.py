@@ -61,7 +61,22 @@ def version():
 def setup(
     force: bool = typer.Option(False, "--force", "-f", help="强制重新配置，覆盖已有 .env"),
 ):
-    """首次配置 - 创建 .env 并引导填写 API Key"""
+    """First-time setup — create .env from template and guide user through API Key configuration.
+
+    Copies .env.example to .env, optionally opens the file in the user's preferred editor,
+    and validates that required fields are populated before completing.
+
+    Args:
+        force: If False (default) and .env already exists, aborts without modification.
+               If True, overwrites existing .env with a fresh copy of .env.example.
+
+    Raises:
+        typer.Exit(1): If .env.example template is missing from the project directory.
+
+    Example:
+        beaver setup           # Create .env if it doesn't exist
+        beaver setup --force    # Overwrite existing .env with fresh template
+    """
     import os
     import shutil
     from pathlib import Path
