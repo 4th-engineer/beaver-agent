@@ -84,7 +84,7 @@ GITHUB_TOKEN=your_token_here
 1. 分析对话模式，识别改进点
 2. 清理 TODO，优化生成代码质量
 3. 更新 skills 和文档
-4. 所有变更记录到 `doc/evolution.md`
+4. 所有变更记录到 `.evolution/log.md`
 
 ---
 
@@ -114,7 +114,7 @@ beaver-agent/
 ├── tests/                        # 87 tests
 └── doc/
     ├── architecture.md           # 架构文档
-    └── evolution.md             # 自我进化日志
+    └── evolution.md              # 自我进化日志 (已迁移至 .evolution/log.md)
 ```
 
 ---
