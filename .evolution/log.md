@@ -162,3 +162,5 @@
 | 2026-05-05 03:00 | beaver-agent | Added __all__ exports to pixel_pilot.py (connect, disconnect, send, is_enabled) — consistent with tools/core/eval/memory packages which all export their public API explicitly | 89 tests passing |
 
 | 2026-05-05 04:00 | beaver-agent | Removed unused uuid import from pixel_pilot.py; updated architecture doc test count 87→89 | 89 tests passing |
+
+| 2026-05-05 08:00 | beaver-agent | Added test_eval.py with 36 tests for eval components (Runner, BenchmarkRegistry, TaskLoader, PromptStrategy, 5 Scorer types, BeaverHarness) — previously untested core architecture, 125 tests passing | 125 tests passing |
