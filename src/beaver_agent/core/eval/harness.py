@@ -3,14 +3,9 @@
 from typing import Any, Optional
 
 from .task import Task, Benchmark, TaskResult
-from .adapter import ModelAdapter, BeaverAdapter
+from .adapter import ModelAdapter
 from .runner import Runner
-from .loader import (
-    BenchmarkRegistry,
-    get_benchmark_registry,
-    register_benchmark,
-    list_benchmarks,
-)
+from .loader import get_benchmark_registry
 
 
 class BeaverHarness:

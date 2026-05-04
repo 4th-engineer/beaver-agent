@@ -9,7 +9,7 @@ from rich.console import Console
 from rich.table import Table
 
 from beaver_agent.core.config import BeaverConfig
-from beaver_agent.core.llm_client import LLMClient
+
 from beaver_agent.core.intent_parser import IntentParser
 from beaver_agent.core.task_planner import TaskPlanner
 from beaver_agent.core.tool_router import ToolRouter

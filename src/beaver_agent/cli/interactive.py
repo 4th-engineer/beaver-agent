@@ -8,8 +8,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.prompt import Prompt
-from rich.syntax import Syntax
-from rich.table import Table
+
 
 from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.core.config import BeaverConfig

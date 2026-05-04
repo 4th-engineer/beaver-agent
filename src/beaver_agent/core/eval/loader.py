@@ -3,7 +3,7 @@
 import json
 import structlog
 from pathlib import Path
-from typing import Iterator
+
 
 logger = structlog.get_logger()
 from .task import Task, Benchmark
