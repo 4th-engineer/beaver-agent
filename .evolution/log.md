@@ -136,6 +136,9 @@
 
 | 2026-05-05 04:00 | beaver-agent | Replaced str(e) with exc_info=e in DataStore.version_parse_fallback logger call — completes full exc_info sweep across all beaver-agent modules | 87 tests passing |
 
+| 2026-05-05 05:00 | beaver-agent | Added comprehensive docstrings to 3 undocumented agent.py internal methods: _summarize_content (Args/Returns), _json_summary (Args/Returns), _generate_fallback_response (Args/Returns) — all agent.py public and internal methods now documented | 87 tests passing |
+| 2026-05-05 06:00 | beaver-agent | Added __all__ to cli/commands.py — consistent with tools/core/eval/memory packages which all export their public API explicitly | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements

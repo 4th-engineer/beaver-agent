@@ -6,6 +6,15 @@ from beaver_agent.core.config import BeaverConfig, load_config
 from beaver_agent.core.agent import BeaverAgent
 
 
+__all__ = [
+    "handle_command",
+    "print_help",
+    "show_model_info",
+    "show_status",
+    "chat_command",
+    "model_command",
+]
+
 console = Console()
 
 
