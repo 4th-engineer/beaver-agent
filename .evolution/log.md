@@ -163,4 +163,6 @@
 
 | 2026-05-05 04:00 | beaver-agent | Removed unused uuid import from pixel_pilot.py; updated architecture doc test count 87→89 | 89 tests passing |
 
-| 2026-05-05 08:00 | beaver-agent | Added test_eval.py with 36 tests for eval components (Runner, BenchmarkRegistry, TaskLoader, PromptStrategy, 5 Scorer types, BeaverHarness) — previously untested core architecture, 125 tests passing | 125 tests passing |
+|| 2026-05-05 08:00 | beaver-agent | Added test_eval.py with 36 tests for eval components (Runner, BenchmarkRegistry, TaskLoader, PromptStrategy, 5 Scorer types, BeaverHarness) — previously untested core architecture, 125 tests passing | 125 tests passing |
+
+|| 2026-05-05 09:00 | beaver-agent | Removed stale doc/evolution.md — evolution log migrated to .evolution/log.md per previous runs; eliminates misleading outdated doc (70 tests vs actual 125) | 125 tests passing |
