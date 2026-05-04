@@ -11,7 +11,17 @@ logger = structlog.get_logger()
 
 
 class LLMResponse:
-    """LLM response wrapper"""
+    """LLM response wrapper.
+
+    Encapsulates the response from an LLM API call, including the generated
+    content, the model used, and optional token usage statistics.
+
+    Attributes:
+        content: The generated text content from the LLM.
+        model: The model name that generated the response.
+        usage: Optional dictionary of token usage metrics (prompt_tokens,
+            completion_tokens, total_tokens). Empty dict if usage info unavailable.
+    """
 
     def __init__(self, content: str, model: str, usage: Optional[Dict] = None):
         self.content = content
