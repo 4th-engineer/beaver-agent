@@ -149,6 +149,8 @@
 | 2026-05-06 08:00 | beaver-agent | Removed dead Lock() usage from pixel_pilot.py — threading.Lock import was removed in a prior run but the _lock = Lock() call on line 47 was left dangling, causing NameError at runtime when structlog unavailable | 125 tests passing |
 | 2026-05-06 09:00 | beaver-agent | Fixed exc_info=True→exc_info=e in code_gen.py (3 handlers) and code_review.py (1 handler) — these were the only modules still using exc_info=True instead of exc_info=e, completing the full exc_info consistency sweep | 125 tests passing |
 
+| 2026-05-06 10:00 | beaver-agent | Enhanced LLMResponse docstring — added Attributes section documenting content/model/usage fields | 125 tests passing |
+
 ## Current Stage
 - 125 tests passing
 - Next: Error handling improvements
