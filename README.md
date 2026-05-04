@@ -130,7 +130,7 @@ pytest
 ## 📚 Documentation
 
 - **[Architecture](doc/architecture.md)** — 系统架构详解
-- **[Evolution Log](doc/evolution.md)** — 自我进化记录
+- **[Evolution Log](.evolution/log.md)** — 自我进化记录
 
 ---
 

@@ -152,3 +152,5 @@
 4. Logging enhancement
 
 | 2026-05-05 09:00 | beaver-agent | Added docstring to CodeExecutionScorer.__init__ — inline comment replaced with Args section documenting test_cases format | 87 tests passing |
+
+| 2026-05-05 10:00 | beaver-agent | Export ModelAdapter, BeaverAdapter, OpenAIAdapter, MiniMaxAdapter, PromptStrategy, get_strategy from eval/__init__.py — eval package claimed 6 components but only exported 4 of them | 87 tests passing |
