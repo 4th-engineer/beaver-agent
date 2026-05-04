@@ -189,7 +189,4 @@ def model_command(show: bool) -> None:
         show: If True, display current model information
     """
     config = load_config()
-    if show:
-        show_model_info(config)
-    else:
-        show_model_info(config)
+    show_model_info(config)

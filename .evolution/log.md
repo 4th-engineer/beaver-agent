@@ -123,6 +123,8 @@
 | 2026-05-04 08:00 | beaver-agent | Added IntentParser, TaskPlanner, SkillManager, MCPManager, SessionMemory to core/__init__.py exports — now consistent with tools/ and eval/ public API patterns | 87 tests passing |
 | 2026-05-04 09:00 | beaver-agent | Added docstring to CodeGenTool.__init__ (Args/config, llm_client) — last undocumented __init__ among tools with (config, llm_client) pattern | 87 tests passing |
 
+| 2026-05-05 | beaver-agent | Added explicit import of CodeReviewIssue in debugger.py — ensures proper type annotation support and IDE auto-complete for the shared issue class | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
