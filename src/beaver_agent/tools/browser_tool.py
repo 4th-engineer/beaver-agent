@@ -12,9 +12,6 @@ import structlog
 logger = structlog.get_logger()
 
 
-AGENT_BROWSER_BIN = "/home/agentuser/.hermes/hermes-agent/node_modules/.bin/agent-browser"
-
-
 @dataclass
 class BrowserResult:
     success: bool
