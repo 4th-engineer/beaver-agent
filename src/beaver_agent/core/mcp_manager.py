@@ -145,7 +145,20 @@ class MCPManager:
 
     async def _connect_server(self, server_name: str,
                              server_config: MCPServerConfig) -> None:
-        """Connect to a single MCP server"""
+        """Connect to a single MCP server and establish the transport.
+
+        Routes to either HTTP or stdio transport based on server_config.
+        For stdio servers, spawns a subprocess and runs full handshake
+        (initialize + tool discovery). For HTTP, logs configuration only.
+
+        Args:
+            server_name: Unique identifier for the server.
+            server_config: MCPServerConfig with url or command for transport.
+
+        Raises:
+            ValueError: If neither url nor command is configured.
+            RuntimeError: If stdio connection or tool discovery fails.
+        """
         if server_config.url:
             await self._connect_http(server_name, server_config)
         elif server_config.command:
@@ -242,7 +255,20 @@ class MCPManager:
         return baseline
 
     async def _send_request(self, server_name: str, request: dict) -> None:
-        """Send a JSON-RPC request to the server"""
+        """Send a JSON-RPC request to the server and wait for a response.
+
+        Serializes the request dict as JSON-RPC 2.0 and writes it as a
+        newline-delimited message to the server's stdin. The caller is
+        responsible for reading the corresponding response via
+        _read_response().
+
+        Args:
+            server_name: Name of the connected MCP server.
+            request: Dict with jsonrpc, id, method, and params fields.
+
+        Raises:
+            RuntimeError: If the server process is not connected.
+        """
         process = self._server_processes.get(server_name)
         if not process:
             raise RuntimeError(f"Server {server_name} not connected")
@@ -280,7 +306,21 @@ class MCPManager:
         await process.stdin.drain()
 
     async def _read_response(self, server_name: str) -> dict:
-        """Read a JSON-RPC response from the server"""
+        """Read a JSON-RPC response from the server.
+
+        Reads a single newline-delimited JSON line from the server's stdout.
+        Used immediately after _send_request() to retrieve the response.
+
+        Args:
+            server_name: Name of the connected MCP server.
+
+        Returns:
+            The parsed JSON-RPC response dict (includes result or error).
+
+        Raises:
+            RuntimeError: If the server process is not connected or
+                          disconnects before responding.
+        """
         process = self._server_processes.get(server_name)
         if not process:
             raise RuntimeError(f"Server {server_name} not connected")
@@ -291,7 +331,18 @@ class MCPManager:
         return json.loads(line.decode())
 
     async def _discover_tools(self, server_name: str) -> None:
-        """Discover tools from a connected MCP server"""
+        """Discover available tools from a connected MCP server.
+
+        Sends a tools/list JSON-RPC request, then iterates the returned
+        tool list and registers each as an MCPTool instance keyed by
+        ``mcp_{server_name}_{normalized_name}`` in self._tools.
+
+        Args:
+            server_name: Name of the connected MCP server.
+
+        Side effects:
+            Populates self._tools with discovered MCPTool wrappers.
+        """
         request = {
             "jsonrpc": "2.0",
             "id": 2,
