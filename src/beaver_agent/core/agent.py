@@ -1,6 +1,7 @@
 """Beaver Agent Core v2 - With LLM Integration"""
 
 import uuid
+from io import StringIO
 from typing import Optional, Dict, Any, List
 
 import structlog
@@ -231,7 +232,6 @@ Always provide actionable suggestions."""
             table.add_row(status, tool_name, content)
 
         # Render table to string
-        from io import StringIO
         buf = StringIO()
         tmp_console = Console(file=buf, force_terminal=True)
         tmp_console.print(table)
