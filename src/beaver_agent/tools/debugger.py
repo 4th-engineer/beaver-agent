@@ -4,6 +4,8 @@ from typing import Optional, Dict, Any
 
 import structlog
 
+from beaver_agent.tools.code_review import CodeReviewIssue
+
 logger = structlog.get_logger()
 
 
