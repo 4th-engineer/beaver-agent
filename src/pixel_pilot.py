@@ -21,10 +21,7 @@ PixelPilot - 一行代码接入 beaver-agent 可视化观测
     python your_agent.py  # 自动连接
 """
 
-import os
-import sys
 import json
-import time
 import functools
 from datetime import datetime
 from threading import Lock
