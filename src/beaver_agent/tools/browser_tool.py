@@ -14,6 +14,14 @@ logger = structlog.get_logger()
 
 @dataclass
 class BrowserResult:
+    """Result of a browser operation.
+
+    Attributes:
+        success: Whether the browser operation succeeded.
+        content: Optional response content (e.g., page text, screenshot path).
+        message: Human-readable status or error message.
+    """
+
     success: bool
     content: Any = None
     message: str = ""

@@ -24,6 +24,14 @@ class LLMResponse:
     """
 
     def __init__(self, content: str, model: str, usage: Optional[Dict] = None):
+        """Initialize an LLM response wrapper.
+
+        Args:
+            content: The generated text content from the LLM.
+            model: The model name that generated the response.
+            usage: Optional dictionary of token usage metrics (prompt_tokens,
+                completion_tokens, total_tokens). Defaults to empty dict if not provided.
+        """
         self.content = content
         self.model = model
         self.usage = usage or {}

@@ -11,12 +11,31 @@ from dotenv import load_dotenv
 
 
 class AppConfig(BaseModel):
+    """Root application configuration.
+
+    Attributes:
+        name: Human-readable application name.
+        version: Semantic version string.
+        debug: Whether debug mode is enabled (enables verbose logging).
+    """
+
     name: str = "Beaver Agent"
     version: str = "0.1.0"
     debug: bool = False
 
 
 class ModelConfig(BaseModel):
+    """LLM model provider configuration.
+
+    Attributes:
+        provider: Name of the LLM provider (e.g., 'openrouter', 'anthropic', 'openai').
+        name: Model name or alias to use for completions.
+        api_key: Optional API key for the provider. Falls back to environment variables.
+        api_base: Optional base URL for API endpoints (useful for proxy/self-hosted).
+        max_tokens: Maximum number of tokens to generate in a single response.
+        temperature: Sampling temperature (0.0-1.0). Higher values increase creativity.
+    """
+
     provider: str = "openrouter"
     name: str = Field(default="anthropic/claude-3-haiku", validation_alias="model")
     api_key: Optional[str] = None
@@ -26,17 +45,39 @@ class ModelConfig(BaseModel):
 
 
 class GitHubConfig(BaseModel):
+    """GitHub integration configuration.
+
+    Attributes:
+        token: Optional GitHub personal access token for API authentication.
+        owner: Default GitHub repository owner (user or organization).
+        repo: Default repository name.
+    """
+
     token: Optional[str] = None
     owner: str = "user-YeLei"
     repo: str = "beaver-agent"
 
 
 class CLIConfig(BaseModel):
+    """Command-line interface configuration.
+
+    Attributes:
+        prompt: Prompt prefix displayed before user input (e.g., '🦫 Beaver').
+        welcome_banner: Optional ASCII art or welcome message shown on startup.
+    """
+
     prompt: str = "🦫 Beaver"
     welcome_banner: str = ""
 
 
 class LoggingConfig(BaseModel):
+    """Logging subsystem configuration.
+
+    Attributes:
+        level: Log level (DEBUG, INFO, WARNING, ERROR, CRITICAL).
+        format: Log output format ('json' for structured logging, 'text' for plain text).
+    """
+
     level: str = "INFO"
     format: str = "json"
 

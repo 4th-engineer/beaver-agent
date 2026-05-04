@@ -200,3 +200,5 @@
 
 | 2026-05-06 07:00 | beaver-agent | Added error logging to TaskLoader.from_json_file and from_harness_format — silent file I/O and JSON parse failures now logged with exc_info, returning [] on failure for graceful degradation | 125 tests passing |
 | 2026-05-07 07:00 | beaver-agent | Verified DebuggerTool.suggest_fixes exception handler has return statement — was correctly fixed in commit 52641ec, no duplicate return in current code | 125 tests passing |
+
+| 2026-05-07 08:00 | beaver-agent | Added verbose guard to _patch_tool_router print() calls in pixel_pilot.py — the two print() messages after patching now respect the verbose parameter, consistent with all other pixel_pilot status messages | 125 tests passing |

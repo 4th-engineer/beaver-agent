@@ -12,6 +12,16 @@ logger = structlog.get_logger()
 
 @dataclass
 class FunctionInfo:
+    """Represents a function definition extracted from Python source code.
+
+    Attributes:
+        name: Name of the function.
+        line: Line number where the function is defined.
+        docstring: Optional docstring extracted from the function body.
+        calls: List of function names called within this function's body.
+        decorators: List of decorator names applied to the function.
+    """
+
     name: str
     line: int
     docstring: Optional[str] = None
@@ -21,6 +31,16 @@ class FunctionInfo:
 
 @dataclass
 class ClassInfo:
+    """Represents a class definition extracted from Python source code.
+
+    Attributes:
+        name: Name of the class.
+        line: Line number where the class is defined.
+        docstring: Optional docstring extracted from the class body.
+        methods: List of method names defined in this class.
+        bases: List of base class names this class inherits from.
+    """
+
     name: str
     line: int
     docstring: Optional[str] = None
@@ -30,6 +50,17 @@ class ClassInfo:
 
 @dataclass
 class ModuleInfo:
+    """Represents a Python module with its imports, classes, and functions.
+
+    Attributes:
+        path: File path to the module.
+        imports: List of module names imported via `import X`.
+        from_imports: Dict mapping source module to list of imported names via `from X import Y`.
+        classes: List of ClassInfo objects for each class defined in this module.
+        functions: List of FunctionInfo objects for each function defined in this module.
+        calls_module: List of module names this module calls (imports + uses).
+    """
+
     path: str
     imports: List[str] = field(default_factory=list)
     from_imports: Dict[str, List[str]] = field(default_factory=dict)
