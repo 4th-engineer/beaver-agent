@@ -204,6 +204,8 @@ def _get_agent_name(self) -> str:
     except Exception as e:
         if _has_structlog:
             _logger.warning("get_agent_name_failed", exc_info=e)
+        else:
+            print(f"[PixelPilot] Warning: Could not get agent name: {e}")
         return "beaver"
 
 
