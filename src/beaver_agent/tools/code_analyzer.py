@@ -408,6 +408,13 @@ class CodeAnalyzer:
                 dirs["_root"].append(module_name)
 
         def print_tree(items: List[str], prefix: str = "", is_last: bool = True) -> None:
+            """Recursively build ASCII tree lines for module hierarchy display.
+            
+            Args:
+                items: Module names to display at this level.
+                prefix: Prefix string for indentation (tree branches).
+                is_last: True if these items are the last siblings at this level.
+            """
             for i, item in enumerate(sorted(items)):
                 is_last_item = i == len(items) - 1
                 connector = "└── " if is_last_item else "├── "
