@@ -202,4 +202,6 @@
 | 2026-05-07 07:00 | beaver-agent | Verified DebuggerTool.suggest_fixes exception handler has return statement — was correctly fixed in commit 52641ec, no duplicate return in current code | 125 tests passing |
 
 | 2026-05-07 08:00 | beaver-agent | Added verbose guard to _patch_tool_router print() calls in pixel_pilot.py — the two print() messages after patching now respect the verbose parameter, consistent with all other pixel_pilot status messages | 125 tests passing |
-| 2026-05-07 09:00 | beaver-agent | Added docstrings to 10 undocumented classes (FunctionInfo, ClassInfo, ModuleInfo, AppConfig, ModelConfig, GitHubConfig, CLIConfig, LoggingConfig, LLMResponse.__init__, BrowserResult) — all 125 tests passing | 125 tests passing |
+|| 2026-05-07 09:00 | beaver-agent | Added docstrings to 10 undocumented classes (FunctionInfo, ClassInfo, ModuleInfo, AppConfig, ModelConfig, GitHubConfig, CLIConfig, LoggingConfig, LLMResponse.__init__, BrowserResult) — all 125 tests passing | 125 tests passing |
+
+|| 2026-05-07 10:00 | beaver-agent | Added comprehensive docstrings to 4 undocumented MCPManager async methods: _connect_server (Args/Raises), _send_request (Args), _read_response (Args/Returns/Raises), _discover_tools (Args/Side effects) — completes full docstring coverage for MCPManager internals | 125 tests passing |
