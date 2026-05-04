@@ -15,8 +15,12 @@ class TaskLoader:
     @staticmethod
     def from_json_file(path: str) -> list[Task]:
         """Load tasks from a JSON file."""
-        with open(path) as f:
-            data = json.load(f)
+        try:
+            with open(path) as f:
+                data = json.load(f)
+        except Exception as e:
+            logger.error("task_loader_file_read_failed", path=path, exc_info=e)
+            return []
         return [Task(**item) for item in data.get("tasks", [])]
 
     @staticmethod
@@ -27,8 +31,12 @@ class TaskLoader:
     @staticmethod
     def from_harness_format(file_path: str) -> Benchmark:
         """Load a complete benchmark from a single JSON file."""
-        with open(file_path) as f:
-            data = json.load(f)
+        try:
+            with open(file_path) as f:
+                data = json.load(f)
+        except Exception as e:
+            logger.error("harness_format_file_read_failed", path=file_path, exc_info=e)
+            raise
         benchmark = Benchmark(
             name=data.get("name", "benchmark"),
             description=data.get("description", ""),
