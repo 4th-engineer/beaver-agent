@@ -44,7 +44,6 @@ except ImportError:
 _enabled = False
 _viewer_url = "http://localhost:7777"
 _initialized = False
-_lock = Lock()
 
 # PixelPilot logger — only active if structlog is available
 if _has_structlog:

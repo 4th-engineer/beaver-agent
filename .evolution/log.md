@@ -145,6 +145,8 @@
 
 | 2026-05-06 06:00 | beaver-agent | Added __all__ exports to eval/prompting.py — consistent with tools/core/eval packages which all export their public API explicitly | 125 tests passing |
 
+| 2026-05-06 07:00 | beaver-agent | Added docstring to MCPTool.__init__ (Args/name, server_name, description, input_schema, mcp_manager) — last undocumented __init__ in mcp_manager.py | 125 tests passing |
+
 ## Current Stage
 - 125 tests passing
 - Next: Error handling improvements
