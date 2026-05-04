@@ -238,7 +238,17 @@ Always provide actionable suggestions."""
         return buf.getvalue()
 
     def _summarize_content(self, tool: str, content: str) -> str:
-        """Summarize long tool output based on tool type — no truncation, highlight key info."""
+        """Summarize long tool output based on tool type — no truncation, highlight key info.
+
+        Args:
+            tool: Tool name (e.g., 'read_file', 'terminal', 'search', 'mcp').
+            content: Raw string output from the tool execution.
+
+        Returns:
+            A summarized string with key information highlighted. For short
+            outputs (<24 lines for files, <35 for terminal), returns the
+            original content unchanged.
+        """
         if not isinstance(content, str):
             content = str(content)
 
@@ -330,7 +340,19 @@ Always provide actionable suggestions."""
         return content
 
     def _json_summary(self, obj: Any, depth: int = 0) -> str:
-        """Build a one-line summary of JSON structure."""
+        """Build a one-line summary of JSON structure.
+
+        Args:
+            obj: The object to summarize (dict, list, str, or other).
+            depth: Current recursion depth (used internally, max 3).
+
+        Returns:
+            A compact one-line string describing the object structure.
+            - dicts show up to 5 keys with their value types and a (+N keys) suffix
+            - lists show item count
+            - strings show first 20 characters
+            - other types show repr() truncated to 30 chars
+        """
         if depth > 3:
             return "..."
         if isinstance(obj, dict):
@@ -345,7 +367,17 @@ Always provide actionable suggestions."""
         return repr(obj)[:30]
 
     def _generate_fallback_response(self, intent: str, context: str) -> str:
-        """Generate response without LLM (fallback mode)"""
+        """Generate response without LLM (fallback mode).
+
+        Args:
+            intent: The parsed intent (e.g., 'code_generation', 'code_review').
+            context: The tool execution results formatted as a context string.
+
+        Returns:
+            A human-readable response string explaining what the agent would do
+            if the LLM were configured, including a brief guide for enabling
+            AI capabilities.
+        """
 
         if intent == "code_generation":
             return f"""## 💻 代码生成
