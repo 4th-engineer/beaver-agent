@@ -93,7 +93,7 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
 
         _enabled = True
         _initialized = True
-        _patch_tool_router()
+        _patch_tool_router(verbose)
     else:
         if _has_structlog:
             _logger.warning("server_not_reachable", url=_viewer_url)
@@ -225,7 +225,7 @@ def _get_tool_display_name(tool_name: str, action: str = "") -> str:
     return tool_name.replace("_", " ").title()
 
 
-def _patch_tool_router() -> None:
+def _patch_tool_router(verbose: bool = True) -> None:
     """
     动态注入 ToolRouter.route() 方法，自动追踪所有工具调用。
     这是一个猴子补丁，但非常轻量且完全向后兼容。
@@ -299,12 +299,12 @@ def _patch_tool_router() -> None:
         if _enabled:
             if _has_structlog:
                 _logger.info("toolrouter_patched")
-            else:
+            elif verbose:
                 print("[PixelPilot] 🔌 ToolRouter patched - all tool calls will be tracked")
 
         if _has_structlog:
             _logger.info("pixel_pilot_ready")
-        else:
+        elif verbose:
             print("[PixelPilot] Ready.")
 
     except ImportError as e:
