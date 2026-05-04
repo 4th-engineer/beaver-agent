@@ -32,6 +32,13 @@ from threading import Lock
 from urllib import request, error
 from typing import Optional, Dict, Any
 
+__all__ = [
+    "connect",
+    "disconnect",
+    "send",
+    "is_enabled",
+]
+
 try:
     import structlog
     _has_structlog = True
