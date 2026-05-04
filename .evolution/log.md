@@ -132,6 +132,7 @@
 | 2026-05-05 01:00 | beaver-agent | Removed dead code in browser_tool.py — redundant AGENT_BROWSER_BIN hardcoded path on line 15 was immediately overwritten by line 23 (None init); both still present but now line 15 is unreachable dead code | 87 tests passing |
 
 | 2026-05-05 02:00 | beaver-agent | Moved StringIO import from inside _build_context to module level in agent.py — follows Python import conventions, avoids repeated import overhead | 87 tests passing |
+| 2026-05-05 03:00 | beaver-agent | Removed redundant str(e) in SkillManager._extract_frontmatter — exc_info=e already captures exception, consistent with full exc_info sweep | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing
