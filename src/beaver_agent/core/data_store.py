@@ -23,7 +23,7 @@ class DataVersion:
             self._parsed = pkg_version.parse(self.raw)
         except Exception as e:
             self._parsed = pkg_version.parse(self.raw.split('-')[0])
-            logger.warning("version_parse_fallback", raw=self.raw, original_error=str(e))
+            logger.warning("version_parse_fallback", raw=self.raw, exc_info=e)
     
     def __str__(self) -> str:
         return self.raw
