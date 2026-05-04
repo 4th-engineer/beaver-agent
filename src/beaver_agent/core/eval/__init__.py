@@ -5,6 +5,8 @@ from .task import Task, Benchmark, TaskResult
 from .runner import Runner
 from .loader import BenchmarkRegistry, get_benchmark_registry, register_benchmark, list_benchmarks
 from .metrics import Scorer, ExactMatchScorer, SimilarityScorer, CodeExecutionScorer, CodeReviewScorer, get_scorer
+from .adapter import ModelAdapter, BeaverAdapter, OpenAIAdapter, MiniMaxAdapter
+from .prompting import PromptStrategy, get_strategy
 
 __all__ = [
     "BeaverHarness",
@@ -22,4 +24,10 @@ __all__ = [
     "CodeExecutionScorer",
     "CodeReviewScorer",
     "get_scorer",
+    "ModelAdapter",
+    "BeaverAdapter",
+    "OpenAIAdapter",
+    "MiniMaxAdapter",
+    "PromptStrategy",
+    "get_strategy",
 ]
