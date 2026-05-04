@@ -139,6 +139,7 @@
 | 2026-05-05 05:00 | beaver-agent | Added comprehensive docstrings to 3 undocumented agent.py internal methods: _summarize_content (Args/Returns), _json_summary (Args/Returns), _generate_fallback_response (Args/Returns) — all agent.py public and internal methods now documented | 87 tests passing |
 | 2026-05-05 06:00 | beaver-agent | Added __all__ to cli/commands.py — consistent with tools/core/eval/memory packages which all export their public API explicitly | 87 tests passing |
 | 2026-05-05 07:00 | beaver-agent | Fixed error_log_read_failed exc_info=e→exc_info=True in terminal_tool.py — completes final exc_info=True sweep | 87 tests passing |
+| 2026-05-05 08:00 | beaver-agent | Removed unused `List` import from browser_tool.py typing imports — clean imports, no functional change | 87 tests passing |
 
 ## Current Stage
 - 87 tests passing

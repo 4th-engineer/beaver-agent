@@ -64,7 +64,14 @@ class CodeExecutionScorer(Scorer):
     """Execute generated code and check if it passes test cases."""
 
     def __init__(self, test_cases: list[dict]):
-        # test_cases: [{"input": ..., "expected": ...}]
+        """Initialize the CodeExecutionScorer with test cases.
+
+        Args:
+            test_cases: List of test case dicts, each containing:
+                - "input": Input value or code snippet (optional for some scorers)
+                - "expected": Expected result string to compare against
+                Example: ``[{"input": "2+2", "expected": "4"}]``
+        """
         self.test_cases = test_cases
 
     def score(self, prediction: str, reference: str, context: dict = None) -> tuple[float, dict]:
