@@ -284,7 +284,23 @@ class GitHubTool:
         head: str = "",
         base: str = "main"
     ) -> str:
-        """Create a pull request"""
+        """Create a pull request in a repository.
+
+        Args:
+            owner: GitHub repository owner (user or organization).
+            repo: Repository name.
+            title: Pull request title.
+            body: Optional PR description (default: empty).
+            head: Branch name containing the changes (source branch).
+            base: Target branch for the PR (default: "main").
+
+        Returns:
+            A formatted success message with PR number and URL,
+            or an error message if PR creation fails.
+
+        Raises:
+            No explicit raises — errors are logged and returned as string messages.
+        """
         if not self._check_config():
             return "❌ GitHub token not configured. Set github.token in config."
 
