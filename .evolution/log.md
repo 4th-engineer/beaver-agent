@@ -195,3 +195,5 @@
 
 | 2026-05-05 04:00 | beaver-agent | Enhanced docstrings for _print_response and print_welcome in interactive.py — both previously had one-line placeholders, now have Args/Returns documenting their behavior | 125 tests passing |
 | 2026-05-05 06:00 | beaver-agent | Fixed architecture.md — removed nonexistent gateway/ module (Phase 2 aspirational), updated LLM stack (OpenRouter→MiniMax/Claude/OpenAI), simplified diagram to reflect actual CLI-based architecture | 125 tests passing |
+
+| 2026-05-06 06:00 | beaver-agent | Added fallback print() to _get_agent_name() in pixel_pilot.py — last silent exception handler now logs when structlog unavailable (consistent with all other pixel_pilot exception handlers) | 125 tests passing |
