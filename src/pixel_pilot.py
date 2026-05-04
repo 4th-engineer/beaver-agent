@@ -24,7 +24,6 @@ PixelPilot - 一行代码接入 beaver-agent 可视化观测
 import json
 import functools
 from datetime import datetime
-from threading import Lock
 from urllib import request, error
 from typing import Optional, Dict, Any
 

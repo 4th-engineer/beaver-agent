@@ -140,8 +140,8 @@
 | 2026-05-05 06:00 | beaver-agent | Added __all__ to cli/commands.py — consistent with tools/core/eval/memory packages which all export their public API explicitly | 87 tests passing |
 | 2026-05-05 07:00 | beaver-agent | Fixed error_log_read_failed exc_info=e→exc_info=True in terminal_tool.py — completes final exc_info=True sweep | 87 tests passing |
 | 2026-05-05 11:00 | beaver-agent | Replaced exc_info=e with exc_info=True in code_gen (3 handlers) and code_review (1 handler) — consistent with full exc_info=True sweep across all modules | 125 tests passing |
-
 | 2026-05-05 04:00 | beaver-agent | Fixed pixel_pilot connect() verbose flag — print() messages now only print when verbose=True (previously ignored verbose parameter entirely); all 125 tests passing | 125 tests passing |
+| 2026-05-06 05:00 | beaver-agent | Removed unused threading.Lock import from pixel_pilot.py — clean imports, no functional change | 125 tests passing |
 
 ## Current Stage
 - 125 tests passing
