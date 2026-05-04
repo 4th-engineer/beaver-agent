@@ -155,4 +155,4 @@
 
 | 2026-05-05 10:00 | beaver-agent | Export ModelAdapter, BeaverAdapter, OpenAIAdapter, MiniMaxAdapter, PromptStrategy, get_strategy from eval/__init__.py — eval package claimed 6 components but only exported 4 of them | 87 tests passing |
 
-| 2026-05-05 02:00 | beaver-agent | Fixed README evolution link — doc/evolution.md doesn't exist, actual log is at .evolution/log.md | 87 tests passing |
+| 2026-05-05 03:00 | beaver-agent | Fixed remaining 2 stale doc/evolution.md references in README.md (Self-Evolution section line 87 and Project Structure section line 117) — previous fix at 02:00 only corrected the Architecture doc link | 87 tests passing |
