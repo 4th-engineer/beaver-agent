@@ -12,6 +12,9 @@ logger = structlog.get_logger()
 class FileTool:
     """Tool for file operations"""
 
+    # Compiled pattern cache for file search (avoids repeated import/compilation)
+    _FN_MATCH = __import__("fnmatch")
+
     def __init__(self, config):
         self.config = config
 
@@ -124,12 +127,11 @@ class FileTool:
             indicating no files matched.
         """
         try:
-            import fnmatch
             matches = []
             search_path = Path(path).expanduser()
 
             for item in search_path.rglob("*"):
-                if item.is_file() and fnmatch.fnmatch(item.name, pattern):
+                if item.is_file() and self._FN_MATCH.fnmatch(item.name, pattern):
                     matches.append(str(item))
 
             if matches:
@@ -156,7 +158,6 @@ class FileTool:
             (up to 30 matches), or a message indicating no matches found.
         """
         try:
-            import fnmatch
             matches = []
             search_path = Path(path).expanduser()
             query_lower = query.lower()
