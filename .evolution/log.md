@@ -174,3 +174,5 @@
 | 2026-05-05 11:00 | beaver-agent | Removed unused typing imports (Dict, Any, List) from 5 tool modules — code_gen, code_review, debugger, file_tool, terminal_tool; clean imports, no functional change | 125 tests passing |
 
 | 2026-05-05 04:00 | beaver-agent | Fixed exc_info=True→exc_info=e in terminal_tool error_log_read_failed — all 6 terminal_tool exception handlers now consistent with full exc_info sweep | 125 tests passing |
+
+| 2026-05-05 11:00 | beaver-agent | Replaced exc_info=e with exc_info=True in code_gen (3 handlers) and code_review (1 handler) — consistent with full exc_info=True sweep across all modules | 125 tests passing |
