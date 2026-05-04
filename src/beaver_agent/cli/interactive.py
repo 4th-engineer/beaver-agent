@@ -100,7 +100,16 @@ def run_repl(config: BeaverConfig) -> None:
 
 
 def _print_response(response: str) -> None:
-    """Print agent response with syntax highlighting for code blocks."""
+    """Print agent response with syntax highlighting for code blocks.
+
+    Detects whether the response contains markdown code blocks (```)
+    and renders them with Rich's Markdown renderer for syntax highlighting.
+    Plain text responses are printed directly.
+
+    Args:
+        response: The agent's response string to display. May contain
+            markdown formatting, code blocks, or plain text.
+    """
     # Check if response contains code blocks
     if "```" in response:
         # Print as markdown (handles code blocks with syntax highlighting)
@@ -110,7 +119,14 @@ def _print_response(response: str) -> None:
 
 
 def print_welcome(config: BeaverConfig) -> None:
-    """Print welcome message"""
+    """Print the welcome banner panel.
+
+    Displays a formatted Rich Panel with the Beaver Agent welcome message,
+    version number, and help hints for new users.
+
+    Args:
+        config: The Beaver configuration containing app version and CLI settings.
+    """
     console.print(Panel(
         f"[bold cyan]🦫 Beaver Agent[/bold cyan] v{config.app.version}\n\n"
         f"[dim]输入 [green]/help[/green] 查看帮助    [dim]输入 [red]/exit[/red] 退出[/dim]",
