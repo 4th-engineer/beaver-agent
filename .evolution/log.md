@@ -134,6 +134,8 @@
 | 2026-05-05 02:00 | beaver-agent | Moved StringIO import from inside _build_context to module level in agent.py — follows Python import conventions, avoids repeated import overhead | 87 tests passing |
 | 2026-05-05 03:00 | beaver-agent | Removed redundant str(e) in SkillManager._extract_frontmatter — exc_info=e already captures exception, consistent with full exc_info sweep | 87 tests passing |
 
+| 2026-05-05 04:00 | beaver-agent | Replaced str(e) with exc_info=e in DataStore.version_parse_fallback logger call — completes full exc_info sweep across all beaver-agent modules | 87 tests passing |
+
 ## Current Stage
 - 87 tests passing
 - Next: Error handling improvements
