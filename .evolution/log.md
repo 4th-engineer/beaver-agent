@@ -282,3 +282,5 @@
 | 2026-05-09 06:00 | beaver-agent | Enhanced docstrings for main.py run() and chat() commands — replaced one-line Chinese placeholders with Args/Example sections documenting REPL and single-query modes | 471 tests passing |
 
 | 2026-05-10 05:00 | beaver-agent | Added test_analyze_command to test_cli_commands.py — last untested command path (/analyze) now covered; 472 tests passing |
+
+| 2026-05-10 06:00 | beaver-agent | Fixed stale test count in README badge (471→472) — README now accurate |
