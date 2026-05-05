@@ -15,7 +15,14 @@ class FileTool:
     # Compiled pattern cache for file search (avoids repeated import/compilation)
     _FN_MATCH = __import__("fnmatch")
 
-    def __init__(self, config):
+    def __init__(self, config: "BeaverConfig") -> None:
+        """Initialize FileTool with BeaverConfig.
+
+        Args:
+            config: BeaverConfig instance containing file_tool.root_path
+                for security sandboxing. All file operations are restricted
+                to within the root_path directory.
+        """
         self.config = config
 
     def read_file(self, file_path: str, limit: Optional[int] = None) -> str:

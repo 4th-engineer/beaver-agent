@@ -10,7 +10,14 @@ logger = structlog.get_logger()
 class GitHubTool:
     """Tool for GitHub operations"""
 
-    def __init__(self, config):
+    def __init__(self, config: "BeaverConfig") -> None:
+        """Initialize GitHubTool with BeaverConfig.
+
+        Args:
+            config: BeaverConfig instance containing github.token, github.owner,
+                and github.repo settings. If any attribute is missing on the
+                github sub-config, it defaults to None.
+        """
         self.config = config
         self.token = getattr(config.github, "token", None) if hasattr(config, "github") else None
         self.owner = getattr(config.github, "owner", None) if hasattr(config, "github") else None

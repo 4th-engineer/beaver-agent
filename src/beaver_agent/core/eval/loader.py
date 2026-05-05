@@ -49,7 +49,8 @@ class TaskLoader:
 class BenchmarkRegistry:
     """Discovers and registers built-in + custom benchmarks."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize BenchmarkRegistry with empty internal benchmark map."""
         self._benchmarks: dict[str, Benchmark] = {}
 
     def register(self, benchmark: Benchmark) -> "BenchmarkRegistry":

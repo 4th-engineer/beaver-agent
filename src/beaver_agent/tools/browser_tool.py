@@ -481,7 +481,13 @@ class BrowserTool:
         reflect the updated page state.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize BrowserTool with default state.
+
+        Sets up the browser session state with current_url and last_snapshot
+        set to None. Callers must invoke browser binary separately via
+        _run_browser_cmd for actual browser automation.
+        """
         self.current_url: Optional[str] = None
         self.last_snapshot: Optional[str] = None
 
