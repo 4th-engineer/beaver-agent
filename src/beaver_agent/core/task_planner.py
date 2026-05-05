@@ -1,4 +1,4 @@
-"""Beaver Agent Task Planner v2 - With LLM tools"""
+"""Beaver Agent Task Planner - LLM-powered task decomposition."""
 
 import re
 from typing import List, Dict, Any
