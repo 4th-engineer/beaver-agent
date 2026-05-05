@@ -159,12 +159,12 @@
 | 2026-05-07 01:00 | beaver-agent | Added comprehensive docstring to BeaverHarness.__init__ (Args: adapter/max_workers/benchmark_dir, Example) — last undocumented __init__ in project | 182 tests passing |
 
 ## Current Stage
-- 199 tests passing
-- PromptStrategy class docstring enhanced
-- Next: Test coverage for eval/prompting.py
+- 207 tests passing
+- Added ToolRouter test coverage (8 new tests)
+- Next: Error handling improvements
 
 ## Priority Areas
-1. Test coverage (eval/prompting untested)
+1. Test coverage (added ToolRouter — core routing untested)
 2. Error handling (mostly complete)
 3. CLI documentation (mostly complete)
 4. Logging enhancement (mostly complete)
@@ -229,4 +229,5 @@
 
 | 2026-05-08 06:00 | beaver-agent | Added comprehensive public API to top-level beaver_agent/__init__.py (40+ symbols from core/eval/memory) — enables clean from beaver_agent import BeaverAgent style imports | 199 tests passing |
 
-|| 2026-05-08 07:00 | beaver-agent | Exported CodeReviewIssue from tools/__init__.py and top-level beaver_agent/__init__.py — makes shared issue class part of public API, consistent with eval package export patterns | 199 tests passing |
+| 2026-05-08 07:00 | beaver-agent | Exported CodeReviewIssue from tools/__init__.py — makes shared issue class part of public API, consistent with eval package patterns | 199 tests passing |
+| 2026-05-08 08:00 | beaver-agent | Added test_tool_router.py with 8 tests for ToolRouter.route() error paths (no tool, unknown tool, no action, tool exception, success) and registry access (list_tools, get_tool) — previously untested core component | 207 tests passing |
