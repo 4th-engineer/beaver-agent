@@ -296,6 +296,8 @@
 
 | 2026-05-12 07:00 | beaver-agent | Removed 7 unused imports across 5 modules (Any, Union, re, Optional, BaseSettings, field) — clean imports, no functional change | 493 tests passing |
 
+| 2026-05-12 08:00 | beaver-agent | Exported MCPTool from core/__init__.py — was imported in top-level __init__.py but missing from core public API (consistent with tools/ and eval/ patterns) | 493 tests passing |
+
 ## Current Stage
 - 493 tests passing
 - Added test_cli_app.py for Typer CLI app-level command registration and help output
