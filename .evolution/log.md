@@ -156,8 +156,10 @@
 | 2026-05-06 12:00 | beaver-agent | Removed 6 unused imports across 5 modules: Iterator (loader.py), Syntax+Table (interactive.py), LLMClient (agent.py), CodeReviewIssue (debugger.py), redundant loader imports (harness.py) | 125 tests passing |
 | 2026-05-06 13:00 | beaver-agent | Added 37 tests for LongTermMemory — complete coverage for MemoryEntry, add/search/get_recent, convenience methods, context, stats, clear, trim, query | 162 tests passing |
 
+| 2026-05-07 01:00 | beaver-agent | Added comprehensive docstring to BeaverHarness.__init__ (Args: adapter/max_workers/benchmark_dir, Example) — last undocumented __init__ in project | 182 tests passing |
+
 ## Current Stage
-- 162 tests passing
+- 182 tests passing
 - Next: Error handling improvements
 
 ## Priority Areas
