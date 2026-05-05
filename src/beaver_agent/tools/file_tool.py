@@ -1,6 +1,5 @@
 """Beaver Agent File Tool"""
 
-import os
 from pathlib import Path
 from typing import Optional
 

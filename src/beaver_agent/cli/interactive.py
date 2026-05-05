@@ -1,6 +1,5 @@
 """Beaver Agent Interactive REPL"""
 
-import sys
 from typing import Optional
 
 import structlog
