@@ -5,7 +5,8 @@ from unittest.mock import MagicMock, patch
 from typer.testing import CliRunner
 
 from beaver_agent.main import app
-from beaver_agent.cli.commands import handle_command, print_help, show_model_info, show_status
+from beaver_agent.cli.commands import handle_command, print_help, show_model_info, show_status, chat_command
+from beaver_agent.cli.interactive import print_welcome
 
 
 @pytest.fixture
@@ -238,6 +239,56 @@ class TestCliApp:
 
     def test_model_command_exists(self, runner):
         """Test 'model' command is registered in CLI."""
-        result = runner.invoke(app, ["--help"])
+        result = runner.invoke(app, ["model", "--help"])
         assert result.exit_code == 0
-        assert "model" in result.output
+
+
+class TestChatCommand:
+    """Tests for chat_command function."""
+
+    def test_chat_command_returns_response(self, mock_config, capsys):
+        """Test chat_command calls agent.run and prints response."""
+        with patch("beaver_agent.cli.commands.BeaverAgent") as MockAgent:
+            mock_instance = MockAgent.return_value
+            mock_instance.run.return_value = "Test response from agent"
+            chat_command(mock_config, "Hello agent")
+            captured = capsys.readouterr()
+            assert "Test response from agent" in captured.out
+
+    def test_chat_command_calls_agent_run_with_query(self, mock_config):
+        """Test chat_command passes query to agent.run()."""
+        with patch("beaver_agent.cli.commands.BeaverAgent") as MockAgent:
+            mock_instance = MockAgent.return_value
+            mock_instance.run.return_value = "Response"
+            chat_command(mock_config, "Test query")
+            mock_instance.run.assert_called_once_with("Test query")
+
+    def test_chat_command_creates_agent_with_config(self, mock_config):
+        """Test chat_command passes config to BeaverAgent constructor."""
+        with patch("beaver_agent.cli.commands.BeaverAgent") as MockAgent:
+            mock_instance = MockAgent.return_value
+            mock_instance.run.return_value = "Response"
+            chat_command(mock_config, "Query")
+            MockAgent.assert_called_once_with(mock_config)
+
+
+class TestPrintWelcome:
+    """Tests for print_welcome function."""
+
+    def test_print_welcome_displays_version(self, mock_config, capsys):
+        """Test print_welcome shows version number."""
+        with patch("beaver_agent.cli.interactive.Panel") as MockPanel:
+            mock_config.app.version = "1.0.0"
+            print_welcome(mock_config)
+            MockPanel.assert_called_once()
+            call_args = MockPanel.call_args[0]
+            panel_content = str(call_args[0])
+            assert "v1.0.0" in panel_content
+
+    def test_print_welcome_displays_beaver_agent_text(self, mock_config, capsys):
+        """Test print_welcome shows Beaver Agent branding."""
+        with patch("beaver_agent.cli.interactive.Panel") as MockPanel:
+            print_welcome(mock_config)
+            call_args = MockPanel.call_args[0]
+            panel_content = str(call_args[0])
+            assert "Beaver Agent" in panel_content
