@@ -267,30 +267,14 @@
 | 2026-05-08 11:00 | beaver-agent | Cleaned up stale "v2" version markers from 3 core module docstrings (agent.py, intent_parser.py, tool_router.py) — version numbers were inconsistent and misleading | 314 tests passing |
 
 ## Current Stage
-- 410 tests passing
-- Added test_data_store.py for DataStore, DataVersion, and Migration
-- Next: Continue test coverage (agent.py, interactive.py, adapter.py, etc.)
+- 471 tests passing
+- Added test_cli_commands.py for CLI command handlers (handle_command, print_help, show_model_info, show_status)
+- Next: Continue improving test coverage (interactive.py, main.py run/chat paths)
 
 ## Priority Areas
-1. Test coverage (browser_tool, debugger, mcp_tool still untested)
+1. Test coverage (interactive.py, main.py run/chat paths)
 2. Error handling (mostly complete)
 3. CLI documentation (mostly complete)
 4. Logging enhancement (mostly complete)
 
-| 2026-05-08 11:00 | beaver-agent | Added test_code_review.py — 24 tests covering CodeReviewIssue (format, severity, line number) and CodeReviewTool (init, review with LLM, review with file_path, empty/not-configured fallback, exception handling) | 231 tests passing |
-
-| 2026-05-08 12:30 | beaver-agent | Added test_debugger.py with 31 tests covering analyze/suggest_fixes/_basic_error_analysis/_format_debug_response/_analyze_code_health | 314 tests passing |
-
-| 2026-05-08 11:30 | beaver-agent | Synced test count 207→231 in README.md and doc/architecture.md | 231 tests passing |
-
-| 2026-05-08 12:00 | beaver-agent | Added comprehensive docstrings to 12 browser_tool module-level functions (screenshot, get_html, click, fill, type_text, scroll_into_view, wait, find_elements, back, forward, reload, close) — all now have Args/Returns/Example sections, completing the tools/ docstring sweep | 231 tests passing |
-
-| 2026-05-06 03:06 | beaver-agent | Added test_browser_tool.py with 52 tests — comprehensive coverage for BrowserTool class and all 17 module-level functions; fixed pre-existing bug where _run_browser_cmd passed error= keyword arg to BrowserResult (only accepts success/content/message) | 283 tests passing |
-
-| 2026-05-08 03:00 | beaver-agent | Added error handling to DataStore._save_applied — previously silent file write failures could lose migration state; now wrapped in try/except with structlog error logging, consistent with all other file I/O in data_store.py | 314 tests passing |
-
-| 2026-05-08 12:00 | beaver-agent | Added test_config.py — 26 tests for all 8 Pydantic config models and load_config; fixed real bug: load_config crashed with KeyError when no config file existed | 340 tests passing |
-
-| 2026-05-09 | beaver-agent | Added test_adapter.py — 13 tests for ModelAdapter (ABC), BeaverAdapter, OpenAIAdapter, MiniMaxAdapter; fixed BeaverAdapter.generate() to pass **kwargs to client (was silently ignoring kwargs) | 447 tests passing |
-
-| 2026-05-09 | beaver-agent | Added test_github_tool.py — 36 tests covering all GitHubTool methods (init, _check_config, operate, get_repo_info, create_issue, list_issues, get_issue, create_pr) with config validation, API success/error/exception cases | 376 tests passing |
+| 2026-05-09 05:00 | beaver-agent | Added test_cli_commands.py — 24 tests for CLI command handlers (handle_command: /exit, /quit, /q, /help, /h, ?, /clear, /reset, /model, /status, /debug, /browse, /screenshot, unknown; print_help, show_model_info, show_status; Typer app command registration) | 471 tests passing |
