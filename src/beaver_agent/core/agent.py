@@ -1,5 +1,6 @@
 """Beaver Agent Core - LLM-integrated agent orchestration."""
 
+import re
 import uuid
 from io import StringIO
 from typing import Optional, Dict, Any, List
@@ -144,8 +145,6 @@ class BeaverAgent:
             response: The agent's response.
             tool_results: Results from tool executions.
         """
-        import re
-
         # Pattern-based extraction for common cases
 
         # 1. User language/preference patterns
