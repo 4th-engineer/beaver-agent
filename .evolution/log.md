@@ -217,4 +217,6 @@
 | 2026-05-07 14:00 | beaver-agent | Synced stale test counts in README (162→182) and architecture.md (162→182) — documentation now accurate | 182 tests passing |
 | 2026-05-08 00:00 | beaver-agent | Added structlog to eval/adapter.py — log NotImplementedError raises in OpenAIAdapter and MiniMaxAdapter.generate() with prompt_length | 182 tests passing |
 
-| 2026-05-08 01:00 | beaver-agent | Added dedicated error handling for file write in CodeGenTool.generate — separated file_tool.write_file() into its own try-except with distinct 'code_save_failed' event; previously write failures were misreported as 'code_generation_failed' | 182 tests passing |
+| 2026-05-08 01:00 | Added dedicated error handling for file write in CodeGenTool.generate — separated file_tool.write_file() into its own try-except with distinct 'code_save_failed' event; previously write failures were misreported as 'code_generation_failed' | 182 tests passing |
+
+| 2026-05-08 02:00 | Added test_terminal_tool.py with 17 tests covering TerminalTool (init, _is_blocked security checks, execute with blocked/safe/timeout cases, get_error_log, run_tests) | 199 tests passing |
