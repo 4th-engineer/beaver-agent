@@ -147,7 +147,7 @@ def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
         or success=False with error message on failure.
     """
     if error := _validate_browser_binary():
-        return BrowserResult(success=False, error=error)
+        return BrowserResult(success=False, message=error)
     try:
         result = subprocess.run(
             f"{AGENT_BROWSER_BIN} {cmd}",
@@ -159,12 +159,12 @@ def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
         if result.returncode == 0:
             return BrowserResult(success=True, content=result.stdout, message=result.stdout.strip())
         else:
-            return BrowserResult(success=False, error=result.stderr.strip() or result.stdout.strip())
+            return BrowserResult(success=False, message=result.stderr.strip() or result.stdout.strip())
     except subprocess.TimeoutExpired:
-        return BrowserResult(success=False, error=f"Command timed out after {timeout}s")
+        return BrowserResult(success=False, message=f"Command timed out after {timeout}s")
     except Exception as e:
         logger.error("browser_command_failed", cmd=cmd, exc_info=e)
-        return BrowserResult(success=False, error=str(e))
+        return BrowserResult(success=False, message=str(e))
 
 
 def navigate(url: str, timeout: int = 30) -> BrowserResult:
