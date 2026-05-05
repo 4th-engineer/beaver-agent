@@ -280,6 +280,8 @@
 
 | 2026-05-09 05:00 | beaver-agent | Added test_cli_commands.py — 24 tests for CLI command handlers (handle_command: /exit, /quit, /q, /help, /h, ?, /clear, /reset, /model, /status, /debug, /browse, /screenshot, unknown; print_help, show_model_info, show_status; Typer app command registration) | 471 tests passing |
 
+| 2026-05-14 07:00 | beaver-agent | Added test_interactive.py with 16 tests covering run_repl REPL loop (KeyboardInterrupt/EOF/exit command handling, command routing, agent.run invocation, error logging, debug mode traceback, welcome banner), _print_response (plain text/markdown rendering), and print_welcome (version/branding/cyan border) | 519 tests passing |
+
 | 2026-05-13 06:00 | beaver-agent | Added direct test for model_command(show=True) — patches load_config and verifies model name/provider are displayed; 494 tests passing |
 
 | 2026-05-12 06:00 | beaver-agent | Fixed stale test count in README.md project structure (480→493) — documentation now accurate | 493 tests passing |
@@ -310,12 +312,12 @@
 | 2026-05-10 | beaver-agent | Fixed stale test count in README.md Project Structure section (494→503) — documentation now accurate | 503 tests passing |
 
 ## Current Stage
-- 503 tests passing
+- 519 tests passing
 - README.md and architecture.md both accurate (503 tests)
-- Next: Continue improving test coverage (interactive.py REPL paths, main.py)
+- Next: Continue improving test coverage (main.py run/chat paths)
 
 ## Priority Areas
-1. Test coverage (interactive.py REPL, main.py run/chat paths)
+1. Test coverage (main.py run/chat paths)
 2. Error handling (mostly complete)
 3. CLI documentation (mostly complete)
 4. Logging enhancement (mostly complete)
