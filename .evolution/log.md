@@ -279,6 +279,8 @@
 
 | 2026-05-09 05:00 | beaver-agent | Added test_cli_commands.py — 24 tests for CLI command handlers (handle_command: /exit, /quit, /q, /help, /h, ?, /clear, /reset, /model, /status, /debug, /browse, /screenshot, unknown; print_help, show_model_info, show_status; Typer app command registration) | 471 tests passing |
 
+| 2026-05-13 06:00 | beaver-agent | Added direct test for model_command(show=True) — patches load_config and verifies model name/provider are displayed; 494 tests passing |
+
 | 2026-05-12 06:00 | beaver-agent | Fixed stale test count in README.md project structure (480→493) — documentation now accurate | 493 tests passing |
 
 | 2026-05-12 06:00 | beaver-agent | Added 3 tests for _print_response (test_plain_text_prints_directly, test_markdown_with_code_blocks_renders_as_markdown, test_empty_code_block_markers_dont_trigger_markdown) — previously untested CLI helper now covered | 480 tests passing |
@@ -299,8 +301,8 @@
 | 2026-05-12 08:00 | beaver-agent | Exported MCPTool from core/__init__.py — was imported in top-level __init__.py but missing from core public API (consistent with tools/ and eval/ patterns) | 493 tests passing |
 
 ## Current Stage
-- 493 tests passing
-- Added test_cli_app.py for Typer CLI app-level command registration and help output
+- 494 tests passing
+- Added direct test for model_command(show=True) in test_cli_commands.py
 - Next: Continue improving test coverage (interactive.py REPL paths, main.py)
 
 ## Priority Areas
