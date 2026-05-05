@@ -283,5 +283,6 @@
 
 | 2026-05-10 05:00 | beaver-agent | Added test_analyze_command to test_cli_commands.py — last untested command path (/analyze) now covered; 472 tests passing |
 
-| 2026-05-10 06:00 | beaver-agent | Fixed stale test count in README badge (471→472) — README now accurate |
-| 2026-05-10 07:00 | beaver-agent | Fixed stale test count in architecture.md (471→472) — documentation now consistent |
+|| 2026-05-10 06:00 | beaver-agent | Fixed stale test count in README badge (471→472) — README now accurate |
+|| 2026-05-10 07:00 | beaver-agent | Fixed stale test count in architecture.md (471→472) — documentation now consistent |
+| 2026-05-10 08:00 | beaver-agent | Moved inline 'import re' to module level in agent.py — follows Python import conventions, avoids repeated import overhead on every _build_context call | 472 tests passing |
