@@ -284,3 +284,4 @@
 | 2026-05-10 05:00 | beaver-agent | Added test_analyze_command to test_cli_commands.py — last untested command path (/analyze) now covered; 472 tests passing |
 
 | 2026-05-10 06:00 | beaver-agent | Fixed stale test count in README badge (471→472) — README now accurate |
+| 2026-05-10 07:00 | beaver-agent | Fixed stale test count in architecture.md (471→472) — documentation now consistent |
