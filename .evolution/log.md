@@ -239,8 +239,8 @@
 | 2026-05-08 11:00 | beaver-agent | Cleaned up stale "v2" version markers from 3 core module docstrings (agent.py, intent_parser.py, tool_router.py) — version numbers were inconsistent and misleading | 314 tests passing |
 
 ## Current Stage
-- 314 tests passing
-- All core module docstrings cleaned up (no stale v2 markers)
+- 376 tests passing
+- All tool modules now have test coverage (github_tool added)
 - Next: Continue incremental improvements
 
 ## Priority Areas
