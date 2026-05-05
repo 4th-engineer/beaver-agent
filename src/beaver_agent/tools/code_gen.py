@@ -53,10 +53,14 @@ class CodeGenTool:
 
             # If file_path provided, offer to save
             if file_path:
-                from beaver_agent.tools.file_tool import FileTool
-                file_tool = FileTool(self.config)
-                save_result = file_tool.write_file(file_path, response.content)
-                return f"{response.content}\n\n---\n{save_result}"
+                try:
+                    from beaver_agent.tools.file_tool import FileTool
+                    file_tool = FileTool(self.config)
+                    save_result = file_tool.write_file(file_path, response.content)
+                    return f"{response.content}\n\n---\n{save_result}"
+                except Exception as e:
+                    logger.error("code_save_failed", file_path=file_path, exc_info=e)
+                    return f"{response.content}\n\n❌ Code save failed for {file_path}. Check logs for details."
 
             return response.content
 
