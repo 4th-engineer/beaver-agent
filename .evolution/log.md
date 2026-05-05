@@ -226,3 +226,5 @@
 
 | 2026-05-08 04:00 | beaver-agent | Removed duplicate MCPConfig import in test_mcp_manager.py (MCPConfig was imported twice on line 10) | 199 tests passing |
 | 2026-05-08 05:00 | beaver-agent | Exported LongTermMemory, MemoryCategory, MemoryEntry, MemoryQuery from core/__init__.py — were in core/memory/__init__.py but missing from parent public API | 199 tests passing |
+
+| 2026-05-08 06:00 | beaver-agent | Added comprehensive public API to top-level beaver_agent/__init__.py (40+ symbols from core/eval/memory) — enables clean from beaver_agent import BeaverAgent style imports | 199 tests passing |
