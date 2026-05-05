@@ -304,6 +304,8 @@
 
 | 2026-05-09 06:00 | beaver-agent | Fixed stale date in architecture.md section 12 (2026-05-11→2026-05-09) — documentation now accurate | 494 tests passing |
 
+| 2026-05-09 04:00 | beaver-agent | Explicit __all__ in cli/__init__.py — replaced wildcard import with explicit symbol list (handle_command, print_help, show_model_info, show_status, chat_command, model_command, run_repl), consistent with tools/core/eval patterns | 494 tests passing |
+
 ## Current Stage
 - 494 tests passing
 - Added direct test for model_command(show=True) in test_cli_commands.py
