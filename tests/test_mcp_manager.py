@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from beaver_agent.core.config import (
-    BeaverConfig, MCPServerConfig, MCPConfig, MCPConfig
+    BeaverConfig, MCPServerConfig, MCPConfig
 )
 from beaver_agent.core.mcp_manager import MCPManager, MCPTool
 
