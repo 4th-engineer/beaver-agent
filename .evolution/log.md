@@ -286,6 +286,19 @@
 | 2026-05-10 05:00 | beaver-agent | Added test_analyze_command to test_cli_commands.py — last untested command path (/analyze) now covered; 472 tests passing |
 
 || 2026-05-10 06:00 | beaver-agent | Fixed stale test count in README badge (471→472) — README now accurate |
-|| 2026-05-10 07:00 | beaver-agent | Fixed stale test count in architecture.md (471→472) — documentation now consistent |
-| 2026-05-10 08:00 | beaver-agent | Moved inline 'import re' to module level in agent.py — follows Python import conventions, avoids repeated import overhead on every _build_context call | 472 tests passing |
-| 2026-05-11 05:00 | beaver-agent | Added 5 tests for chat_command (3) and print_welcome (2) in test_cli_commands.py — previously untested CLI entry points now covered; fixed test_model_command_exists to use 'model --help' | 477 tests passing |
+||| 2026-05-10 07:00 | beaver-agent | Fixed stale test count in architecture.md (471→472) — documentation now consistent |
+|| 2026-05-10 08:00 | beaver-agent | Moved inline 'import re' to module level in agent.py — follows Python import conventions, avoids repeated import overhead on every _build_context call | 472 tests passing |
+|| 2026-05-11 05:00 | beaver-agent | Added 5 tests for chat_command (3) and print_welcome (2) in test_cli_commands.py — previously untested CLI entry points now covered; fixed test_model_command_exists to use 'model --help' | 477 tests passing |
+
+| 2026-05-11 06:00 | beaver-agent | Added test_cli_app.py with 13 tests for Typer CLI app-level behavior (run/chat/version/model/setup --help, chat requires query, no command exits with 2, --help shows all commands) | 493 tests passing |
+
+## Current Stage
+- 493 tests passing
+- Added test_cli_app.py for Typer CLI app-level command registration and help output
+- Next: Continue improving test coverage (interactive.py REPL paths, main.py)
+
+## Priority Areas
+1. Test coverage (interactive.py REPL, main.py run/chat paths)
+2. Error handling (mostly complete)
+3. CLI documentation (mostly complete)
+4. Logging enhancement (mostly complete)
