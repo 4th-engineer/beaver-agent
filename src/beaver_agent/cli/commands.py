@@ -1,9 +1,15 @@
 """Beaver Agent CLI Commands"""
 
+import tempfile
+from pathlib import Path
+from typing import Optional
+
 from rich.console import Console
 
 from beaver_agent.core.config import BeaverConfig, load_config
 from beaver_agent.core.agent import BeaverAgent
+from beaver_agent.tools.browser_tool import BrowserTool
+from beaver_agent.tools.code_analyzer import analyze_repository
 
 
 __all__ = [
@@ -44,11 +50,6 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
         /browse <url>     - Open a URL and retrieve content
         /screenshot       - Take a screenshot of the current browser page
     """
-    from pathlib import Path
-    from beaver_agent.tools.browser_tool import BrowserTool
-    from beaver_agent.tools.code_analyzer import analyze_repository
-    import tempfile
-
     cmd = cmd.strip().lower()
 
     # Exit commands
