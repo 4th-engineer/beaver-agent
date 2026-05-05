@@ -166,6 +166,19 @@ class TestHandleCommand:
                 mock_instance.open.assert_called_once()
                 mock_instance.screenshot.assert_called_once()
 
+    def test_analyze_command(self, mock_config, mock_agent, capsys):
+        """Test /analyze runs repository analysis."""
+        with patch("beaver_agent.cli.commands.analyze_repository") as mock_analyze:
+            mock_analyze.return_value = "Repository structure: 42 files, 8 modules"
+            with patch("beaver_agent.cli.commands.Path") as MockPath:
+                MockPath.return_value.parent.parent.parent.parent = "/fake/project"
+
+                result = handle_command("/analyze", mock_config, mock_agent)
+                assert result is True
+                mock_analyze.assert_called_once()
+                captured = capsys.readouterr()
+                assert "42 files" in captured.out
+
 
 class TestPrintHelp:
     """Tests for print_help function."""
