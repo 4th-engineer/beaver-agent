@@ -159,14 +159,15 @@
 | 2026-05-07 01:00 | beaver-agent | Added comprehensive docstring to BeaverHarness.__init__ (Args: adapter/max_workers/benchmark_dir, Example) — last undocumented __init__ in project | 182 tests passing |
 
 ## Current Stage
-- 182 tests passing
-- Next: Error handling improvements
+- 199 tests passing
+- PromptStrategy class docstring enhanced
+- Next: Test coverage for eval/prompting.py
 
 ## Priority Areas
-1. Error handling
-2. CLI documentation
-3. Test coverage
-4. Logging enhancement
+1. Test coverage (eval/prompting untested)
+2. Error handling (mostly complete)
+3. CLI documentation (mostly complete)
+4. Logging enhancement (mostly complete)
 
 | 2026-05-05 09:00 | beaver-agent | Added docstring to CodeExecutionScorer.__init__ — inline comment replaced with Args section documenting test_cases format | 87 tests passing |
 
@@ -217,6 +218,8 @@
 | 2026-05-07 14:00 | beaver-agent | Synced stale test counts in README (162→182) and architecture.md (162→182) — documentation now accurate | 182 tests passing |
 | 2026-05-08 00:00 | beaver-agent | Added structlog to eval/adapter.py — log NotImplementedError raises in OpenAIAdapter and MiniMaxAdapter.generate() with prompt_length | 182 tests passing |
 
-| 2026-05-08 01:00 | Added dedicated error handling for file write in CodeGenTool.generate — separated file_tool.write_file() into its own try-except with distinct 'code_save_failed' event; previously write failures were misreported as 'code_generation_failed' | 182 tests passing |
+| 2026-05-08 01:00 | beaver-agent | Added dedicated error handling for file write in CodeGenTool.generate — separated file_tool.write_file() into its own try-except with distinct 'code_save_failed' event; previously write failures were misreported as 'code_generation_failed' | 182 tests passing |
+
+| 2026-05-08 03:00 | beaver-agent | Enhanced PromptStrategy class docstring with Attributes section (name, system_template, user_template, few_shot_examples) and doctest-style Example — all prompting.py public classes now have comprehensive docstrings | 199 tests passing |
 
 | 2026-05-08 02:00 | Added test_terminal_tool.py with 17 tests covering TerminalTool (init, _is_blocked security checks, execute with blocked/safe/timeout cases, get_error_log, run_tests) | 199 tests passing |
