@@ -250,6 +250,8 @@
 
 | 2026-05-08 12:00 | beaver-agent | Added test_config.py — 26 tests for all 8 Pydantic config models and load_config; fixed real bug: load_config crashed with KeyError when no config file existed | 340 tests passing |
 
+| 2026-05-09 | beaver-agent | Added test_llm_client.py — 24 tests for LLMClient (init, fallback, chat, generate_code, review_code, debug_code, explain_code) and LLMResponse | 434 tests passing |
+
 | 2026-05-09 | beaver-agent | Added test_github_tool.py — 36 tests covering all GitHubTool methods (init, _check_config, operate, get_repo_info, create_issue, list_issues, get_issue, create_pr) with config validation, API success/error/exception cases | 376 tests passing |
 
 | 2026-05-07 04:00 | beaver-agent | Added test_data_store.py with 34 tests for DataStore (init, version management, migrations, data access), DataVersion (parsing, comparisons, hash), and Migration classes | 410 tests passing |
