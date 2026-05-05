@@ -238,10 +238,30 @@
 
 | 2026-05-08 11:00 | beaver-agent | Cleaned up stale "v2" version markers from 3 core module docstrings (agent.py, intent_parser.py, tool_router.py) — version numbers were inconsistent and misleading | 314 tests passing |
 
+| 2026-05-08 11:00 | beaver-agent | Added test_code_review.py — 24 tests covering CodeReviewIssue (format, severity, line number) and CodeReviewTool (init, review with LLM, review with file_path, empty/not-configured fallback, exception handling) | 231 tests passing |
+
+| 2026-05-08 12:30 | beaver-agent | Added test_debugger.py with 31 tests covering analyze/suggest_fixes/_basic_error_analysis/_format_debug_response/_analyze_code_health | 314 tests passing |
+
+| 2026-05-08 12:00 | beaver-agent | Added comprehensive docstrings to 12 browser_tool module-level functions (screenshot, get_html, click, fill, type_text, scroll_into_view, wait, find_elements, back, forward, reload, close) — all now have Args/Returns/Example sections, completing the tools/ docstring sweep | 231 tests passing |
+
+| 2026-05-06 03:06 | beaver-agent | Added test_browser_tool.py with 52 tests — comprehensive coverage for BrowserTool class and all 17 module-level functions; fixed pre-existing bug where _run_browser_cmd passed error= keyword arg to BrowserResult (only accepts success/content/message) | 283 tests passing |
+
+| 2026-05-08 03:00 | beaver-agent | Added error handling to DataStore._save_applied — previously silent file write failures could lose migration state; now wrapped in try/except with structlog error logging, consistent with all other file I/O in data_store.py | 314 tests passing |
+
+| 2026-05-08 12:00 | beaver-agent | Added test_config.py — 26 tests for all 8 Pydantic config models and load_config; fixed real bug: load_config crashed with KeyError when no config file existed | 340 tests passing |
+
+| 2026-05-09 | beaver-agent | Added test_github_tool.py — 36 tests covering all GitHubTool methods (init, _check_config, operate, get_repo_info, create_issue, list_issues, get_issue, create_pr) with config validation, API success/error/exception cases | 376 tests passing |
+
+| 2026-05-07 04:00 | beaver-agent | Added test_data_store.py with 34 tests for DataStore (init, version management, migrations, data access), DataVersion (parsing, comparisons, hash), and Migration classes | 410 tests passing |
+
+| 2026-05-08 10:00 | beaver-agent | Removed 4 unused imports across 3 modules: sys (interactive.py), json+shutil (browser_tool.py), os (file_tool.py) — clean imports, no functional change | 207 tests passing |
+
+| 2026-05-08 11:00 | beaver-agent | Cleaned up stale "v2" version markers from 3 core module docstrings (agent.py, intent_parser.py, tool_router.py) — version numbers were inconsistent and misleading | 314 tests passing |
+
 ## Current Stage
-- 376 tests passing
-- All tool modules now have test coverage (github_tool added)
-- Next: Continue incremental improvements
+- 410 tests passing
+- Added test_data_store.py for DataStore, DataVersion, and Migration
+- Next: Continue test coverage (agent.py, interactive.py, adapter.py, etc.)
 
 ## Priority Areas
 1. Test coverage (browser_tool, debugger, mcp_tool still untested)
