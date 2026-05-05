@@ -236,11 +236,12 @@
 
 | 2026-05-08 10:00 | beaver-agent | Removed 4 unused imports across 3 modules: sys (interactive.py), json+shutil (browser_tool.py), os (file_tool.py) — clean imports, no functional change | 207 tests passing |
 
+| 2026-05-08 11:00 | beaver-agent | Cleaned up stale "v2" version markers from 3 core module docstrings (agent.py, intent_parser.py, tool_router.py) — version numbers were inconsistent and misleading | 314 tests passing |
+
 ## Current Stage
-- 231 tests passing
-- Added comprehensive docstrings to all 12 browser_tool module-level functions
-- tools/ directory docstring sweep complete — all public functions documented
-- Next: Add test coverage for remaining untested modules (browser_tool, debugger)
+- 314 tests passing
+- All core module docstrings cleaned up (no stale v2 markers)
+- Next: Continue incremental improvements
 
 ## Priority Areas
 1. Test coverage (browser_tool, debugger, mcp_tool still untested)
