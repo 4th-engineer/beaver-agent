@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 from typer.testing import CliRunner
 
 from beaver_agent.main import app
-from beaver_agent.cli.commands import handle_command, print_help, show_model_info, show_status, chat_command
+from beaver_agent.cli.commands import handle_command, print_help, show_model_info, show_status, chat_command, model_command
 from rich.markdown import Markdown
 from beaver_agent.cli.interactive import print_welcome, _print_response
 
@@ -242,6 +242,17 @@ class TestCliApp:
         """Test 'model' command is registered in CLI."""
         result = runner.invoke(app, ["model", "--help"])
         assert result.exit_code == 0
+
+    def test_model_command_show_true_displays_model_info(self, capsys):
+        """Test model_command(show=True) loads config and displays model info."""
+        mock_cfg = MagicMock()
+        mock_cfg.model.name = "test-model-name"
+        mock_cfg.model.provider = "test-provider-name"
+        with patch("beaver_agent.cli.commands.load_config", return_value=mock_cfg):
+            model_command(show=True)
+        captured = capsys.readouterr()
+        assert "test-model-name" in captured.out
+        assert "test-provider-name" in captured.out
 
 
 class TestChatCommand:
