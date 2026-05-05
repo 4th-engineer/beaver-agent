@@ -307,9 +307,11 @@
 
 | 2026-05-09 04:00 | beaver-agent | Explicit __all__ in cli/__init__.py — replaced wildcard import with explicit symbol list (handle_command, print_help, show_model_info, show_status, chat_command, model_command, run_repl), consistent with tools/core/eval patterns | 494 tests passing |
 
+| 2026-05-10 | beaver-agent | Fixed stale test count in README.md Project Structure section (494→503) — documentation now accurate | 503 tests passing |
+
 ## Current Stage
 - 503 tests passing
-- Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06)
+- README.md and architecture.md both accurate (503 tests)
 - Next: Continue improving test coverage (interactive.py REPL paths, main.py)
 
 ## Priority Areas
