@@ -44,7 +44,7 @@ class BeaverAdapter(ModelAdapter):
         Returns:
             The generated text response from the LLM.
         """
-        return self._client.generate(prompt)
+        return self._client.generate(prompt, **kwargs)
 
     def supports_streaming(self) -> bool:
         """Return False since BeaverAdapter does not support streaming.
