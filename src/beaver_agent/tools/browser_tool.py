@@ -216,7 +216,25 @@ def snapshot(interactive_only: bool = True, compact: bool = True, depth: int = 1
 
 
 def screenshot(path: Optional[str] = None, full_page: bool = False, annotate: bool = False) -> BrowserResult:
-    """Take screenshot of current page"""
+    """Take screenshot of current page.
+
+    Args:
+        path: File path to save screenshot. If None, a temp file is created
+            with .png suffix.
+        full_page: If True, capture the entire scrollable page (default: False).
+        annotate: If True, overlay interactive element labels on screenshot
+            (default: False).
+
+    Returns:
+        BrowserResult with success=True and content=screenshot file path,
+        or success=False and error message if capture failed.
+
+    Example:
+        >>> result = screenshot()
+        >>> if result.success:
+        ...     print(f"Saved to {result.content}")
+        >>> result = screenshot("/tmp/page.png", full_page=True)
+    """
     if path is None:
         path = tempfile.mktemp(suffix=".png")
 
@@ -253,7 +271,20 @@ def get_text(selector: str = None) -> BrowserResult:
 
 
 def get_html(selector: str = None) -> BrowserResult:
-    """Get HTML content from page or element"""
+    """Get HTML content from page or a specific element.
+
+    Args:
+        selector: Optional CSS selector or @ref ID. If None, gets full page HTML.
+            If provided, gets HTML of the matching element only.
+
+    Returns:
+        BrowserResult with success=True and content=HTML string,
+        or success=False and error message if retrieval failed.
+
+    Example:
+        >>> result = get_html()  # full page HTML
+        >>> result = get_html("div.content")  # element HTML
+    """
     cmd = f"get html" if selector is None else f"get html {selector}"
     return _run_browser_cmd(cmd)
 
@@ -287,18 +318,54 @@ def get_url() -> BrowserResult:
 
 
 def click(selector: str) -> BrowserResult:
-    """Click an element by selector or @ref"""
+    """Click an element by selector or @ref.
+
+    Args:
+        selector: CSS selector or @ref ID of the element to click.
+
+    Returns:
+        BrowserResult with success=True if click succeeded,
+        or success=False and error message if click failed.
+
+    Example:
+        >>> result = click("@e5")  # click by ref ID
+        >>> result = click("button.submit")  # click by selector
+    """
     return _run_browser_cmd(f"click {selector}")
 
 
 def fill(selector: str, text: str) -> BrowserResult:
-    """Fill input field with text"""
+    """Fill an input field with text.
+
+    Args:
+        selector: CSS selector or @ref ID of the input field to fill.
+        text: The text string to fill into the field.
+
+    Returns:
+        BrowserResult with success=True if fill succeeded,
+        or success=False and error message if fill failed.
+
+    Example:
+        >>> result = fill("input[name='email']", "user@example.com")
+    """
     escaped_text = text.replace('"', '\\"')
     return _run_browser_cmd(f'fill {selector} "{escaped_text}"')
 
 
 def type_text(selector: str, text: str) -> BrowserResult:
-    """Type text into element (character by character)"""
+    """Type text into an element character by character.
+
+    Args:
+        selector: CSS selector or @ref ID of the element to type into.
+        text: The text string to type, sent as individual keypress events.
+
+    Returns:
+        BrowserResult with success=True if typing succeeded,
+        or success=False and error message if typing failed.
+
+    Example:
+        >>> result = type_text("input[type='text']", "Hello world")
+    """
     escaped_text = text.replace('"', '\\"')
     return _run_browser_cmd(f'type {selector} "{escaped_text}"')
 
@@ -340,17 +407,58 @@ def scroll(direction: str, pixels: int = 300) -> BrowserResult:
 
 
 def scroll_into_view(selector: str) -> BrowserResult:
-    """Scroll element into view"""
+    """Scroll an element into the visible viewport.
+
+    Args:
+        selector: CSS selector or @ref ID of the element to scroll into view.
+
+    Returns:
+        BrowserResult with success=True if scroll succeeded,
+        or success=False and error message if scroll failed.
+
+    Example:
+        >>> result = scroll_into_view("@e10")
+        >>> result = scroll_into_view("footer")
+    """
     return _run_browser_cmd(f"scrollintoview {selector}")
 
 
 def wait(selector_or_ms: str) -> BrowserResult:
-    """Wait for element or time in ms"""
+    """Wait for an element to appear or for a time in milliseconds.
+
+    Args:
+        selector_or_ms: Either a CSS selector / @ref ID to wait for,
+            or a time value in milliseconds (e.g., "1000" for 1 second).
+
+    Returns:
+        BrowserResult with success=True if wait completed,
+        or success=False and error message if wait failed.
+
+    Example:
+        >>> result = wait("@e5")  # wait for element
+        >>> result = wait("2000")  # wait 2 seconds
+    """
     return _run_browser_cmd(f"wait {selector_or_ms}")
 
 
 def find_elements(role: str, value: str, action: str = "click", name: str = None) -> BrowserResult:
-    """Find elements by role, text, label, etc."""
+    """Find elements by accessibility role and value, then optionally perform an action.
+
+    Args:
+        role: Accessibility role to search by (e.g., 'button', 'link', 'textbox').
+        value: The value, text, or label to match within elements with that role.
+        action: Action to perform on the first matching element (default: 'click').
+            Common actions: 'click', 'hover', 'focus', 'none'.
+        name: Optional accessible name to further filter elements.
+
+    Returns:
+        BrowserResult with success=True if element found and action succeeded,
+        or success=False and error message if no element matched or action failed.
+
+    Example:
+        >>> result = find_elements("button", "Submit")
+        >>> result = find_elements("link", "Home", action="none")
+    """
     cmd = f"find {role} {value} {action}"
     if name:
         cmd += f" --name {name}"
@@ -358,22 +466,54 @@ def find_elements(role: str, value: str, action: str = "click", name: str = None
 
 
 def back() -> BrowserResult:
-    """Go back in browser history"""
+    """Navigate back to the previous page in browser history.
+
+    Returns:
+        BrowserResult with success=True if navigation succeeded,
+        or success=False and error message if back navigation failed.
+
+    Example:
+        >>> result = back()
+    """
     return _run_browser_cmd("back")
 
 
 def forward() -> BrowserResult:
-    """Go forward in browser history"""
+    """Navigate forward in browser history.
+
+    Returns:
+        BrowserResult with success=True if navigation succeeded,
+        or success=False and error message if forward navigation failed.
+
+    Example:
+        >>> result = forward()
+    """
     return _run_browser_cmd("forward")
 
 
 def reload() -> BrowserResult:
-    """Reload current page"""
+    """Reload the current page.
+
+    Returns:
+        BrowserResult with success=True if reload succeeded,
+        or success=False and error message if reload failed.
+
+    Example:
+        >>> result = reload()
+    """
     return _run_browser_cmd("reload")
 
 
 def close() -> BrowserResult:
-    """Close browser"""
+    """Close the current browser session.
+
+    Returns:
+        BrowserResult with success=True if close succeeded,
+        or success=False and error message if close failed.
+
+    Example:
+        >>> result = close()
+    """
     return _run_browser_cmd("close")
 
 
