@@ -1,7 +1,7 @@
 """Beaver Agent LLM Client - Unified interface for OpenRouter/Claude/OpenAI"""
 
 import os
-from typing import Optional, List, Dict, Any, Union
+from typing import Optional, List, Dict
 
 import structlog
 

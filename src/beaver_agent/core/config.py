@@ -6,7 +6,6 @@ from typing import Optional
 
 import yaml
 from pydantic import BaseModel, Field, field_validator
-from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 
 

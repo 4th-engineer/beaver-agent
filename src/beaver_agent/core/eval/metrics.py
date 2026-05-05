@@ -2,8 +2,6 @@
 
 from abc import ABC, abstractmethod
 import difflib
-import re
-from typing import Any
 
 import structlog
 

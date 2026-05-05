@@ -1,7 +1,5 @@
 """Beaver Agent Interactive REPL"""
 
-from typing import Optional
-
 import structlog
 from rich.console import Console
 from rich.markdown import Markdown
