@@ -278,3 +278,5 @@
 4. Logging enhancement (mostly complete)
 
 | 2026-05-09 05:00 | beaver-agent | Added test_cli_commands.py — 24 tests for CLI command handlers (handle_command: /exit, /quit, /q, /help, /h, ?, /clear, /reset, /model, /status, /debug, /browse, /screenshot, unknown; print_help, show_model_info, show_status; Typer app command registration) | 471 tests passing |
+
+| 2026-05-09 06:00 | beaver-agent | Enhanced docstrings for main.py run() and chat() commands — replaced one-line Chinese placeholders with Args/Example sections documenting REPL and single-query modes | 471 tests passing |
