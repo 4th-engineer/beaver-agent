@@ -1,4 +1,4 @@
-"""Beaver Agent Core v2 - With LLM Integration"""
+"""Beaver Agent Core - LLM-integrated agent orchestration."""
 
 import uuid
 from io import StringIO

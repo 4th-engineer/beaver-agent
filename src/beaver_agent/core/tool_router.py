@@ -1,4 +1,4 @@
-"""Beaver Agent Tool Router v2 - With LLM integration"""
+"""Beaver Agent Tool Router - LLM-integrated tool dispatch."""
 
 from typing import Dict, Any, Optional
 
