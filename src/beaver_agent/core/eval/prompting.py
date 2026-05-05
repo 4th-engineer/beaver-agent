@@ -15,7 +15,34 @@ __all__ = [
 
 @dataclass
 class PromptStrategy:
-    """Defines how to construct prompts for a specific task type."""
+    """Defines how to construct prompts for a specific task type.
+
+    Attributes:
+        name: Identifier for this strategy (e.g., "code_generation", "bug_fix").
+        system_template: Static system-level instructions provided to the LLM.
+            Shapes the LLM's role and behavior (e.g., "You are an expert Python programmer").
+        user_template: Template string for the user prompt. The literal ``{prompt}``
+            placeholder is replaced with the task-specific prompt at build time.
+            Defaults to ``"{prompt}"`` which passes the task text unchanged.
+        few_shot_examples: Optional list of ``{input, output}`` dicts providing
+            in-context examples. When non-empty, each example is formatted as
+            ``"Example: {input}\\nResponse: {output}"`` and prepended to the user
+            prompt before the actual task, separated by blank lines.
+
+    Example:
+        >>> strategy = PromptStrategy(
+        ...     name="code_generation",
+        ...     system_template="You are an expert Python programmer.",
+        ...     few_shot_examples=[
+        ...         {"input": "def double(x):", "output": "return x * 2"}
+        ...     ]
+        ... )
+        >>> system, user = strategy.build("Write a function that triples a number")
+        >>> print(system)
+        You are an expert Python programmer.
+        >>> print(user[:50])
+        Example: def double(x):
+    """
     name: str
     system_template: str = ""
     user_template: str = "{prompt}"
