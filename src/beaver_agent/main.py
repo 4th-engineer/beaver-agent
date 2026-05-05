@@ -23,7 +23,23 @@ def run(
     model: Optional[str] = typer.Option(None, "--model", "-m", help="指定模型"),
     debug: bool = typer.Option(False, "--debug", "-d", help="调试模式"),
 ):
-    """启动交互式 CLI"""
+    """Start the interactive REPL loop.
+
+    Initializes a BeaverAgent with the specified configuration and enters
+    a read-eval-print loop, processing user input until EOF, /exit command,
+    or KeyboardInterrupt.
+
+    Args:
+        model: Optional model name to use (e.g., "MiniMax", "claude-3-opus").
+               If not specified, uses the default from config or .env.
+        debug: If True, enables debug mode which prints full tracebacks
+               for unhandled exceptions in the agent or tool layer.
+
+    Example:
+        beaver run                    # Start REPL with default settings
+        beaver run --model MiniMax    # Start REPL using MiniMax model
+        beaver run --debug            # Start REPL with debug output enabled
+    """
     config = load_config(debug=debug)
     if model:
         config.model.name = model
@@ -35,7 +51,21 @@ def chat(
     query: str = typer.Option(..., "--query", "-q", help="查询内容"),
     model: Optional[str] = typer.Option(None, "--model", "-m", help="指定模型"),
 ):
-    """单次查询模式"""
+    """Execute a single query and exit.
+
+    Initializes a BeaverAgent, sends the query for processing, prints the
+    response, and exits immediately. Useful for non-interactive scripts
+    or one-off commands.
+
+    Args:
+        query: The user query string to process through the agent.
+        model: Optional model name to use (e.g., "MiniMax", "claude-3-opus").
+               If not specified, uses the default from config or .env.
+
+    Example:
+        beaver chat -q "Explain what a structlog is"
+        beaver chat -q "Write a hello world in Python" --model MiniMax
+    """
     config = load_config()
     if model:
         config.model.name = model
