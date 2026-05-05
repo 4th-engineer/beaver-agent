@@ -3,6 +3,7 @@
 ## History
 | Date | Changes Made | Impact |
 |------|--------------|--------|
+| 2026-05-06 07:30 | beaver-agent | Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06) — documentation now accurate | 503 tests passing |
 | 2026-05-06 | Add test_main.py covering CLI entry points (run, chat, model, version, setup) | 503 tests passing |
 | 2026-04-29 | Added docstrings to TerminalTool.get_error_log and run_tests | Improved code documentation |
 | 2026-04-29 | Added skill system - SkillManager, IntentParser skill routing, 2 sample skills | 46 tests passing |
@@ -165,13 +166,13 @@
 | 2026-05-09 05:00 | beaver-agent | Removed stale v2 marker from TaskPlanner docstring — cleaned up misleading version number, consistent with prior cleanup of agent.py/intent_parser.py/tool_router.py | 447 tests passing |
 
 ## Current Stage
-- 447 tests passing
-- Full test coverage: adapter, browser_tool, cli, code_analyzer, code_gen, code_review, config, conversation_logger, data_store, debugger, eval, file_tool, github_tool, intent_parser, llm_client, long_term_memory, mcp_manager, memory, skill_manager, task_planner, terminal_tool, tool_router
-- Next: Continue improving code quality (linting, type hints, error handling edge cases)
+- 503 tests passing
+- Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06)
+- Next: Continue improving test coverage (interactive.py, main.py run/chat paths)
 
 ## Priority Areas
-1. Type hint coverage (partially complete)
-2. Error handling edge cases (mostly complete)
+1. Test coverage (interactive.py REPL, main.py run/chat paths)
+2. Error handling (mostly complete)
 3. CLI documentation (mostly complete)
 4. Logging enhancement (mostly complete)
 
@@ -267,8 +268,8 @@
 | 2026-05-08 11:00 | beaver-agent | Cleaned up stale "v2" version markers from 3 core module docstrings (agent.py, intent_parser.py, tool_router.py) — version numbers were inconsistent and misleading | 314 tests passing |
 
 ## Current Stage
-- 471 tests passing
-- Added test_cli_commands.py for CLI command handlers (handle_command, print_help, show_model_info, show_status)
+- 503 tests passing
+- Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06)
 - Next: Continue improving test coverage (interactive.py, main.py run/chat paths)
 
 ## Priority Areas
@@ -307,8 +308,8 @@
 | 2026-05-09 04:00 | beaver-agent | Explicit __all__ in cli/__init__.py — replaced wildcard import with explicit symbol list (handle_command, print_help, show_model_info, show_status, chat_command, model_command, run_repl), consistent with tools/core/eval patterns | 494 tests passing |
 
 ## Current Stage
-- 494 tests passing
-- Added direct test for model_command(show=True) in test_cli_commands.py
+- 503 tests passing
+- Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06)
 - Next: Continue improving test coverage (interactive.py REPL paths, main.py)
 
 ## Priority Areas
