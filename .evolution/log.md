@@ -300,6 +300,10 @@
 
 | 2026-05-12 08:00 | beaver-agent | Exported MCPTool from core/__init__.py — was imported in top-level __init__.py but missing from core public API (consistent with tools/ and eval/ patterns) | 493 tests passing |
 
+| 2026-05-09 06:00 | beaver-agent | Exported CodeReviewIssue from top-level beaver_agent/__init__.py — makes shared issue class part of public API, consistent with eval/ package patterns | 494 tests passing |
+
+| 2026-05-09 06:00 | beaver-agent | Fixed stale date in architecture.md section 12 (2026-05-11→2026-05-09) — documentation now accurate | 494 tests passing |
+
 ## Current Stage
 - 494 tests passing
 - Added direct test for model_command(show=True) in test_cli_commands.py
