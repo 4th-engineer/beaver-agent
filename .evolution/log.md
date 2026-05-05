@@ -260,3 +260,5 @@
 | 2026-05-06 03:06 | beaver-agent | Added test_browser_tool.py with 52 tests — comprehensive coverage for BrowserTool class and all 17 module-level functions; fixed pre-existing bug where _run_browser_cmd passed error= keyword arg to BrowserResult (only accepts success/content/message) | 283 tests passing |
 
 | 2026-05-08 03:00 | beaver-agent | Added error handling to DataStore._save_applied — previously silent file write failures could lose migration state; now wrapped in try/except with structlog error logging, consistent with all other file I/O in data_store.py | 314 tests passing |
+
+| 2026-05-08 12:00 | beaver-agent | Added test_config.py — 26 tests for all 8 Pydantic config models and load_config; fixed real bug: load_config crashed with KeyError when no config file existed | 340 tests passing |

@@ -111,7 +111,7 @@ beaver-agent/
 ├── skills/                      # 用户可扩展 skills
 ├── mcp_configs/                  # 用户可配置 MCP
 ├── logs/                         # 对话日志
-├── tests/                        # 314 tests
+├── tests/                        # 340 tests
 └── doc/
     ├── architecture.md           # 架构文档
     └── evolution.md              # 自我进化日志 (已迁移至 .evolution/log.md)
