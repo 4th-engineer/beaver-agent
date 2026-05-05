@@ -3,7 +3,7 @@
 ## History
 | Date | Changes Made | Impact |
 |------|--------------|--------|
-| 2026-04-28 | Fixed FileTool path security | +4 tests passing |
+| 2026-05-06 | Add test_main.py covering CLI entry points (run, chat, model, version, setup) | 503 tests passing |
 | 2026-04-29 | Added docstrings to TerminalTool.get_error_log and run_tests | Improved code documentation |
 | 2026-04-29 | Added skill system - SkillManager, IntentParser skill routing, 2 sample skills | 46 tests passing |
 | 2026-04-29 | Add conversation logger | 62 tests passing |
