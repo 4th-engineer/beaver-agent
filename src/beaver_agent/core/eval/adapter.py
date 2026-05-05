@@ -2,6 +2,10 @@
 
 from abc import ABC, abstractmethod
 
+import structlog
+
+logger = structlog.get_logger()
+
 
 class ModelAdapter(ABC):
     """Abstract adapter that all LLM providers must implement."""
@@ -75,6 +79,7 @@ class OpenAIAdapter(ModelAdapter):
         Raises:
             NotImplementedError: OpenAI adapter is not yet implemented.
         """
+        logger.error("openai_adapter_not_implemented", prompt_length=len(prompt))
         raise NotImplementedError("OpenAI adapter not yet implemented")
 
     def supports_streaming(self) -> bool:
@@ -105,6 +110,7 @@ class MiniMaxAdapter(ModelAdapter):
         Raises:
             NotImplementedError: MiniMax adapter is not yet implemented.
         """
+        logger.error("minimax_adapter_not_implemented", prompt_length=len(prompt))
         raise NotImplementedError("MiniMax adapter not yet implemented")
 
     def supports_streaming(self) -> bool:
