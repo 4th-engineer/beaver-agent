@@ -6,7 +6,8 @@ from typer.testing import CliRunner
 
 from beaver_agent.main import app
 from beaver_agent.cli.commands import handle_command, print_help, show_model_info, show_status, chat_command
-from beaver_agent.cli.interactive import print_welcome
+from rich.markdown import Markdown
+from beaver_agent.cli.interactive import print_welcome, _print_response
 
 
 @pytest.fixture
@@ -292,3 +293,41 @@ class TestPrintWelcome:
             call_args = MockPanel.call_args[0]
             panel_content = str(call_args[0])
             assert "Beaver Agent" in panel_content
+
+
+class TestPrintResponse:
+    """Tests for _print_response function."""
+
+    def test_plain_text_prints_directly(self, capsys):
+        """Test plain text without code blocks is printed via console.print."""
+        with patch("beaver_agent.cli.interactive.console") as mock_console:
+            _print_response("Hello world")
+            mock_console.print.assert_called_once_with("Hello world")
+
+    def test_markdown_with_code_blocks_renders_as_markdown(self, capsys):
+        """Test response with ``` is rendered via Markdown renderer."""
+        with patch("beaver_agent.cli.interactive.console") as mock_console:
+            with patch("beaver_agent.cli.interactive.Markdown") as MockMarkdown:
+                mock_markdown_instance = MockMarkdown.return_value
+                _print_response("Hello\n```python\nprint('hi')\n```")
+                mock_console.print.assert_called_once()
+                # Verify Markdown was called (rendered as markdown, not plain text)
+                MockMarkdown.assert_called_once()
+                MockMarkdown.assert_called_with(
+                    "Hello\n```python\nprint('hi')\n```",
+                    code_theme="monokai"
+                )
+                # The console.print was called with the Markdown instance (mock)
+                call_args = mock_console.print.call_args[0]
+                assert call_args[0] is mock_markdown_instance
+
+    def test_empty_code_block_markers_dont_trigger_markdown(self, capsys):
+        """Test triple backticks without content between them still triggers Markdown path."""
+        # Even empty code blocks should go through Markdown renderer
+        with patch("beaver_agent.cli.interactive.console") as mock_console:
+            with patch("beaver_agent.cli.interactive.Markdown") as MockMarkdown:
+                mock_markdown_instance = MockMarkdown.return_value
+                _print_response("```\n```")
+                MockMarkdown.assert_called_once()
+                call_args = mock_console.print.call_args[0]
+                assert call_args[0] is mock_markdown_instance
