@@ -258,3 +258,5 @@
 | 2026-05-08 12:00 | beaver-agent | Added comprehensive docstrings to 12 browser_tool module-level functions (screenshot, get_html, click, fill, type_text, scroll_into_view, wait, find_elements, back, forward, reload, close) — all now have Args/Returns/Example sections, completing the tools/ docstring sweep | 231 tests passing |
 
 | 2026-05-06 03:06 | beaver-agent | Added test_browser_tool.py with 52 tests — comprehensive coverage for BrowserTool class and all 17 module-level functions; fixed pre-existing bug where _run_browser_cmd passed error= keyword arg to BrowserResult (only accepts success/content/message) | 283 tests passing |
+
+| 2026-05-08 03:00 | beaver-agent | Added error handling to DataStore._save_applied — previously silent file write failures could lose migration state; now wrapped in try/except with structlog error logging, consistent with all other file I/O in data_store.py | 314 tests passing |
