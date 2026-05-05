@@ -157,6 +157,12 @@ def load_config(debug: bool = False) -> BeaverConfig:
                 config_data = yaml.safe_load(f) or {}
             break
 
+    # Ensure required sections exist even when no config file was found
+    if "model" not in config_data:
+        config_data["model"] = {}
+    if "github" not in config_data:
+        config_data["github"] = {}
+
     # Override with environment variables
     config_data["model"]["api_key"] = os.environ.get(
         "OPENROUTER_API_KEY",
