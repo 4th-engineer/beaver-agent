@@ -285,4 +285,6 @@
 
 | 2026-05-08 12:00 | beaver-agent | Added test_config.py — 26 tests for all 8 Pydantic config models and load_config; fixed real bug: load_config crashed with KeyError when no config file existed | 340 tests passing |
 
+| 2026-05-09 | beaver-agent | Added test_adapter.py — 13 tests for ModelAdapter (ABC), BeaverAdapter, OpenAIAdapter, MiniMaxAdapter; fixed BeaverAdapter.generate() to pass **kwargs to client (was silently ignoring kwargs) | 447 tests passing |
+
 | 2026-05-09 | beaver-agent | Added test_github_tool.py — 36 tests covering all GitHubTool methods (init, _check_config, operate, get_repo_info, create_issue, list_issues, get_issue, create_pr) with config validation, API success/error/exception cases | 376 tests passing |
