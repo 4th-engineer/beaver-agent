@@ -279,6 +279,8 @@
 
 | 2026-05-09 05:00 | beaver-agent | Added test_cli_commands.py — 24 tests for CLI command handlers (handle_command: /exit, /quit, /q, /help, /h, ?, /clear, /reset, /model, /status, /debug, /browse, /screenshot, unknown; print_help, show_model_info, show_status; Typer app command registration) | 471 tests passing |
 
+| 2026-05-12 06:00 | beaver-agent | Fixed stale test count in README.md project structure (480→493) — documentation now accurate | 493 tests passing |
+
 | 2026-05-12 06:00 | beaver-agent | Added 3 tests for _print_response (test_plain_text_prints_directly, test_markdown_with_code_blocks_renders_as_markdown, test_empty_code_block_markers_dont_trigger_markdown) — previously untested CLI helper now covered | 480 tests passing |
 
 | 2026-05-09 06:00 | beaver-agent | Enhanced docstrings for main.py run() and chat() commands — replaced one-line Chinese placeholders with Args/Example sections documenting REPL and single-query modes | 471 tests passing |
