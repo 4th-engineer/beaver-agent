@@ -14,6 +14,7 @@ __all__ = [
     "TaskPlanner",
     "SkillManager",
     "MCPManager",
+    "MCPTool",
     "SessionMemory",
     "LongTermMemory",
     "MemoryCategory",
@@ -29,6 +30,6 @@ from beaver_agent.core.data_store import DataStore, get_data_store, init_data_st
 from beaver_agent.core.intent_parser import IntentParser
 from beaver_agent.core.task_planner import TaskPlanner
 from beaver_agent.core.skill_manager import SkillManager
-from beaver_agent.core.mcp_manager import MCPManager
+from beaver_agent.core.mcp_manager import MCPManager, MCPTool
 from beaver_agent.core.memory.session import SessionMemory
 from beaver_agent.core.memory.long_term import LongTermMemory, MemoryCategory, MemoryEntry, MemoryQuery

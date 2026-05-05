@@ -294,6 +294,8 @@
 
 | 2026-05-11 06:00 | beaver-agent | Added test_cli_app.py with 13 tests for Typer CLI app-level behavior (run/chat/version/model/setup --help, chat requires query, no command exits with 2, --help shows all commands) | 493 tests passing |
 
+| 2026-05-12 07:00 | beaver-agent | Removed 7 unused imports across 5 modules (Any, Union, re, Optional, BaseSettings, field) — clean imports, no functional change | 493 tests passing |
+
 ## Current Stage
 - 493 tests passing
 - Added test_cli_app.py for Typer CLI app-level command registration and help output
