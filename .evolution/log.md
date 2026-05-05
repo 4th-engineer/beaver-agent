@@ -225,3 +225,4 @@
 | 2026-05-08 02:00 | Added test_terminal_tool.py with 17 tests covering TerminalTool (init, _is_blocked security checks, execute with blocked/safe/timeout cases, get_error_log, run_tests) | 199 tests passing |
 
 | 2026-05-08 04:00 | beaver-agent | Removed duplicate MCPConfig import in test_mcp_manager.py (MCPConfig was imported twice on line 10) | 199 tests passing |
+| 2026-05-08 05:00 | beaver-agent | Exported LongTermMemory, MemoryCategory, MemoryEntry, MemoryQuery from core/__init__.py — were in core/memory/__init__.py but missing from parent public API | 199 tests passing |
