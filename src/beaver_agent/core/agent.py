@@ -14,6 +14,7 @@ from beaver_agent.core.intent_parser import IntentParser
 from beaver_agent.core.task_planner import TaskPlanner
 from beaver_agent.core.tool_router import ToolRouter
 from beaver_agent.core.memory.session import SessionMemory
+from beaver_agent.core.memory.long_term import LongTermMemory
 from beaver_agent.core.conversation_logger import ConversationLogger
 from beaver_agent.core.data_store import init_data_store
 
@@ -46,6 +47,7 @@ class BeaverAgent:
         
         self.session_id = str(uuid.uuid4())[:8]
         self.memory = SessionMemory()
+        self.long_term_memory = LongTermMemory(self.data_store.data_dir / "memory")
         self.intent_parser = IntentParser()
         self.task_planner = TaskPlanner()
         self.tool_router = ToolRouter(config)
@@ -114,11 +116,98 @@ class BeaverAgent:
             # Add assistant response to history
             self.conversation_history.append({"role": "assistant", "content": response})
 
+            # Auto-extract and store important information from this exchange
+            self._extract_and_store_memory(user_input, response, tool_results)
+
             return response
 
         except Exception as e:
             logger.error("agent_run_failed", exc_info=e, input=user_input[:100])
             return f"❌ An unexpected error occurred: {e}"
+
+    def _extract_and_store_memory(
+        self,
+        user_input: str,
+        response: str,
+        tool_results: list[dict[str, Any]],
+    ) -> None:
+        """Automatically extract and store important information in long-term memory.
+
+        Scans the conversation for:
+        - User preferences (language, communication style)
+        - Project conventions and facts
+        - Problem-solution pairs from successful tool executions
+        - Tool usage patterns
+
+        Args:
+            user_input: The user's input message.
+            response: The agent's response.
+            tool_results: Results from tool executions.
+        """
+        import re
+
+        # Pattern-based extraction for common cases
+
+        # 1. User language/preference patterns
+        chinese_patterns = [
+            r"用中文",
+            r"中文沟通",
+            r"说话.*中文",
+            r"回复.*中文",
+        ]
+        for pattern in chinese_patterns:
+            if re.search(pattern, user_input, re.IGNORECASE):
+                self.long_term_memory.remember_user_preference(
+                    "User prefers Chinese communication",
+                    session_id=self.session_id,
+                )
+                break
+
+        # 2. Project facts from tool results
+        # Extract successful file operations to learn project structure
+        for result in tool_results:
+            if not result.get("success"):
+                continue
+
+            tool_name = result.get("tool", "")
+            data = result.get("data", "")
+
+            # Learn from code analyzer
+            if tool_name in ("code_analyzer", "analyze") and isinstance(data, str):
+                # Extract module/path information
+                if "src/" in data or "tests/" in data:
+                    self.long_term_memory.remember_project_fact(
+                        f"Project has code at: {data[:200]}",
+                        tags=["project", "structure"],
+                        session_id=self.session_id,
+                    )
+
+            # Learn from git operations
+            if tool_name in ("git", "github") and isinstance(data, str):
+                if "branch" in data.lower() or "commit" in data.lower():
+                    self.long_term_memory.remember_convention(
+                        f"Git operation result: {data[:150]}",
+                        context="learned from tool execution",
+                        session_id=self.session_id,
+                    )
+
+        # 3. Problem-solution: successful bug fixes
+        if "error" in user_input.lower() or "bug" in user_input.lower():
+            for result in tool_results:
+                if result.get("success") and result.get("data"):
+                    self.long_term_memory.remember_solution(
+                        problem=user_input[:200],
+                        solution=f"Tool: {result.get('tool')}, Result: {str(result.get('data'))[:200]}",
+                        tags=["bugfix", "problem"],
+                        session_id=self.session_id,
+                    )
+                    break
+
+        logger.debug(
+            "memory_auto_extracted",
+            session_id=self.session_id,
+            user_input_preview=user_input[:50],
+        )
 
     def _generate_response(
         self,
@@ -164,6 +253,14 @@ Always provide actionable suggestions."""
         # Add conversation history (last 10 messages)
         for msg in self.conversation_history[-10:]:
             messages.append({"role": msg["role"], "content": msg["content"]})
+
+        # Add long-term memory context
+        memory_context = self.long_term_memory.get_context_for_prompt(
+            query=user_input,  # Search relevant memories based on current input
+            limit=5,
+        )
+        if memory_context:
+            messages.append({"role": "system", "content": memory_context})
 
         # Add current context
         if context:
