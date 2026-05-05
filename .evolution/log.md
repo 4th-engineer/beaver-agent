@@ -253,3 +253,5 @@
 | 2026-05-08 11:30 | beaver-agent | Synced test count 207→231 in README.md and doc/architecture.md | 231 tests passing |
 
 | 2026-05-08 12:00 | beaver-agent | Added comprehensive docstrings to 12 browser_tool module-level functions (screenshot, get_html, click, fill, type_text, scroll_into_view, wait, find_elements, back, forward, reload, close) — all now have Args/Returns/Example sections, completing the tools/ docstring sweep | 231 tests passing |
+
+| 2026-05-06 03:06 | beaver-agent | Added test_browser_tool.py with 52 tests — comprehensive coverage for BrowserTool class and all 17 module-level functions; fixed pre-existing bug where _run_browser_cmd passed error= keyword arg to BrowserResult (only accepts success/content/message) | 283 tests passing |
