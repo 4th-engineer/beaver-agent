@@ -162,6 +162,8 @@
 
 | 2026-05-09 04:00 | beaver-agent | Removed unused Optional import from cli/commands.py — clean imports, no functional change | 447 tests passing |
 
+| 2026-05-09 05:00 | beaver-agent | Removed stale v2 marker from TaskPlanner docstring — cleaned up misleading version number, consistent with prior cleanup of agent.py/intent_parser.py/tool_router.py | 447 tests passing |
+
 ## Current Stage
 - 447 tests passing
 - Full test coverage: adapter, browser_tool, cli, code_analyzer, code_gen, code_review, config, conversation_logger, data_store, debugger, eval, file_tool, github_tool, intent_parser, llm_client, long_term_memory, mcp_manager, memory, skill_manager, task_planner, terminal_tool, tool_router
