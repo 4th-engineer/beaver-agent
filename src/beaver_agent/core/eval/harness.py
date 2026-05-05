@@ -25,6 +25,20 @@ class BeaverHarness:
         max_workers: int = 4,
         benchmark_dir: Optional[str] = None,
     ):
+        """Initialize the BeaverHarness evaluation runner.
+
+        Args:
+            adapter: ModelAdapter instance (BeaverAdapter, OpenAIAdapter, or MiniMaxAdapter)
+                used to execute LLM calls for each task.
+            max_workers: Maximum number of parallel task executions. Defaults to 4.
+            benchmark_dir: Optional path to a benchmark directory. If provided, the
+                BenchmarkRegistry will load all benchmark tasks from YAML files in
+                that directory at initialization. Defaults to None (no benchmarks loaded).
+
+        Example:
+            >>> from beaver_agent.core.eval import BeaverHarness, BeaverAdapter
+            >>> harness = BeaverHarness(BeaverAdapter(), max_workers=4)
+        """
         self.adapter = adapter
         self.runner = Runner(adapter, max_workers=max_workers)
         self.registry = get_benchmark_registry()
