@@ -181,8 +181,24 @@ class DataStore:
             return []
     
     def _save_applied(self, names: List[str]) -> None:
-        """Save applied migration list"""
-        self.applied_file.write_text(json.dumps(names, indent=2))
+        """Save applied migration list.
+
+        Writes the list of applied migration names to the applied migrations
+        file. Failures are logged but do not raise — migration state loss
+        is recoverable via re-run.
+
+        Args:
+            names: List of migration names that have been applied.
+
+        Raises:
+            OSError: If the directory cannot be created (logged and swallowed
+                     to avoid blocking migration progress).
+        """
+        try:
+            self.applied_file.write_text(json.dumps(names, indent=2))
+        except OSError as e:
+            logger.error("applied_migrations_save_failed",
+                        path=str(self.applied_file), exc_info=e)
     
     # ─────────────────────────────────────────────────────────
     # Migration System
