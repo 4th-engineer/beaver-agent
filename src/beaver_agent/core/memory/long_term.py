@@ -41,6 +41,13 @@ class MemoryEntry:
     source: str = "auto"  # "auto" extracted, "manual" user explicitly saved
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the memory entry to a dictionary.
+
+        Returns:
+            Dictionary containing all memory entry fields (id, content,
+            category, tags, created_at, last_accessed, access_count,
+            session_id, source) suitable for JSON serialization.
+        """
         return {
             "id": self.id,
             "content": self.content,
@@ -55,6 +62,16 @@ class MemoryEntry:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> MemoryEntry:
+        """Reconstruct a MemoryEntry from a dictionary.
+
+        Args:
+            data: Dictionary with memory entry fields (id, content, category
+                required; tags, last_accessed, access_count, session_id,
+                source are optional with sensible defaults).
+
+        Returns:
+            A MemoryEntry instance reconstructed from the dictionary.
+        """
         return cls(
             id=data["id"],
             content=data["content"],
