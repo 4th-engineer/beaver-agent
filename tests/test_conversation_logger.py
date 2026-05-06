@@ -163,3 +163,34 @@ class TestConversationLogger:
             # Content should be truncated
             assert len(entry["content"]) < 5000
             assert "[truncated]" in entry["content"]
+
+    def test_list_log_files_sorted_newest_first(self, temp_log_dir):
+        """Test that list_log_files returns files sorted newest-first by timestamp"""
+        import time
+        # Create sessions with enough delay to ensure different timestamp filenames
+        # (timestamp resolution is 1 second)
+        logger1 = ConversationLogger(log_dir=str(temp_log_dir))
+        logger1.start_session("first-session")
+        logger1.end_session()
+
+        time.sleep(1.1)  # Ensure different timestamp (1+ second gap)
+
+        logger2 = ConversationLogger(log_dir=str(temp_log_dir))
+        logger2.start_session("second-session")
+        logger2.end_session()
+
+        files = ConversationLogger.list_log_files(log_dir=str(temp_log_dir))
+        assert len(files) == 2
+        # Verify newest first (second-session should appear before first-session)
+        assert "second-session" in str(files[0])
+        assert "first-session" in str(files[1])
+
+    def test_list_log_files_empty_dir(self, temp_log_dir):
+        """Test that list_log_files returns empty list for empty directory"""
+        files = ConversationLogger.list_log_files(log_dir=str(temp_log_dir))
+        assert files == []
+
+    def test_list_log_files_nonexistent_dir(self):
+        """Test that list_log_files returns empty list for nonexistent directory"""
+        files = ConversationLogger.list_log_files(log_dir="/nonexistent/path/12345")
+        assert files == []

@@ -321,8 +321,11 @@
 
 | 2026-05-07 00:00 | beaver-agent | Updated architecture.md date from 2026-05-06 to 2026-05-07 — documentation now accurate | 523 tests passing |
 
+| 2026-05-14 10:00 | beaver-agent | Added docstrings to MemoryEntry.to_dict and from_dict — all 523 public functions now have docstring coverage | 523 tests passing |
+
 ## Current Stage
 - 523 tests passing
+- All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (main.py run/chat paths)
 
 ## Priority Areas
