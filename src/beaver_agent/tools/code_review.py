@@ -6,6 +6,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["CodeReviewIssue", "CodeReviewTool"]
+
 
 class CodeReviewIssue:
     """Represents a code review issue"""

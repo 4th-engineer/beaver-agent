@@ -16,6 +16,9 @@ console = Console()
 logger = structlog.get_logger()
 
 
+__all__ = ["run_repl", "print_welcome"]
+
+
 def run_repl(config: BeaverConfig) -> None:
     """Run the interactive REPL loop.
 

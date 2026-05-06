@@ -9,6 +9,8 @@ from beaver_agent.cli.commands import chat_command, model_command
 from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.core.config import load_config
 
+__all__ = ["app"]
+
 app = typer.Typer(
     name="beaver",
     help="🦫 Beaver Agent - AI Coding Assistant",

@@ -6,6 +6,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["CodeGenTool"]
+
 
 class CodeGenTool:
     """Tool for generating code using LLM"""

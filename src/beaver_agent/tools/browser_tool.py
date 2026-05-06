@@ -10,6 +10,32 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = [
+    "BrowserResult",
+    "BrowserTool",
+    "back",
+    "click",
+    "close",
+    "fetch_content",
+    "fill",
+    "find_elements",
+    "forward",
+    "get_html",
+    "get_text",
+    "get_title",
+    "get_url",
+    "navigate",
+    "press",
+    "reload",
+    "scroll",
+    "scroll_into_view",
+    "screenshot",
+    "snapshot",
+    "take_screenshot",
+    "type_text",
+    "wait",
+]
+
 
 @dataclass
 class BrowserResult:

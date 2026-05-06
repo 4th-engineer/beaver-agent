@@ -9,6 +9,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["FunctionInfo", "ClassInfo", "ModuleInfo", "CodeAnalyzer", "analyze_repository"]
+
 
 @dataclass
 class FunctionInfo:
