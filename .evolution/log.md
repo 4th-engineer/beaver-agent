@@ -145,6 +145,7 @@
 | 2026-05-17 07:00 | beaver-agent | Added structlog logging to BeaverHarness (harness.py) — logs for benchmark loading, task addition, run, and completion events. Completes logging coverage for all non-trivial eval modules (runner/harness/loader/adapter/metrics already had logging; task/prompting are pure dataclasses) | 652 tests passing |
 | 2026-05-17 08:00 | beaver-agent | Added 7 tests for SkillStep and SkillPhase dataclasses in test_skill_manager.py — these were exported in __all__ but had no dedicated test coverage; covers creation, equality, optional fields, and nested step ordering | 659 tests passing |
 | 2026-05-17 09:00 | beaver-agent | Added 2 tests for ToolRouter.get_llm_client() (none by default, returns client when set) and fixed robustness gap — get_llm_client() now uses getattr to avoid AttributeError when _llm_client never initialized | 661 tests passing |
+| 2026-05-17 10:00 | beaver-agent | Exported ConversationLogger from core/__init__.py and top-level __init__.py — was used in agent.py but missing from public API, consistent with other core components (ToolRouter, LLMClient, etc.) | 661 tests passing |
 
 ## Current Stage
 - 661 tests passing
