@@ -140,9 +140,10 @@
 | 2026-05-14 02:00 | beaver-agent | Updated stale API key comments in code_gen.py skeleton templates (OPENROUTER/ANTHROPIC → MINIMAX_API_KEY) and updated corresponding test assertion | 526 tests passing |
 | 2026-05-14 03:00 | beaver-agent | Added assertions to test_run_command_invokes_repl and test_run_command_with_debug_flag — mock_repl.assert_called_once() verifies REPL is actually invoked, exit_code asserts confirm clean exit after 'exit' input | 526 tests passing |
 | 2026-05-07 02:00 | beaver-agent | Fixed README badge (526→527) and added 2 tests for --model CLI flag on run and chat commands | 529 tests passing |
+| 2026-05-07 02:20 | beaver-agent | Added test for subprocess.TimeoutExpired exception handling in TerminalTool.execute() — previously untested exception path now covered with mock; 530 tests passing | 530 tests passing |
 
 ## Current Stage
-- 529 tests passing
+- 530 tests passing
 - All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (remaining edge cases)
 
