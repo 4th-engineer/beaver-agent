@@ -116,6 +116,16 @@ class TestBeaverAgentReset:
         agent.reset()
         assert agent.session_id != old_session_id
 
+    def test_reset_calls_logger_end_and_start_session(self, agent):
+        """Test that reset() ends the old session and starts a new one with the new ID."""
+        old_session_id = agent.session_id
+        with patch.object(agent.logger, "end_session") as mock_end, \
+             patch.object(agent.logger, "start_session") as mock_start:
+            agent.reset()
+            mock_end.assert_called_once()
+            mock_start.assert_called_once_with(agent.session_id)
+            assert agent.session_id != old_session_id
+
 
 class TestBeaverAgentShutdown:
     """Tests for BeaverAgent.shutdown()."""
