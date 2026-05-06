@@ -415,3 +415,70 @@ class TestBeaverHarness:
         harness = BeaverHarness(FakeAdapter())
         harness.load_benchmarks(str(tmp_path))
         assert "mini" in harness.registry.list_benchmarks()
+
+    def test_run_single_returns_task_result(self):
+        """Test run_single executes a task and returns a TaskResult"""
+        class FakeAdapter:
+            def generate(self, prompt):
+                return "hello world"
+
+        harness = BeaverHarness(FakeAdapter())
+        task = Task(
+            id="single-1",
+            name="single task",
+            prompt="Say hello",
+            reference="hello world",
+            task_type="code_generation",
+        )
+        result = harness.run_single(task)
+        assert isinstance(result, TaskResult)
+        assert result.task_id == "single-1"
+        assert result.success is True
+        assert "hello" in result.prediction.lower()
+
+    def test_run_single_with_failing_adapter_returns_failed_result(self):
+        """Test run_single returns failed TaskResult when adapter raises"""
+        class BrokenAdapter:
+            def generate(self, prompt):
+                raise RuntimeError("adapter broken")
+
+        harness = BeaverHarness(BrokenAdapter())
+        task = Task(
+            id="broken-1",
+            name="broken task",
+            prompt="This will fail",
+            reference="something",
+            task_type="code_generation",
+        )
+        result = harness.run_single(task)
+        assert isinstance(result, TaskResult)
+        assert result.success is False
+        assert "adapter broken" in result.error
+
+    def test_benchmark_info_returns_metadata(self):
+        """Test benchmark_info returns name, description, task_count, task_types"""
+        class FakeAdapter:
+            def generate(self, prompt):
+                return "mock"
+
+        harness = BeaverHarness(FakeAdapter())
+        # Register a dedicated benchmark to avoid interference from other tests
+        bm = Benchmark(name="info-test-bm")
+        bm.add_task(Task(id="b1-t1", name="t1", prompt="p1", reference="r1", task_type="code_generation"))
+        bm.add_task(Task(id="b1-t2", name="t2", prompt="p2", reference="r2", task_type="bug_fix"))
+        harness.register_benchmark(bm)
+
+        info = harness.benchmark_info("info-test-bm")
+        assert info["name"] == "info-test-bm"
+        assert info["task_count"] == 2
+        assert set(info["task_types"]) == {"code_generation", "bug_fix"}
+
+    def test_benchmark_info_unknown_returns_empty_dict(self):
+        """Test benchmark_info returns empty dict for unknown benchmark"""
+        class FakeAdapter:
+            def generate(self, prompt):
+                return "mock"
+
+        harness = BeaverHarness(FakeAdapter())
+        info = harness.benchmark_info("nonexistent")
+        assert info == {}
