@@ -29,6 +29,15 @@ def mock_config():
 def mock_agent():
     agent = MagicMock()
     agent.session_id = "test-session-123"
+    agent.config = MagicMock()
+    agent.config.model.name = "test-model"
+    agent.config.model.provider = "test-provider"
+    agent.memory = MagicMock()
+    agent.memory.get_history.return_value = [{"role": "user", "content": "hello"}, {"role": "assistant", "content": "hi"}]
+    agent.long_term_memory = MagicMock()
+    agent.long_term_memory.get_stats.return_value = {"total_entries": 5, "categories": {}}
+    agent.tool_router = MagicMock()
+    agent.tool_router.list_tools.return_value = ["file_tool", "terminal_tool", "github_tool"]
     return agent
 
 
@@ -211,10 +220,15 @@ class TestShowStatus:
     """Tests for show_status function."""
 
     def test_show_status_displays_session_id(self, mock_agent, capsys):
-        """Test show_status shows agent session ID."""
+        """Test show_status shows agent runtime status."""
         show_status(mock_agent)
         captured = capsys.readouterr()
         assert "test-session-123" in captured.out
+        assert "test-model" in captured.out
+        assert "test-provider" in captured.out
+        assert "2 条消息" in captured.out
+        assert "5 条记忆" in captured.out
+        assert "3 个工具" in captured.out
 
 
 class TestCliApp:

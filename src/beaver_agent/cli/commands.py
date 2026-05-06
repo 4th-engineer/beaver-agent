@@ -173,10 +173,20 @@ def show_status(agent: BeaverAgent) -> None:
     """Display the agent's current runtime status.
 
     Args:
-        agent: The active BeaverAgent instance to query for status
+        agent: The active BeaverAgent instance to query for status.
+            Provides access to session_id, config, memory, and tool_router.
     """
-    console.print(f"[green]Agent状态:[/green] 运行中")
+    session_history_count = len(agent.memory.get_history())
+    memory_stats = agent.long_term_memory.get_stats()
+    total_tools = len(agent.tool_router.list_tools())
+    model_name = agent.config.model.name
+    provider = agent.config.model.provider
+
     console.print(f"[green]会话ID:[/green] {agent.session_id}")
+    console.print(f"[green]模型:[/green] {model_name} ({provider})")
+    console.print(f"[green]会话历史:[/green] {session_history_count} 条消息")
+    console.print(f"[green]长期记忆:[/green] {memory_stats.get('total_entries', 0)} 条记忆")
+    console.print(f"[green]工具数量:[/green] {total_tools} 个工具")
 
 
 def chat_command(config: BeaverConfig, query: str) -> None:
