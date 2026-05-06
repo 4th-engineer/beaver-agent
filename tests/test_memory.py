@@ -56,8 +56,54 @@ def test_get_context(memory):
     memory.add_message("assistant", "Hi")
 
     context = memory.get_context()
-    assert "user" in context
-    assert "Hello" in context
+    # Exact format: "role: content" on each line
+    lines = context.strip().split("\n")
+    assert len(lines) == 2
+    assert lines[0] == "user: Hello"
+    assert lines[1] == "assistant: Hi"
+
+
+def test_get_context_limit_20_messages(memory):
+    """get_context includes at most the last 20 messages."""
+    mem = SessionMemory()
+    for i in range(25):
+        mem.add_message("user", f"Message {i}")
+    context = mem.get_context()
+    lines = context.strip().split("\n")
+    assert len(lines) == 20
+    # Last message should be "Message 24"
+    assert "Message 24" in lines[-1]
+    # First message should be "Message 5" (oldest of the last 20)
+    assert "Message 5" in lines[0]
+
+
+def test_search_no_match(memory):
+    """search returns empty list when query not found."""
+    memory.add_message("user", "Hello world")
+    results = memory.search("nonexistent")
+    assert results == []
+
+
+def test_search_case_insensitive(memory):
+    """search is case-insensitive."""
+    memory.add_message("user", "Hello WORLD")
+    results = memory.search("world")
+    assert len(results) == 1
+    results = memory.search("HELLO")
+    assert len(results) == 1
+
+
+def test_get_history_empty(memory):
+    """get_history returns empty list when memory is empty."""
+    history = memory.get_history()
+    assert history == []
+
+
+def test_clear_empty_memory(memory):
+    """clear succeeds on already-empty memory without error."""
+    memory.clear()
+    history = memory.get_history()
+    assert history == []
 
 
 def test_max_history_limit(memory):
