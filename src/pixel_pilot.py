@@ -107,8 +107,6 @@ def disconnect() -> None:
     _enabled = False
     if _has_structlog:
         _logger.info("disconnected")
-    else:
-        print("[PixelPilot] Disconnected.")
 
 
 def send(
