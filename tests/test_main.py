@@ -56,7 +56,7 @@ class TestChatCommand:
         """Test 'beaver chat -q <query>' propagates agent.run exceptions."""
         monkeypatch.chdir(tmp_path)
         env_file = tmp_path / ".env"
-        env_file.write_text("MINIMAX_API_KEY=test_key\n")
+        env_file.write_text("MINIMAX_API_KEY=***\n")
 
         with patch("beaver_agent.cli.commands.BeaverAgent") as MockAgent:
             mock_instance = MockAgent.return_value
@@ -64,6 +64,19 @@ class TestChatCommand:
             result = runner.invoke(app, ["chat", "-q", "Hello"])
             # Exceptions propagate; exit code 1 indicates error
             assert result.exit_code == 1
+
+    def test_chat_with_query_success(self, runner, tmp_path, monkeypatch):
+        """Test 'beaver chat -q <query>' successfully calls agent and prints response."""
+        monkeypatch.chdir(tmp_path)
+        env_file = tmp_path / ".env"
+        env_file.write_text("MINIMAX_API_KEY=***\n")
+
+        with patch("beaver_agent.cli.commands.BeaverAgent") as MockAgent:
+            mock_instance = MockAgent.return_value
+            mock_instance.run.return_value = "Test response from agent"
+            result = runner.invoke(app, ["chat", "-q", "Hello"])
+            mock_instance.run.assert_called_once_with("Hello")
+            assert result.exit_code == 0
 
 
 class TestVersionCommand:
