@@ -147,8 +147,10 @@
 | 2026-05-17 09:00 | beaver-agent | Added 2 tests for ToolRouter.get_llm_client() (none by default, returns client when set) and fixed robustness gap — get_llm_client() now uses getattr to avoid AttributeError when _llm_client never initialized | 661 tests passing |
 | 2026-05-17 10:00 | beaver-agent | Exported ConversationLogger from core/__init__.py and top-level __init__.py — was used in agent.py but missing from public API, consistent with other core components (ToolRouter, LLMClient, etc.) | 661 tests passing |
 
+| 2026-05-17 11:00 | beaver-agent | Added test for BeaverAgent.reset() logger session lifecycle — verifies end_session() and start_session() are called with new session ID | 662 tests passing |
+
 ## Current Stage
-- 661 tests passing
+- 662 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
