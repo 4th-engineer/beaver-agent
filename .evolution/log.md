@@ -152,8 +152,10 @@
 
 | 2026-05-15 04:00 | beaver-agent | Added 4 tests for BeaverHarness.run_single (success/failure cases) and benchmark_info (metadata/unknown benchmark) — previously untested harness methods now covered | 546 tests passing |
 
+| 2026-05-07 04:00 | beaver-agent | Added test_agent.py with 40 tests for BeaverAgent core class — covers __init__ (9 tests), reset, shutdown, _json_summary (6 tests), _build_context (3 tests), _generate_fallback_response (5 tests), _summarize_content (8 tests), and run (6 tests) | 586 tests passing |
+
 ## Current Stage
-- 546 tests passing
+- 586 tests passing
 - All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (remaining edge cases)
 
