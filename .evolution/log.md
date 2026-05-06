@@ -167,8 +167,9 @@
 
 | 2026-05-07 04:50 | beaver-agent | Added error handling to /browse and /screenshot CLI commands — BrowserTool failures now logged with structlog and displayed with red error output; consistent with error handling patterns across project | 610 tests passing |
 | 2026-05-07 05:06 | beaver-agent | Added test_tool_router_llm.py — 3 tests for ToolRouter.get_llm_client() (LLM init success, init failure, null client) — previously untested LLM integration path | 613 tests passing |
+| 2026-05-07 06:00 | beaver-agent | Removed unguarded print from pixel_pilot.disconnect() — consistent with connect() which guards print with verbose flag; disconnect is silent cleanup | 613 tests passing |
 
-## Current Stage
+| ## Current Stage
 - 613 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
