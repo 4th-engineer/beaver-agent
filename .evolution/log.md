@@ -169,8 +169,10 @@
 | 2026-05-07 05:06 | beaver-agent | Added test_tool_router_llm.py — 3 tests for ToolRouter.get_llm_client() (LLM init success, init failure, null client) — previously untested LLM integration path | 613 tests passing |
 | 2026-05-07 06:00 | beaver-agent | Removed unguarded print from pixel_pilot.disconnect() — consistent with connect() which guards print with verbose flag; disconnect is silent cleanup | 613 tests passing |
 
-| ## Current Stage
-- 615 tests passing
+| 2026-05-07 05:35 | beaver-agent | Added test_metrics.py — 26 tests for eval scorer edge cases (ExactMatchScorer whitespace/case/empty, SimilarityScorer boundary, CodeExecutionScorer partial pass/runtime error, CodeReviewScorer keyword coverage) and strategy constants (STRATEGY_MAP, 4 built-in strategies, architecture scorer) | 641 tests passing |
+
+## Current Stage
+- 641 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - pixel_pilot.py now has test coverage (22 tests)
