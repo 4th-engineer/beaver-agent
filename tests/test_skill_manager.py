@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from beaver_agent.core.skill_manager import SkillManager, Skill
+from beaver_agent.core.skill_manager import SkillManager, Skill, SkillStep, SkillPhase
 
 
 @pytest.fixture
@@ -319,3 +319,61 @@ Content
         assert len(d["phases"]) == 1
         assert d["checklist"] == ["Item"]
         assert d["examples"] == ["Example"]
+
+
+class TestSkillStepAndSkillPhase:
+    """Test SkillStep and SkillPhase dataclasses"""
+
+    def test_skill_step_basic(self):
+        """Test SkillStep creation with required fields"""
+        step = SkillStep(order=1, instruction="Run tests")
+        assert step.order == 1
+        assert step.instruction == "Run tests"
+        assert step.check is None
+
+    def test_skill_step_with_check(self):
+        """Test SkillStep with optional check field"""
+        step = SkillStep(order=2, instruction="Verify output", check="assert output == 'ok'")
+        assert step.order == 2
+        assert step.instruction == "Verify output"
+        assert step.check == "assert output == 'ok'"
+
+    def test_skill_step_equality(self):
+        """Test SkillStep equality comparison"""
+        step1 = SkillStep(order=1, instruction="Run tests")
+        step2 = SkillStep(order=1, instruction="Run tests")
+        step3 = SkillStep(order=2, instruction="Run tests")
+        assert step1 == step2
+        assert step1 != step3
+
+    def test_skill_phase_basic(self):
+        """Test SkillPhase creation with required fields"""
+        phase = SkillPhase(name="Implementation", instruction="Implement the feature")
+        assert phase.name == "Implementation"
+        assert phase.instruction == "Implement the feature"
+        assert phase.steps == []
+
+    def test_skill_phase_with_steps(self):
+        """Test SkillPhase with nested SkillSteps"""
+        step1 = SkillStep(order=1, instruction="Write code")
+        step2 = SkillStep(order=2, instruction="Run tests", check="pytest passes")
+        phase = SkillPhase(name="Build", instruction="Build steps", steps=[step1, step2])
+        assert len(phase.steps) == 2
+        assert phase.steps[0].instruction == "Write code"
+        assert phase.steps[1].check == "pytest passes"
+
+    def test_skill_phase_equality(self):
+        """Test SkillPhase equality comparison"""
+        phase1 = SkillPhase(name="Test", instruction="test", steps=[])
+        phase2 = SkillPhase(name="Test", instruction="test", steps=[])
+        phase3 = SkillPhase(name="Build", instruction="test", steps=[])
+        assert phase1 == phase2
+        assert phase1 != phase3
+
+    def test_skill_phase_references_steps(self):
+        """Test SkillPhase step ordering is preserved"""
+        steps = [SkillStep(order=i, instruction=f"Step {i}") for i in range(5)]
+        phase = SkillPhase(name="All Steps", instruction="All", steps=steps)
+        for i, step in enumerate(phase.steps):
+            assert step.order == i
+            assert step.instruction == f"Step {i}"

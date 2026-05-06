@@ -142,43 +142,7 @@
 | 2026-05-07 02:00 | beaver-agent | Fixed README badge (526→527) and added 2 tests for --model CLI flag on run and chat commands | 529 tests passing |
 | 2026-05-07 04:00 | beaver-agent | Added test for subprocess.TimeoutExpired exception handling in TerminalTool.execute() — previously untested exception path now covered with mock; 530 tests passing |
 | 2026-05-16 06:00 | beaver-agent | Synced stale test counts in README (615→646) and architecture.md (613→646) — documentation now accurate | 646 tests passing |
-
-| 2026-05-14 10:30 | beaver-agent | Added 3 tests for MCPManager (test_get_tools_with_tools, test_get_tool_found, test_shutdown) — get_tools/get_tool with actual tools and graceful shutdown now covered | 542 tests passing |
-
-| 2026-05-15 05:00 | beaver-agent | Added structlog logging to SessionMemory (session.py) — add_message and clear now log debug events; completes logging coverage for all core/memory modules | 588 tests passing |
-
-| 2026-05-15 06:00 | beaver-agent | Strengthened test_memory.py — replaced weak substring assertions with exact format verification, added 20-message cap test (get_context), search edge cases (no-match, case-insensitive), empty memory/clear edge cases | 646 tests passing |
-
-| 2026-05-07 03:00 | beaver-agent | Added 9 tests for IntentParser edge cases: empty/whitespace input returns general_chat, file_operation intent detection, terminal_operation intent detection, /skill direct invocation confidence (0.6), general_chat confidence (0.5), skill routing with SkillManager, set_skill_manager, and get_supported_intents with skills | 542 tests passing |
-
-| 2026-05-14 | beaver-agent | Updated stale test counts in README.md badge and Project Structure (533→542) and architecture.md (533→542) — documentation now accurate | 542 tests passing |
-
-| 2026-05-15 03:00 | beaver-agent | Fixed stale API key references in _generate_fallback_response (OPENROUTER_API_KEY/ANTHROPIC_API_KEY → MINIMAX_API_KEY) — fallback messages now reflect actual supported LLM | 542 tests passing |
-
-| 2026-05-15 04:00 | beaver-agent | Added 4 tests for BeaverHarness.run_single (success/failure cases) and benchmark_info (metadata/unknown benchmark) — previously untested harness methods now covered | 546 tests passing |
-
-| 2026-05-07 04:00 | beaver-agent | Added test_agent.py with 40 tests for BeaverAgent core class — covers __init__ (9 tests), reset, shutdown, _json_summary (6 tests), _build_context (3 tests), _generate_fallback_response (5 tests), _summarize_content (8 tests), and run (6 tests) | 586 tests passing |
-
-| 2026-05-07 03:50 | beaver-agent | Added test for LLM exception fallback in BeaverAgent.run() — covers previously untested error path where LLM._call() raises and run() falls back to _generate_fallback_response | 587 tests passing |
-
-| 2026-05-07 04:03 | beaver-agent | Added test_shutdown_idempotent to verify shutdown() can be called multiple times without error — tests graceful degradation when end_session is called on already-closed session | 588 tests passing |
-| 2026-05-07 05:00 | beaver-agent | Synced stale test counts (586→588) in README badge, Project Structure, and architecture.md status table — documentation now accurate | 588 tests passing |
-
-| 2026-05-15 04:00 | beaver-agent | Enhanced show_status to display model name/provider, session history count, long-term memory entries, and tool count — replaces hardcoded "运行中" status with actual runtime information | 588 tests passing |
-
-| 2026-05-07 04:00 | beaver-agent | Added test_pixel_pilot.py with 22 tests for pixel_pilot public API — covers connect/disconnect/send/is_enabled, _get_tool_display_name, _post_event/_test_connection, event construction, and _patch_tool_router monkey-patch; updated test counts in README and architecture.md | 610 tests passing |
-
-| 2026-05-07 04:50 | beaver-agent | Added error handling to /browse and /screenshot CLI commands — BrowserTool failures now logged with structlog and displayed with red error output; consistent with error handling patterns across project | 610 tests passing |
-| 2026-05-07 05:06 | beaver-agent | Added test_tool_router_llm.py — 3 tests for ToolRouter.get_llm_client() (LLM init success, init failure, null client) — previously untested LLM integration path | 613 tests passing |
-| 2026-05-07 06:00 | beaver-agent | Removed unguarded print from pixel_pilot.disconnect() — consistent with connect() which guards print with verbose flag; disconnect is silent cleanup | 613 tests passing |
-
-| 2026-05-07 05:35 | beaver-agent | Added test_metrics.py — 26 tests for eval scorer edge cases | 641 tests passing |
-
-| 2026-05-15 07:00 | beaver-agent | Added __all__ exports to 10 core modules | 646 tests passing |
-
-| 2026-05-16 07:00 | beaver-agent | Added __all__ exports to remaining 6 modules (code_gen, code_review, browser_tool, code_analyzer, interactive, main) — all 10 tool/CLI modules now have explicit __all__ declarations, completing the public API sweep | 646 tests passing |
-| 2026-05-16 08:00 | beaver-agent | Fixed stale date in architecture.md header (2026-05-14→2026-05-16) — documentation now accurate | 646 tests passing |
-| 2026-05-17 06:00 | beaver-agent | Added 6 tests for DataStore.migrate() and register_migration() — covers pending migration execution, no-op when up to date, exception/False failure handling, skipping already-applied, and registration | 652 tests passing |
+| 2026-05-17 07:00 | beaver-agent | Added structlog logging to BeaverHarness (harness.py) — logs for benchmark loading, task addition, run, and completion events. Completes logging coverage for all non-trivial eval modules (runner/harness/loader/adapter/metrics already had logging; task/prompting are pure dataclasses) | 652 tests passing |
 
 ## Current Stage
 - 652 tests passing
