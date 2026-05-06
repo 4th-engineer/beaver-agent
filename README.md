@@ -2,7 +2,7 @@
 
 > A self-evolving AI coding assistant — built for developers who want an agent that grows with their projects.
 
-[![Tests](https://img.shields.io/badge/tests-527%20total-blue)](https://github.com/4th-engineer/beaver-agent)
+[![Tests](https://img.shields.io/badge/tests-530%20total-blue)](https://github.com/4th-engineer/beaver-agent)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
@@ -111,7 +111,7 @@ beaver-agent/
 ├── skills/                      # 用户可扩展 skills
 ├── mcp_configs/                  # 用户可配置 MCP
 ├── logs/                         # 对话日志
-├── tests/                        # 527 tests
+├── tests/                        # 530 tests
 └── doc/
     └── architecture.md           # 架构文档
 ```
