@@ -93,3 +93,25 @@ class TestToolRouterRegistry:
         """get_tool() returns None for unknown tool name."""
         tool = router.get_tool("nonexistent")
         assert tool is None
+
+    def test_get_llm_client_none_by_default(self, router):
+        """get_llm_client() returns None when no LLM client was initialized."""
+        # Router created via __new__ bypasses __init__, so _llm_client is unset
+        assert router.get_llm_client() is None
+
+    def test_get_llm_client_returns_client(self):
+        """get_llm_client() returns the LLM client when it was initialized."""
+        from unittest.mock import MagicMock
+        from beaver_agent.core.tool_router import ToolRouter
+
+        r = ToolRouter.__new__(ToolRouter)
+        r._tool_registry = {}
+        r._llm_client = MagicMock()  # Simulate initialized LLM client
+        r.ERR_NO_TOOL = "ERR_NO_TOOL"
+        r.ERR_UNKNOWN_TOOL = "ERR_UNKNOWN_TOOL"
+        r.ERR_NO_ACTION = "ERR_NO_ACTION"
+        r.ERR_TOOL_EXECUTION = "ERR_TOOL_EXECUTION"
+
+        client = r.get_llm_client()
+        assert client is not None
+        assert client is r._llm_client

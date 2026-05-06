@@ -153,6 +153,7 @@ class ToolRouter:
         """Get the LLM client used for AI-powered tools.
 
         Returns:
-            The LLMClient instance, or None if initialization failed.
+            The LLMClient instance, or None if initialization failed or
+            the client was never initialized.
         """
-        return self._llm_client
+        return getattr(self, "_llm_client", None)
