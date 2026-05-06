@@ -9,6 +9,8 @@ from beaver_agent.core.llm_client import LLMClient
 
 logger = structlog.get_logger()
 
+__all__ = ["ToolRouter"]
+
 
 class ToolRouter:
     """Route tasks to appropriate tools"""

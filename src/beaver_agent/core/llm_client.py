@@ -9,6 +9,8 @@ from beaver_agent.core.config import ModelConfig
 
 logger = structlog.get_logger()
 
+__all__ = ["LLMResponse", "LLMClient"]
+
 
 class LLMResponse:
     """LLM response wrapper.

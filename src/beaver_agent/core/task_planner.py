@@ -7,6 +7,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["TaskPlanner"]
+
 
 class TaskPlanner:
     """Plan and decompose tasks based on intent"""

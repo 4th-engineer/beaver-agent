@@ -21,6 +21,8 @@ from beaver_agent.core.data_store import init_data_store
 
 logger = structlog.get_logger()
 
+__all__ = ["BeaverAgent"]
+
 
 class BeaverAgent:
     """Beaver Agent - Main orchestration class with LLM"""

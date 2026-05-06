@@ -13,6 +13,8 @@ from beaver_agent.core.config import BeaverConfig, MCPServerConfig
 
 logger = structlog.get_logger()
 
+__all__ = ["MCPTool", "MCPManager"]
+
 
 class MCPTool:
     """Represents a tool from an MCP server"""

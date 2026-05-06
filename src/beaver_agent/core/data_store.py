@@ -11,6 +11,15 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = [
+    "DataStore",
+    "DataVersion",
+    "DataCategory",
+    "Migration",
+    "get_data_store",
+    "init_data_store",
+]
+
 
 @dataclass
 class DataVersion:

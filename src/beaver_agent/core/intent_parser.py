@@ -8,6 +8,8 @@ from beaver_agent.core.skill_manager import SkillManager
 
 logger = structlog.get_logger()
 
+__all__ = ["IntentParser"]
+
 
 class IntentParser:
     """Parse user input to determine intent, with skill support"""

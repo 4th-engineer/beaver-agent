@@ -11,6 +11,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["ConversationLogger"]
+
 
 class ConversationLogger:
     """Thread-safe conversation logger for debugging and analysis"""
