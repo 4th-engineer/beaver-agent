@@ -254,6 +254,34 @@ class TestCliApp:
         assert "test-model-name" in captured.out
         assert "test-provider-name" in captured.out
 
+    def test_run_command_with_model_option(self, runner, tmp_path, monkeypatch):
+        """Test 'beaver run --model <name>' sets the model name in config."""
+        monkeypatch.chdir(tmp_path)
+        env_file = tmp_path / ".env"
+        env_file.write_text("MINIMAX_API_KEY=***\n")
+
+        with patch("beaver_agent.main.run_repl") as mock_repl:
+            mock_repl.return_value = None
+            result = runner.invoke(app, ["run", "--model", "gpt-5"], input="exit\n")
+            mock_repl.assert_called_once()
+            # Verify the config model name was set to gpt-5
+            call_config = mock_repl.call_args[0][0]
+            assert call_config.model.name == "gpt-5"
+            assert result.exit_code == 0
+
+    def test_chat_command_with_model_option(self, runner, tmp_path, monkeypatch):
+        """Test 'beaver chat -q <query> --model <name>' sets the model name."""
+        monkeypatch.chdir(tmp_path)
+        env_file = tmp_path / ".env"
+        env_file.write_text("MINIMAX_API_KEY=***\n")
+
+        with patch("beaver_agent.cli.commands.BeaverAgent") as MockAgent:
+            mock_instance = MockAgent.return_value
+            mock_instance.run.return_value = "Test response"
+            result = runner.invoke(app, ["chat", "-q", "Hello", "--model", "claude-3"], input="")
+            mock_instance.run.assert_called_once_with("Hello")
+            assert result.exit_code == 0
+
 
 class TestChatCommand:
     """Tests for chat_command function."""
