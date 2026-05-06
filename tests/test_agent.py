@@ -125,6 +125,12 @@ class TestBeaverAgentShutdown:
         agent.shutdown()
         agent.logger.end_session.assert_called_once()
 
+    def test_shutdown_idempotent(self, agent):
+        """Test that shutdown() can be called multiple times without error."""
+        agent.shutdown()
+        agent.shutdown()  # Should not raise
+        assert agent.logger.end_session.call_count == 2
+
 
 class TestJsonSummary:
     """Tests for BeaverAgent._json_summary()."""
