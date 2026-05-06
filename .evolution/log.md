@@ -150,8 +150,10 @@
 
 | 2026-05-15 03:00 | beaver-agent | Fixed stale API key references in _generate_fallback_response (OPENROUTER_API_KEY/ANTHROPIC_API_KEY → MINIMAX_API_KEY) — fallback messages now reflect actual supported LLM | 542 tests passing |
 
+| 2026-05-15 04:00 | beaver-agent | Added 4 tests for BeaverHarness.run_single (success/failure cases) and benchmark_info (metadata/unknown benchmark) — previously untested harness methods now covered | 546 tests passing |
+
 ## Current Stage
-- 542 tests passing
+- 546 tests passing
 - All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (remaining edge cases)
 
