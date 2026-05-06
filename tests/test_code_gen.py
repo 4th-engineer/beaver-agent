@@ -67,7 +67,7 @@ class TestGenerateSkeleton:
         """Test skeleton for unknown language falls back to generic template"""
         skeleton = code_gen_tool._generate_skeleton("something", "rust")
         assert "// Code for: something" in skeleton
-        assert "Configure LLM API key" in skeleton
+        assert "Configure MINIMAX_API_KEY in .env" in skeleton
 
     def test_generate_skeleton_is_internal(self, code_gen_tool):
         """Test that _generate_skeleton is a private method (prefixed with _)"""

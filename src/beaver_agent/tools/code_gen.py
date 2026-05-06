@@ -75,7 +75,7 @@ class CodeGenTool:
             "python": f'''# Python Code for: {description}
 
 # This is a placeholder - configure LLM API key for full generation
-# Set OPENROUTER_API_KEY or ANTHROPIC_API_KEY in config
+# Set MINIMAX_API_KEY in .env for full generation
 
 def main():
     """Main entry point"""
@@ -86,7 +86,7 @@ if __name__ == "__main__":
 ''',
             "javascript": f'''// JavaScript/Node.js for: {description}
 
-// This is a placeholder - configure LLM API key for full generation
+// This is a placeholder - configure MINIMAX_API_KEY for full generation
 
 function main() {{
     // Your implementation here
@@ -96,7 +96,7 @@ module.exports = {{ main }};
 ''',
             "go": f'''// Go code for: {description}
 
-// This is a placeholder - configure LLM API key for full generation
+// This is a placeholder - configure MINIMAX_API_KEY for full generation
 
 package main
 
@@ -106,7 +106,7 @@ func main() {{
 ''',
         }
 
-        return templates.get(language, f"// Code for: {description}\n// Configure LLM API key for full generation")
+        return templates.get(language, f"// Code for: {description}\n// Configure MINIMAX_API_KEY in .env for full generation")
 
     def complete_code(
         self,
