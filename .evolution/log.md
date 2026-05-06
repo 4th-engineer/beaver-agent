@@ -323,8 +323,10 @@
 
 | 2026-05-14 10:00 | beaver-agent | Added docstrings to MemoryEntry.to_dict and from_dict — all 523 public functions now have docstring coverage | 523 tests passing |
 
+| 2026-05-07 01:04 | beaver-agent | Added 3 tests for ConversationLogger.list_log_files (sorted newest-first, empty dir, nonexistent dir) — previously only lightly tested; 526 tests passing | 526 tests passing |
+
 ## Current Stage
-- 523 tests passing
+- 526 tests passing
 - All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (main.py run/chat paths)
 
