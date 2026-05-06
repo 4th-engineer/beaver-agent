@@ -1,7 +1,7 @@
 # 🦫 Beaver Bot 全能智能体 — 架构设计 v2
 
 > 版本: v2.0
-> 更新: 2026-05-07
+> 更新: 2026-05-14
 > 作者: Beaver Bot Team
 
 ---
@@ -112,7 +112,9 @@ beaver-agent/
 │   │   ├── file_tool.py       # 文件读写搜索
 │   │   ├── terminal_tool.py   # 终端执行（安全沙箱）
 │   │   ├── code_analyzer.py   # 代码仓库分析
-│   │   └── browser_tool.py    # 浏览器自动化
+│   │   ├── browser_tool.py    # 浏览器自动化
+├── src/
+│   └── pixel_pilot.py         # WebSocket 可视化观测（实时追踪工具调用）
 ├── tests/
 ├── requirements.txt
 └── pyproject.toml
