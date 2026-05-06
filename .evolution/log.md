@@ -157,6 +157,7 @@
 | 2026-05-07 03:50 | beaver-agent | Added test for LLM exception fallback in BeaverAgent.run() — covers previously untested error path where LLM._call() raises and run() falls back to _generate_fallback_response | 587 tests passing |
 
 | 2026-05-07 04:03 | beaver-agent | Added test_shutdown_idempotent to verify shutdown() can be called multiple times without error — tests graceful degradation when end_session is called on already-closed session | 588 tests passing |
+| 2026-05-07 05:00 | beaver-agent | Synced stale test counts (586→588) in README badge, Project Structure, and architecture.md status table — documentation now accurate | 588 tests passing |
 
 ## Current Stage
 - 588 tests passing
