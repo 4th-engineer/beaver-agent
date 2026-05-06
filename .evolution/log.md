@@ -175,18 +175,18 @@
 
 | 2026-05-15 07:00 | beaver-agent | Added __all__ exports to 10 core modules | 646 tests passing |
 
-| 2026-05-16 06:00 | beaver-agent | Added __all__ exports to 4 tool modules (file_tool, terminal_tool, github_tool, debugger) — consistent with tools/ package pattern; remaining: code_gen, code_review, browser_tool, code_analyzer, interactive, main | 646 tests passing |
+| 2026-05-16 07:00 | beaver-agent | Added __all__ exports to remaining 6 modules (code_gen, code_review, browser_tool, code_analyzer, interactive, main) — all 10 tool/CLI modules now have explicit __all__ declarations, completing the public API sweep | 646 tests passing |
 
 ## Current Stage
 - 646 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
-- 4/10 tool modules now have __all__ declarations (file_tool, terminal_tool, github_tool, debugger) — remaining: code_gen, code_review, browser_tool, code_analyzer, interactive, main
-- Next: Continue __all__ coverage for remaining tool modules, then test edge cases
+- All 10 tool/CLI modules have __all__ declarations — public API sweep complete
+- Next: Test edge cases and remaining untested paths
 
 ## Priority Areas
 1. Test coverage (remaining edge cases)
 2. Error handling (mostly complete)
 3. CLI documentation (mostly complete)
-4. Logging enhancement (mostly complete)
-5. Public API __all__ declarations (in progress — tool modules)
+4. Logging enhancement (complete)
+5. Public API __all__ declarations (complete)
