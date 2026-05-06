@@ -165,6 +165,8 @@
 
 | 2026-05-07 04:00 | beaver-agent | Added test_pixel_pilot.py with 22 tests for pixel_pilot public API — covers connect/disconnect/send/is_enabled, _get_tool_display_name, _post_event/_test_connection, event construction, and _patch_tool_router monkey-patch; updated test counts in README and architecture.md | 610 tests passing |
 
+| 2026-05-07 04:50 | beaver-agent | Added error handling to /browse and /screenshot CLI commands — BrowserTool failures now logged with structlog and displayed with red error output; consistent with error handling patterns across project | 610 tests passing |
+
 ## Current Stage
 - 610 tests passing
 - All public functions documented (100% docstring coverage)
