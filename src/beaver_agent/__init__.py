@@ -28,6 +28,7 @@ from beaver_agent.core.eval.metrics import (
 from beaver_agent.core.eval.prompting import PromptStrategy, get_strategy
 from beaver_agent.core.eval.adapter import BeaverAdapter, OpenAIAdapter, MiniMaxAdapter, ModelAdapter
 from beaver_agent.tools.code_review import CodeReviewIssue
+from beaver_agent.core.conversation_logger import ConversationLogger
 
 __all__ = [
     # Version
@@ -87,4 +88,5 @@ __all__ = [
     "MiniMaxAdapter",
     # Tools
     "CodeReviewIssue",
+    "ConversationLogger",
 ]

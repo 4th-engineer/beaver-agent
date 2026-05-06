@@ -20,6 +20,7 @@ __all__ = [
     "MemoryCategory",
     "MemoryEntry",
     "MemoryQuery",
+    "ConversationLogger",
 ]
 
 from beaver_agent.core.agent import BeaverAgent
