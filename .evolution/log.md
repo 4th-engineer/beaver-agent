@@ -143,6 +143,7 @@
 | 2026-05-07 02:20 | beaver-agent | Added test for subprocess.TimeoutExpired exception handling in TerminalTool.execute() — previously untested exception path now covered with mock; 530 tests passing | 530 tests passing |
 
 | 2026-05-14 10:30 | beaver-agent | Added 3 tests for MCPManager (test_get_tools_with_tools, test_get_tool_found, test_shutdown) — get_tools/get_tool with actual tools and graceful shutdown now covered | 533 tests passing |
+| 2026-05-14 02:00 | beaver-agent | Fixed stale test counts in README badge (530→533) and Project Structure section (530→533), and architecture.md (527→533) — documentation now accurate | 533 tests passing |
 
 ## Current Stage
 - 533 tests passing
