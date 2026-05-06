@@ -319,6 +319,8 @@
 
 | 2026-05-14 09:00 | beaver-agent | Fixed stale test count in README.md (519→523) — documentation now accurate | 523 tests passing |
 
+| 2026-05-07 00:00 | beaver-agent | Updated architecture.md date from 2026-05-06 to 2026-05-07 — documentation now accurate | 523 tests passing |
+
 ## Current Stage
 - 523 tests passing
 - Next: Continue improving test coverage (main.py run/chat paths)
