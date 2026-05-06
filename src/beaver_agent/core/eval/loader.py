@@ -118,11 +118,16 @@ def get_benchmark_registry() -> BenchmarkRegistry:
     return _benchmark_registry
 
 
-def register_benchmark(benchmark: Benchmark):
+def register_benchmark(benchmark: Benchmark) -> None:
     """Register a benchmark with the global registry (convenience function).
 
     Args:
         benchmark: The Benchmark instance to register.
+
+    Returns:
+        None. The benchmark is registered in the global BenchmarkRegistry
+        singleton and can be retrieved via ``get_benchmark_registry()`` or
+        ``list_benchmarks()``.
 
     Example:
         >>> register_benchmark(my_benchmark)
