@@ -3,6 +3,10 @@
 from typing import List, Dict, Any, Optional
 import time
 
+import structlog
+
+logger = structlog.get_logger()
+
 
 class SessionMemory:
     """In-memory session storage for conversation context.
@@ -53,6 +57,7 @@ class SessionMemory:
 
         self.messages.append(message)
         self.metadata["last_updated"] = time.time()
+        logger.debug("session_message_added", role=role, message_count=len(self.messages))
 
         # Trim if exceeds max
         if len(self.messages) > self.max_history:
@@ -93,6 +98,7 @@ class SessionMemory:
         """
         self.messages.clear()
         self.metadata["last_updated"] = time.time()
+        logger.debug("session_cleared")
 
     def search(self, query: str) -> List[Dict[str, Any]]:
         """Search through session history by content keyword.
