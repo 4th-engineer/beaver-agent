@@ -280,6 +280,8 @@
 
 | 2026-05-09 05:00 | beaver-agent | Added test_cli_commands.py — 24 tests for CLI command handlers (handle_command: /exit, /quit, /q, /help, /h, ?, /clear, /reset, /model, /status, /debug, /browse, /screenshot, unknown; print_help, show_model_info, show_status; Typer app command registration) | 471 tests passing |
 
+| 2026-05-07 00:00 | beaver-agent | Added Returns section to register_benchmark docstring in loader.py — added explicit return type annotation (-> None) and Returns documentation explaining the global registry side effect | 519 tests passing |
+
 | 2026-05-14 07:00 | beaver-agent | Added test_interactive.py with 16 tests covering run_repl REPL loop (KeyboardInterrupt/EOF/exit command handling, command routing, agent.run invocation, error logging, debug mode traceback, welcome banner), _print_response (plain text/markdown rendering), and print_welcome (version/branding/cyan border) | 519 tests passing |
 
 | 2026-05-13 06:00 | beaver-agent | Added direct test for model_command(show=True) — patches load_config and verifies model name/provider are displayed; 494 tests passing |
