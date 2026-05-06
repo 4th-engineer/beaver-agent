@@ -139,10 +139,10 @@
 | 2026-05-14 01:00 | beaver-agent | Added pixel_pilot.py to architecture.md project structure — WebSocket visualization tool for real-time agent activity tracking was missing from documentation | 526 tests passing |
 | 2026-05-14 02:00 | beaver-agent | Updated stale API key comments in code_gen.py skeleton templates (OPENROUTER/ANTHROPIC → MINIMAX_API_KEY) and updated corresponding test assertion | 526 tests passing |
 | 2026-05-14 03:00 | beaver-agent | Added assertions to test_run_command_invokes_repl and test_run_command_with_debug_flag — mock_repl.assert_called_once() verifies REPL is actually invoked, exit_code asserts confirm clean exit after 'exit' input | 526 tests passing |
-| 2026-05-14 04:00 | beaver-agent | Added test_chat_with_query_success to test_main.py — covers the happy path for 'beaver chat -q <query>' command (agent.run called with query and response printed); last untested chat command path now covered | 527 tests passing |
+| 2026-05-07 02:00 | beaver-agent | Fixed README badge (526→527) and added 2 tests for --model CLI flag on run and chat commands | 529 tests passing |
 
 ## Current Stage
-- 527 tests passing
+- 529 tests passing
 - All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (remaining edge cases)
 
