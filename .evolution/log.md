@@ -142,8 +142,10 @@
 | 2026-05-07 02:00 | beaver-agent | Fixed README badge (526→527) and added 2 tests for --model CLI flag on run and chat commands | 529 tests passing |
 | 2026-05-07 02:20 | beaver-agent | Added test for subprocess.TimeoutExpired exception handling in TerminalTool.execute() — previously untested exception path now covered with mock; 530 tests passing | 530 tests passing |
 
+| 2026-05-14 10:30 | beaver-agent | Added 3 tests for MCPManager (test_get_tools_with_tools, test_get_tool_found, test_shutdown) — get_tools/get_tool with actual tools and graceful shutdown now covered | 533 tests passing |
+
 ## Current Stage
-- 530 tests passing
+- 533 tests passing
 - All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (remaining edge cases)
 
