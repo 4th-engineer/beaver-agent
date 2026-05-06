@@ -148,6 +148,8 @@
 
 | 2026-05-14 | beaver-agent | Updated stale test counts in README.md badge and Project Structure (533→542) and architecture.md (533→542) — documentation now accurate | 542 tests passing |
 
+| 2026-05-15 03:00 | beaver-agent | Fixed stale API key references in _generate_fallback_response (OPENROUTER_API_KEY/ANTHROPIC_API_KEY → MINIMAX_API_KEY) — fallback messages now reflect actual supported LLM | 542 tests passing |
+
 ## Current Stage
 - 542 tests passing
 - All public functions documented (100% docstring coverage)
