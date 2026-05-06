@@ -1,5 +1,7 @@
 """Beaver Agent File Tool"""
 
+__all__ = ["FileTool"]
+
 from pathlib import Path
 from typing import Optional
 

@@ -1,5 +1,7 @@
 """Beaver Agent GitHub Tool"""
 
+__all__ = ["GitHubTool"]
+
 from typing import Optional
 
 import structlog

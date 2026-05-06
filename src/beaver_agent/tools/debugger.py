@@ -1,5 +1,7 @@
 """Beaver Agent Debugger Tool"""
 
+__all__ = ["DebuggerTool"]
+
 from typing import Optional
 
 import structlog

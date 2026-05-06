@@ -1,5 +1,7 @@
 """Beaver Agent Terminal Tool"""
 
+__all__ = ["TerminalTool"]
+
 import subprocess
 from typing import Optional
 
