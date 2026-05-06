@@ -315,9 +315,10 @@
 
 | 2026-05-10 12:00 | beaver-agent | Removed unused 'status' variable in interactive.py REPL loop — console.status() context manager displays spinner automatically, binding was unnecessary dead code | 519 tests passing |
 
+| 2026-05-14 08:00 | beaver-agent | Added 4 tests for code_analyzer internal methods (_find_calls, _get_function_body, _find_class_methods_multiline) — improved untested method coverage | 523 tests passing |
+
 ## Current Stage
-- 519 tests passing
-- README.md and architecture.md both accurate (503 tests)
+- 523 tests passing
 - Next: Continue improving test coverage (main.py run/chat paths)
 
 ## Priority Areas
