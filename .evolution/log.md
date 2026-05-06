@@ -173,15 +173,18 @@
 
 | 2026-05-07 05:35 | beaver-agent | Added test_metrics.py — 26 tests for eval scorer edge cases (ExactMatchScorer whitespace/case/empty, SimilarityScorer boundary, CodeExecutionScorer partial pass/runtime error, CodeReviewScorer keyword coverage) and strategy constants (STRATEGY_MAP, 4 built-in strategies, architecture scorer) | 641 tests passing |
 
+| 2026-05-15 07:00 | beaver-agent | Added __all__ exports to 10 core modules (agent, config, conversation_logger, data_store, intent_parser, llm_client, mcp_manager, skill_manager, task_planner, tool_router) — now all core modules explicitly declare their public API, consistent with tools/eval/cli packages | 646 tests passing |
+
 ## Current Stage
 - 646 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
-- pixel_pilot.py now has test coverage (22 tests)
+- All core modules now have explicit __all__ public API declarations
 - Next: Continue improving test coverage (remaining edge cases)
 
 ## Priority Areas
-1. Test coverage (main.py run/chat paths)
+1. Test coverage (remaining edge cases)
 2. Error handling (mostly complete)
 3. CLI documentation (mostly complete)
 4. Logging enhancement (mostly complete)
+5. Public API __all__ declarations (now complete for core modules)
