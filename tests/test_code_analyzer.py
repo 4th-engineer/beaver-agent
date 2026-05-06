@@ -261,3 +261,101 @@ def test_class_info_dataclass():
     assert cls.docstring is None
     assert cls.methods == []
     assert cls.bases == []
+
+
+def test_find_calls():
+    """Test function call extraction from code body"""
+    analyzer = CodeAnalyzer("/fake")
+    
+    # Simple function calls
+    body = """
+    result = foo()
+    items.append(bar)
+    """
+    calls = analyzer._find_calls(body)
+    assert "foo" in calls
+    assert "items.append" in calls  # method call stored as 'module.method'
+    
+    # Module-qualified calls (regex captures only immediate dotted part, e.g. 'path.join' not 'os.path.join')
+    body = """
+    path.join(a, b)
+    json.loads(data)
+    """
+    calls = analyzer._find_calls(body)
+    assert "path.join" in calls
+    assert "json.loads" in calls
+    
+    # Filter out keywords
+    body = """
+    if x == y:
+        return True
+    for i in items:
+        print(i)
+    """
+    calls = analyzer._find_calls(body)
+    assert "if" not in calls
+    assert "else" not in calls
+    assert "for" not in calls
+    assert "return" not in calls
+    assert "print" in calls  # print is a function call, not a keyword in this context
+
+
+def test_find_calls_excludes_keywords():
+    """Test that _find_calls properly excludes Python keywords and built-ins"""
+    analyzer = CodeAnalyzer("/fake")
+    
+    body = """
+    x = True if condition else False
+    while running:
+        break
+    continue
+    """
+    calls = analyzer._find_calls(body)
+    # These are keywords/built-ins, not function calls
+    assert "if" not in calls
+    assert "else" not in calls
+    assert "while" not in calls
+    assert "break" not in calls
+    assert "continue" not in calls
+
+
+def test_get_function_body():
+    """Test extraction of function body from source"""
+    analyzer = CodeAnalyzer("/fake")
+    content = """
+def example():
+    x = 1
+    y = 2
+    return x + y
+
+def other():
+    pass
+"""
+    lines = content.split("\n")
+    # Find the "def example():" line (index 1)
+    body = analyzer._get_function_body(content, 1)
+    assert "x = 1" in body
+    assert "y = 2" in body
+    assert "return x + y" in body
+    # Should not include 'def other()'
+    assert "def other" not in body
+
+
+def test_find_class_methods_multiline():
+    """Test detection of methods across multiple lines"""
+    analyzer = CodeAnalyzer("/fake")
+    content = '''
+class MyClass:
+    """A class with methods"""
+    
+    def method_one(self):
+        """First method"""
+        pass
+    
+    def method_two(self, x):
+        """Second method"""
+        return x
+'''
+    methods = analyzer._find_class_methods(content, 1)  # line with "class MyClass:" (index 1)
+    assert "method_one" in methods
+    assert "method_two" in methods
