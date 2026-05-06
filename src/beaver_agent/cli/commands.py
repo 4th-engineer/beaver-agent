@@ -1,6 +1,7 @@
 """Beaver Agent CLI Commands"""
 
 import tempfile
+import structlog
 from pathlib import Path
 
 from rich.console import Console
@@ -9,6 +10,9 @@ from beaver_agent.core.config import BeaverConfig, load_config
 from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.tools.browser_tool import BrowserTool
 from beaver_agent.tools.code_analyzer import analyze_repository
+
+
+logger = structlog.get_logger()
 
 
 __all__ = [
@@ -99,18 +103,26 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
         url = cmd.split(" ", 1)[1].strip()
         if not url.startswith("http"):
             url = "https://" + url
-        bt = BrowserTool()
-        result = bt.open(url)
-        console.print(f"[green]已打开:[/green] {url}\n{result}")
+        try:
+            bt = BrowserTool()
+            result = bt.open(url)
+            console.print(f"[green]已打开:[/green] {url}\n{result}")
+        except Exception as e:
+            logger.error("browse_command_failed", url=url, exc_info=e)
+            console.print(f"[red]浏览失败:[/red] {e}")
         return True
 
     # Screenshot
     if cmd == "/screenshot":
-        bt = BrowserTool()
-        bt.open("https://example.com")
-        ss_path = tempfile.mktemp(suffix=".png")
-        result = bt.screenshot(ss_path, full=True)
-        console.print(f"[green]{result}[/green]\n路径: {ss_path}")
+        try:
+            bt = BrowserTool()
+            bt.open("https://example.com")
+            ss_path = tempfile.mktemp(suffix=".png")
+            result = bt.screenshot(ss_path, full=True)
+            console.print(f"[green]{result}[/green]\n路径: {ss_path}")
+        except Exception as e:
+            logger.error("screenshot_command_failed", exc_info=e)
+            console.print(f"[red]截图失败:[/red] {e}")
         return True
 
     # Unknown command
