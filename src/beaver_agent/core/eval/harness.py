@@ -2,10 +2,14 @@
 
 from typing import Any, Optional
 
+import structlog
+
 from .task import Task, Benchmark, TaskResult
 from .adapter import ModelAdapter
 from .runner import Runner
 from .loader import get_benchmark_registry
+
+logger = structlog.get_logger()
 
 
 class BeaverHarness:
@@ -44,6 +48,7 @@ class BeaverHarness:
         self.registry = get_benchmark_registry()
 
         if benchmark_dir:
+            logger.debug("loading_benchmarks_from_dir", dir_path=benchmark_dir)
             self.registry.load_from_directory(benchmark_dir)
 
     def add_task(self, task: Task) -> "BeaverHarness":
@@ -60,8 +65,10 @@ class BeaverHarness:
             <BeaverHarness>
         """
         if "ephemeral" not in self.registry.list_benchmarks():
+            logger.debug("creating_ephemeral_benchmark")
             self.registry.register(Benchmark(name="ephemeral"))
         self.registry.get("ephemeral").add_task(task)
+        logger.debug("task_added_to_ephemeral", task_id=task.id)
         return self
 
     def load_benchmarks(self, dir_path: str) -> "BeaverHarness":
@@ -77,6 +84,7 @@ class BeaverHarness:
         Example:
             >>> harness.load_benchmarks("benchmarks/")
         """
+        logger.debug("loading_benchmarks", dir_path=dir_path)
         self.registry.load_from_directory(dir_path)
         return self
 
@@ -106,9 +114,13 @@ class BeaverHarness:
         Returns:
             A summary dict (if summarize=True) or a list of TaskResult objects.
         """
+        logger.info("running_benchmark", benchmark_name=benchmark_name, summarize=summarize)
         results = self.runner.run_benchmark(benchmark_name)
         if summarize:
-            return self.runner.summarize_results(results)
+            summary = self.runner.summarize_results(results)
+            logger.info("benchmark_completed", benchmark_name=benchmark_name, result_count=len(results))
+            return summary
+        logger.info("benchmark_completed_raw", benchmark_name=benchmark_name, result_count=len(results))
         return results
 
     def run_single(self, task: Task) -> TaskResult:
@@ -124,7 +136,10 @@ class BeaverHarness:
         Raises:
             See Runner.run_task for task-level exceptions that may propagate.
         """
-        return self.runner.run_task(task)
+        logger.debug("running_single_task", task_id=task.id, task_type=task.task_type)
+        result = self.runner.run_task(task)
+        logger.debug("single_task_completed", task_id=task.id, success=result.success, score=result.score)
+        return result
 
     def list_benchmarks(self) -> list[str]:
         """List all registered benchmark names.
