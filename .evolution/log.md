@@ -137,6 +137,7 @@
 | 2026-05-07 01:04 | beaver-agent | Added 3 tests for ConversationLogger.list_log_files (sorted newest-first, empty dir, nonexistent dir) — previously only lightly tested; 526 tests passing | 526 tests passing |
 | 2026-05-07 01:30 | beaver-agent | Exported ModelAdapter from top-level beaver_agent/__init__.py — was in core/eval/__init__.py but missing from top-level public API, consistent with BeaverAdapter/OpenAIAdapter/MiniMaxAdapter | 526 tests passing |
 | 2026-05-14 01:00 | beaver-agent | Added pixel_pilot.py to architecture.md project structure — WebSocket visualization tool for real-time agent activity tracking was missing from documentation | 526 tests passing |
+| 2026-05-14 02:00 | beaver-agent | Updated stale API key comments in code_gen.py skeleton templates (OPENROUTER/ANTHROPIC → MINIMAX_API_KEY) and updated corresponding test assertion | 526 tests passing |
 
 ## Current Stage
 - 526 tests passing
