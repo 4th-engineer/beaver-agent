@@ -98,6 +98,50 @@ class TestMCPManager:
         """Test getting non-existent tool"""
         assert mcp_manager.get_tool("nonexistent") is None
 
+    def test_get_tools_with_tools(self, mcp_manager):
+        """Test get_tools returns registered tools"""
+        mock_tool = MagicMock(spec=MCPTool)
+        mock_tool.to_dict.return_value = {
+            "name": "mcp_time_get_time",
+            "description": "Get current time",
+        }
+        mcp_manager._tools["mcp_time_get_time"] = mock_tool
+
+        tools = mcp_manager.get_tools()
+        assert len(tools) == 1
+        assert tools[0]["name"] == "mcp_time_get_time"
+
+    def test_get_tool_found(self, mcp_manager):
+        """Test get_tool returns a registered tool"""
+        mock_tool = MagicMock(spec=MCPTool)
+        mock_tool.name = "get_time"
+        mcp_manager._tools["mcp_time_get_time"] = mock_tool
+
+        result = mcp_manager.get_tool("mcp_time_get_time")
+        assert result is mock_tool
+
+    def test_shutdown(self, mcp_manager):
+        """Test shutdown terminates all server processes and clears tools"""
+        import asyncio
+
+        # Add a mock server process
+        mock_process = AsyncMock()
+        mcp_manager._server_processes["test_server"] = mock_process
+
+        # Add a mock tool
+        mock_tool = MagicMock(spec=MCPTool)
+        mcp_manager._tools["mcp_test_tool"] = mock_tool
+
+        # Run shutdown
+        asyncio.run(mcp_manager.shutdown())
+
+        # Verify process was terminated and waited on
+        mock_process.terminate.assert_called_once()
+        mock_process.wait.assert_called_once()
+        # Verify state cleared
+        assert len(mcp_manager._server_processes) == 0
+        assert len(mcp_manager._tools) == 0
+
     def test_build_env(self, mcp_manager):
         """Test environment building for subprocess"""
         user_env = {"MY_API_KEY": "secret123"}
@@ -175,3 +219,4 @@ class TestMCPManagerIntegration:
         import asyncio
         asyncio.run(manager.initialize())
         assert manager.get_tools() == []
+
