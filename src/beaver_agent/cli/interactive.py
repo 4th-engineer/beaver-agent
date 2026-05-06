@@ -73,7 +73,7 @@ def run_repl(config: BeaverConfig) -> None:
             with console.status(
                 "[bold green]🦫 思考中...[/bold green]\n"
                 "[dim]分析意图 → 规划任务 → 执行工具[/dim]"
-            ) as status:
+            ):
                 response = agent.run(user_input)
 
             # Display response
