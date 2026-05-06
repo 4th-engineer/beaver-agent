@@ -159,6 +159,8 @@
 | 2026-05-07 04:03 | beaver-agent | Added test_shutdown_idempotent to verify shutdown() can be called multiple times without error — tests graceful degradation when end_session is called on already-closed session | 588 tests passing |
 | 2026-05-07 05:00 | beaver-agent | Synced stale test counts (586→588) in README badge, Project Structure, and architecture.md status table — documentation now accurate | 588 tests passing |
 
+| 2026-05-15 04:00 | beaver-agent | Enhanced show_status to display model name/provider, session history count, long-term memory entries, and tool count — replaces hardcoded "运行中" status with actual runtime information | 588 tests passing |
+
 ## Current Stage
 - 588 tests passing
 - All public functions documented (100% docstring coverage)
