@@ -177,10 +177,11 @@
 | 2026-05-15 07:00 | beaver-agent | Added __all__ exports to 10 core modules | 646 tests passing |
 
 | 2026-05-16 07:00 | beaver-agent | Added __all__ exports to remaining 6 modules (code_gen, code_review, browser_tool, code_analyzer, interactive, main) — all 10 tool/CLI modules now have explicit __all__ declarations, completing the public API sweep | 646 tests passing |
-| 2026-05-07 06:30 | beaver-agent | Fixed stale date in architecture.md header (2026-05-14→2026-05-16) — documentation now accurate | 646 tests passing |
+| 2026-05-16 08:00 | beaver-agent | Fixed stale date in architecture.md header (2026-05-14→2026-05-16) — documentation now accurate | 646 tests passing |
+| 2026-05-17 06:00 | beaver-agent | Added 6 tests for DataStore.migrate() and register_migration() — covers pending migration execution, no-op when up to date, exception/False failure handling, skipping already-applied, and registration | 652 tests passing |
 
 ## Current Stage
-- 646 tests passing
+- 652 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete

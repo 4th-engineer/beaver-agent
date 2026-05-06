@@ -210,6 +210,108 @@ class TestDataStoreMigrations:
         store._save_applied(["initial_user_system_separation", "add_structured_skill_format"])
         assert store.is_migration_needed() is False
 
+    def test_migrate_runs_pending_migrations(self, store, tmp_path):
+        """Test migrate() executes pending migrations in order."""
+        store.set_version("0.0.0")
+        called = []
+
+        def migration_1(ds):
+            called.append("m1")
+            return True
+
+        def migration_2(ds):
+            called.append("m2")
+            return True
+
+        store.register_migration("0.1.0", "migration_one", "First migration", migration_1)
+        store.register_migration("0.2.0", "migration_two", "Second migration", migration_2)
+
+        result = store.migrate()
+
+        assert result is True
+        assert called == ["m1", "m2"]
+        assert store.get_version() == DataVersion("0.2.0")
+
+    def test_migrate_returns_true_when_nothing_pending(self, store):
+        """Test migrate() returns True when no migrations are pending."""
+        # Apply all built-in migrations so nothing is pending
+        store._save_applied(["initial_user_system_separation", "add_structured_skill_format"])
+        store.set_version("0.2.0")
+        result = store.migrate()
+        assert result is True
+
+    def test_migrate_returns_false_when_migration_raises(self, store, tmp_path):
+        """Test migrate() returns False when a migration raises an exception."""
+        # Override the first built-in migration with a bad one
+        store._migrations.clear()
+
+        def bad_migration(ds):
+            raise RuntimeError("migration error")
+
+        store.register_migration("0.1.0", "bad_migration", "Bad migration", bad_migration)
+        store.set_version("0.0.0")
+
+        result = store.migrate()
+
+        assert result is False
+        # Version should not advance past the failed migration
+        assert store.get_version() == DataVersion("0.0.0")
+
+    def test_migrate_returns_false_when_migration_returns_false(self, store, tmp_path):
+        """Test migrate() returns False when a migration returns False."""
+        store._migrations.clear()
+
+        def failing_migration(ds):
+            return False
+
+        store.register_migration("0.1.0", "failing_migration", "Failing migration", failing_migration)
+        store.set_version("0.0.0")
+
+        result = store.migrate()
+
+        assert result is False
+        assert store.get_version() == DataVersion("0.0.0")
+
+    def test_migrate_skips_already_applied_migrations(self, store, tmp_path):
+        """Test migrate() skips migrations that are already applied."""
+        # Override with clean migrations for this test
+        store._migrations.clear()
+        called = []
+
+        def migration_1(ds):
+            called.append("m1")
+            return True
+
+        def migration_2(ds):
+            called.append("m2")
+            return True
+
+        store.register_migration("0.1.0", "migration_one", "First migration", migration_1)
+        store.register_migration("0.2.0", "migration_two", "Second migration", migration_2)
+        store.set_version("0.0.0")
+        # Pre-apply the first migration
+        store._save_applied(["migration_one"])
+
+        result = store.migrate()
+
+        assert result is True
+        assert called == ["m2"]
+        assert store.get_version() == DataVersion("0.2.0")
+
+    def test_register_migration_stores_migration(self, store):
+        """Test register_migration() stores the migration in the registry."""
+        initial_count = len(store._migrations)
+        def dummy(ds):
+            return True
+
+        store.register_migration("9.9.9", "test_migration", "Test migration", dummy)
+        pending = store.get_pending_migrations()
+
+        assert len(pending) == initial_count + 1
+        test_mig = next(m for m in pending if m.name == "test_migration")
+        assert test_mig.description == "Test migration"
+        assert test_mig.version == DataVersion("9.9.9")
+
 
 class TestDataStoreDataAccess:
     """Tests for DataStore data access methods."""
