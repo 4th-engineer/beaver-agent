@@ -485,7 +485,7 @@ Always provide actionable suggestions."""
 ---
 
 💡 如需完整 AI 代码生成能力，请配置:
-- `OPENROUTER_API_KEY` 或 `ANTHROPIC_API_KEY`
+- `MINIMAX_API_KEY`
 """
 
         elif intent == "code_review":
