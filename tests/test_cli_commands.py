@@ -151,6 +151,27 @@ class TestHandleCommand:
             captured = capsys.readouterr()
             assert "example.com" in captured.out
 
+    def test_browse_command_exception(self, mock_config, mock_agent, capsys):
+        """Test /browse handles BrowserTool exceptions gracefully."""
+        with patch("beaver_agent.cli.commands.BrowserTool") as MockBrowserTool:
+            mock_instance = MagicMock()
+            mock_instance.open.side_effect = RuntimeError("Network error")
+            MockBrowserTool.return_value = mock_instance
+
+            result = handle_command("/browse https://example.com", mock_config, mock_agent)
+            assert result is True
+            captured = capsys.readouterr()
+            assert "浏览失败" in captured.out
+            assert "Network error" in captured.out
+
+    def test_model_switch_empty_name(self, mock_config, mock_agent, capsys):
+        """Test /model with empty name does not switch model."""
+        mock_config.model.name = "original-model"
+        result = handle_command("/model ", mock_config, mock_agent)
+        assert result is True
+        # Empty name after strip should not switch
+        assert mock_config.model.name == "original-model"
+
     def test_browse_command_adds_https(self, mock_config, mock_agent, capsys):
         """Test /browse <url> adds https:// if missing."""
         with patch("beaver_agent.cli.commands.BrowserTool") as MockBrowserTool:
