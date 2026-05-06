@@ -154,8 +154,10 @@
 
 | 2026-05-07 04:00 | beaver-agent | Added test_agent.py with 40 tests for BeaverAgent core class — covers __init__ (9 tests), reset, shutdown, _json_summary (6 tests), _build_context (3 tests), _generate_fallback_response (5 tests), _summarize_content (8 tests), and run (6 tests) | 586 tests passing |
 
+| 2026-05-07 03:50 | beaver-agent | Added test for LLM exception fallback in BeaverAgent.run() — covers previously untested error path where LLM._call() raises and run() falls back to _generate_fallback_response | 587 tests passing |
+
 ## Current Stage
-- 586 tests passing
+- 587 tests passing
 - All public functions documented (100% docstring coverage)
 - Next: Continue improving test coverage (remaining edge cases)
 
