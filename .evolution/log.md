@@ -146,6 +146,8 @@
 
 | 2026-05-15 05:00 | beaver-agent | Added structlog logging to SessionMemory (session.py) — add_message and clear now log debug events; completes logging coverage for all core/memory modules | 588 tests passing |
 
+| 2026-05-15 06:00 | beaver-agent | Strengthened test_memory.py — replaced weak substring assertions with exact format verification, added 20-message cap test (get_context), search edge cases (no-match, case-insensitive), empty memory/clear edge cases | 646 tests passing |
+
 | 2026-05-07 03:00 | beaver-agent | Added 9 tests for IntentParser edge cases: empty/whitespace input returns general_chat, file_operation intent detection, terminal_operation intent detection, /skill direct invocation confidence (0.6), general_chat confidence (0.5), skill routing with SkillManager, set_skill_manager, and get_supported_intents with skills | 542 tests passing |
 
 | 2026-05-14 | beaver-agent | Updated stale test counts in README.md badge and Project Structure (533→542) and architecture.md (533→542) — documentation now accurate | 542 tests passing |
@@ -172,7 +174,7 @@
 | 2026-05-07 05:35 | beaver-agent | Added test_metrics.py — 26 tests for eval scorer edge cases (ExactMatchScorer whitespace/case/empty, SimilarityScorer boundary, CodeExecutionScorer partial pass/runtime error, CodeReviewScorer keyword coverage) and strategy constants (STRATEGY_MAP, 4 built-in strategies, architecture scorer) | 641 tests passing |
 
 ## Current Stage
-- 641 tests passing
+- 646 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - pixel_pilot.py now has test coverage (22 tests)
