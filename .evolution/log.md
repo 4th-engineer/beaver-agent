@@ -144,6 +144,8 @@
 
 | 2026-05-14 10:30 | beaver-agent | Added 3 tests for MCPManager (test_get_tools_with_tools, test_get_tool_found, test_shutdown) — get_tools/get_tool with actual tools and graceful shutdown now covered | 542 tests passing |
 
+| 2026-05-15 05:00 | beaver-agent | Added structlog logging to SessionMemory (session.py) — add_message and clear now log debug events; completes logging coverage for all core/memory modules | 588 tests passing |
+
 | 2026-05-07 03:00 | beaver-agent | Added 9 tests for IntentParser edge cases: empty/whitespace input returns general_chat, file_operation intent detection, terminal_operation intent detection, /skill direct invocation confidence (0.6), general_chat confidence (0.5), skill routing with SkillManager, set_skill_manager, and get_supported_intents with skills | 542 tests passing |
 
 | 2026-05-14 | beaver-agent | Updated stale test counts in README.md badge and Project Structure (533→542) and architecture.md (533→542) — documentation now accurate | 542 tests passing |
@@ -164,6 +166,7 @@
 ## Current Stage
 - 588 tests passing
 - All public functions documented (100% docstring coverage)
+- All core modules have structlog logging
 - Next: Continue improving test coverage (remaining edge cases)
 
 ## Priority Areas
