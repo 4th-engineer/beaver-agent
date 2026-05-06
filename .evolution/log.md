@@ -148,6 +148,7 @@
 | 2026-05-17 10:00 | beaver-agent | Exported ConversationLogger from core/__init__.py and top-level __init__.py — was used in agent.py but missing from public API, consistent with other core components (ToolRouter, LLMClient, etc.) | 661 tests passing |
 
 | 2026-05-17 11:00 | beaver-agent | Added test for BeaverAgent.reset() logger session lifecycle — verifies end_session() and start_session() are called with new session ID | 662 tests passing |
+| 2026-05-17 12:00 | beaver-agent | Removed redundant nested try-except in CodeGenTool.generate — inner try-except around file_tool.write_file was unreachable dead code (inner except returned before reaching outer); unified to single exception handler with code_generation_or_save_failed event | 662 tests passing |
 
 ## Current Stage
 - 662 tests passing
