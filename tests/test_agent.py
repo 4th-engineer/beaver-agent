@@ -367,6 +367,19 @@ class TestAgentRun:
         agent.run("do something")
         agent.logger.log_tool_call.assert_called()
 
+    def test_run_llm_exception_uses_fallback(self, agent):
+        """Test that run() falls back to _generate_fallback_response when LLM._call() raises."""
+        agent.llm = MagicMock()
+        agent.llm._call.side_effect = RuntimeError("LLM API error")
+        agent.tool_router.route.return_value = {"success": True}
+
+        result = agent.run("hello")
+
+        assert isinstance(result, str)
+        assert len(result) > 0
+        # Should have logged the LLM failure
+        agent.logger.log_llm_response.assert_called()
+
     def test_run_extracts_memory(self, agent):
         """Test that run() extracts and stores memory from conversation."""
         mock_response = MagicMock()
