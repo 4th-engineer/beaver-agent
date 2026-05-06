@@ -171,20 +171,22 @@
 | 2026-05-07 05:06 | beaver-agent | Added test_tool_router_llm.py — 3 tests for ToolRouter.get_llm_client() (LLM init success, init failure, null client) — previously untested LLM integration path | 613 tests passing |
 | 2026-05-07 06:00 | beaver-agent | Removed unguarded print from pixel_pilot.disconnect() — consistent with connect() which guards print with verbose flag; disconnect is silent cleanup | 613 tests passing |
 
-| 2026-05-07 05:35 | beaver-agent | Added test_metrics.py — 26 tests for eval scorer edge cases (ExactMatchScorer whitespace/case/empty, SimilarityScorer boundary, CodeExecutionScorer partial pass/runtime error, CodeReviewScorer keyword coverage) and strategy constants (STRATEGY_MAP, 4 built-in strategies, architecture scorer) | 641 tests passing |
+| 2026-05-07 05:35 | beaver-agent | Added test_metrics.py — 26 tests for eval scorer edge cases | 641 tests passing |
 
-| 2026-05-15 07:00 | beaver-agent | Added __all__ exports to 10 core modules (agent, config, conversation_logger, data_store, intent_parser, llm_client, mcp_manager, skill_manager, task_planner, tool_router) — now all core modules explicitly declare their public API, consistent with tools/eval/cli packages | 646 tests passing |
+| 2026-05-15 07:00 | beaver-agent | Added __all__ exports to 10 core modules | 646 tests passing |
+
+| 2026-05-16 06:00 | beaver-agent | Added __all__ exports to 4 tool modules (file_tool, terminal_tool, github_tool, debugger) — consistent with tools/ package pattern; remaining: code_gen, code_review, browser_tool, code_analyzer, interactive, main | 646 tests passing |
 
 ## Current Stage
 - 646 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
-- All core modules now have explicit __all__ public API declarations
-- Next: Continue improving test coverage (remaining edge cases)
+- 4/10 tool modules now have __all__ declarations (file_tool, terminal_tool, github_tool, debugger) — remaining: code_gen, code_review, browser_tool, code_analyzer, interactive, main
+- Next: Continue __all__ coverage for remaining tool modules, then test edge cases
 
 ## Priority Areas
 1. Test coverage (remaining edge cases)
 2. Error handling (mostly complete)
 3. CLI documentation (mostly complete)
 4. Logging enhancement (mostly complete)
-5. Public API __all__ declarations (now complete for core modules)
+5. Public API __all__ declarations (in progress — tool modules)
