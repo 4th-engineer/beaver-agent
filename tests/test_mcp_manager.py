@@ -124,8 +124,8 @@ class TestMCPManager:
         """Test shutdown terminates all server processes and clears tools"""
         import asyncio
 
-        # Add a mock server process
-        mock_process = AsyncMock()
+        # Add a mock server process (use MagicMock - terminate() is sync, not async)
+        mock_process = MagicMock()
         mcp_manager._server_processes["test_server"] = mock_process
 
         # Add a mock tool
