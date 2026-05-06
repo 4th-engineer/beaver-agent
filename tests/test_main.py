@@ -20,23 +20,27 @@ class TestRunCommand:
         monkeypatch.chdir(tmp_path)
         # Create a minimal .env so load_config doesn't fail
         env_file = tmp_path / ".env"
-        env_file.write_text("MINIMAX_API_KEY=test_key\n")
+        env_file.write_text("MINIMAX_API_KEY=***\n")
 
         with patch("beaver_agent.main.run_repl") as mock_repl:
             mock_repl.return_value = None
             result = runner.invoke(app, ["run"], input="exit\n")
-            # The REPL should be called (even if it exits quickly)
-            # run_repl is called once when the REPL starts
+            mock_repl.assert_called_once()
+            # REPL exits via KeyboardInterrupt / EOF / exit command → exit_code 0
+            assert result.exit_code == 0
 
     def test_run_command_with_debug_flag(self, runner, tmp_path, monkeypatch):
         """Test 'beaver run --debug' enables debug mode."""
         monkeypatch.chdir(tmp_path)
         env_file = tmp_path / ".env"
-        env_file.write_text("MINIMAX_API_KEY=test_key\n")
+        env_file.write_text("MINIMAX_API_KEY=***\n")
 
         with patch("beaver_agent.main.run_repl") as mock_repl:
+            mock_repl.return_value = None
             result = runner.invoke(app, ["run", "--debug"], input="exit\n")
+            mock_repl.assert_called_once()
             # Should not crash with debug flag
+            assert result.exit_code == 0
 
 
 class TestChatCommand:
