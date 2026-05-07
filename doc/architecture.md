@@ -296,6 +296,6 @@ github_operation →  github_tool.py
 
 ### 自我进化
 
-- 定时任务: 每日 09:00
+- 定时任务: 每小时 :00
 - 日志: `.evolution/log.md`
 - 原则: 小步快跑，不破坏测试
