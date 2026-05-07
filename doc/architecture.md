@@ -290,6 +290,7 @@ github_operation →  github_tool.py
 | Runner | `src/beaver_agent/core/eval/runner.py` | 基准测试执行器 |
 | Scorers | `src/beaver_agent/core/eval/metrics.py` | 评分指标 |
 | Prompting | `src/beaver_agent/core/eval/prompting.py` | 提示词策略 |
+| ModelAdapter | `src/beaver_agent/core/eval/adapter.py` | 模型适配器 (Beaver/OpenAI/MiniMax) |
 | Session Memory | `src/beaver_agent/core/memory/session.py` | 会话记忆 |
 | LongTerm Memory | `src/beaver_agent/core/memory/long_term.py` | 长期记忆向量存储 |
 

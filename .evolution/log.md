@@ -160,6 +160,8 @@
 | 2026-05-18 05:00 | beaver-agent | Added 9 tests for BeaverAgent._extract_and_store_memory — Chinese preference patterns (4), project fact from code_analyzer/analyze, convention from git/github, solution on error query, no memory on failed tools | 675 tests passing |
 
 | 2026-05-18 06:00 | beaver-agent | Added 8 tests for TaskPlanner edge cases — unknown intent returns [], task structure preserved from INTENT_TASKS, validate_plan accepts extra fields, rejects missing tool/action; _extract_params captures GitHub owner/repo and issue numbers | 683 tests passing |
+| 2026-05-18 07:00 | beaver-agent | Fixed stale test counts in README.md and doc/architecture.md (675→683) — documentation now accurate | 683 tests passing |
+| 2026-05-18 08:00 | beaver-agent | Added ModelAdapter to architecture.md module table — was documented in tree diagram (line 106) but missing from module table, making adapter.py undocumented in the reference section | 683 tests passing |
 
 ## Current Stage
 - 683 tests passing
