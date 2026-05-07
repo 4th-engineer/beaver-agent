@@ -1,7 +1,7 @@
 """Tests for Code Generation Tool"""
 
 import pytest
-from unittest.mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock, patch
 from beaver_agent.tools.code_gen import CodeGenTool
 
 
@@ -104,6 +104,36 @@ class TestGenerate:
         mock_llm_client.generate_code.assert_called_once()
         call_kwargs = mock_llm_client.generate_code.call_args
         assert call_kwargs.kwargs.get('context') == "Use type hints"
+
+    def test_generate_with_file_path_saves_and_returns_content(self, code_gen_tool, mock_llm_client, mock_config):
+        """Test that generate() with file_path calls FileTool.write_file and returns save result"""
+        mock_response = Mock()
+        mock_response.content = "def hello():\n    return 'world'"
+        mock_llm_client.generate_code.return_value = mock_response
+
+        mock_file_tool = Mock()
+        mock_file_tool.write_file.return_value = "✓ Saved to /tmp/hello.py"
+        with patch("beaver_agent.tools.file_tool.FileTool", return_value=mock_file_tool):
+            result = code_gen_tool.generate("hello function", language="python", file_path="/tmp/hello.py")
+
+        mock_file_tool.write_file.assert_called_once_with("/tmp/hello.py", "def hello():\n    return 'world'")
+        assert "def hello():" in result
+        assert "✓ Saved to /tmp/hello.py" in result
+
+    def test_generate_file_path_save_failure_returns_error_with_content(self, code_gen_tool, mock_llm_client, mock_config):
+        """Test that generate() with file_path handles write errors gracefully"""
+        mock_response = Mock()
+        mock_response.content = "def hello():\n    return 'world'"
+        mock_llm_client.generate_code.return_value = mock_response
+
+        mock_file_tool = Mock()
+        mock_file_tool.write_file.side_effect = RuntimeError("Disk full")
+        with patch("beaver_agent.tools.file_tool.FileTool", return_value=mock_file_tool):
+            result = code_gen_tool.generate("hello function", language="python", file_path="/tmp/hello.py")
+
+        assert "def hello():" in result
+        assert "❌ Save failed" in result
+        assert "Disk full" in result
 
     def test_generate_not_configured_returns_skeleton(self, code_gen_tool, mock_llm_client):
         """Test that generate() returns skeleton when LLM returns 'not configured'"""
