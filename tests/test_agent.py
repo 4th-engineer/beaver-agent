@@ -412,3 +412,127 @@ class TestAgentRun:
 
         agent.run("hello")
         agent._extract_and_store_memory.assert_called_once()
+
+
+class TestExtractAndStoreMemory:
+    """Tests for BeaverAgent._extract_and_store_memory()."""
+
+    def test_remembers_chinese_preference(self, agent):
+        """Test that Chinese language request triggers user preference memory."""
+        agent.long_term_memory = MagicMock()
+
+        agent._extract_and_store_memory(
+            "请用中文回复",
+            "好的，我会用中文回复",
+            [{"success": True, "tool": "terminal", "data": "ok"}],
+        )
+
+        agent.long_term_memory.remember_user_preference.assert_called_once()
+        call_args = agent.long_term_memory.remember_user_preference.call_args
+        assert "Chinese" in call_args[0][0]
+        assert call_args[1]["session_id"] == agent.session_id
+
+    def test_remembers_user_preference_multiple_patterns(self, agent):
+        """Test that all Chinese patterns are detected."""
+        agent.long_term_memory = MagicMock()
+
+        patterns = ["用中文沟通", "说话.*中文", "回复.*中文"]
+        for pattern in patterns:
+            agent.long_term_memory.reset_mock()
+            agent._extract_and_store_memory(
+                pattern, "response", [{"success": True, "tool": "terminal", "data": "ok"}]
+            )
+            agent.long_term_memory.remember_user_preference.assert_called_once()
+
+    def test_no_memory_on_normal_input(self, agent):
+        """Test that non-preference input does not store preference memory."""
+        agent.long_term_memory = MagicMock()
+
+        agent._extract_and_store_memory(
+            "Show me the files",
+            "Here are your files",
+            [{"success": True, "tool": "file", "data": "file list"}],
+        )
+
+        agent.long_term_memory.remember_user_preference.assert_not_called()
+
+    def test_remembers_project_fact_from_code_analyzer_via_analyze_tool_name(
+        self, agent
+    ):
+        """Test that 'analyze' tool name also triggers project fact memory."""
+        agent.long_term_memory = MagicMock()
+
+        agent._extract_and_store_memory(
+            "analyze",
+            "done",
+            [{
+                "success": True,
+                "tool": "analyze",
+                "data": "src/core/agent.py - 500 lines",
+            }],
+        )
+
+        agent.long_term_memory.remember_project_fact.assert_called_once()
+
+    def test_remembers_convention_from_git_operations(self, agent):
+        """Test that git operations trigger convention memory."""
+        agent.long_term_memory = MagicMock()
+
+        agent._extract_and_store_memory(
+            "check git status",
+            "on branch main",
+            [{
+                "success": True,
+                "tool": "git",
+                "data": "On branch main, 3 files changed",
+            }],
+        )
+
+        agent.long_term_memory.remember_convention.assert_called_once()
+
+    def test_remembers_convention_from_github_tool(self, agent):
+        """Test that GitHub operations trigger convention memory."""
+        agent.long_term_memory = MagicMock()
+
+        agent._extract_and_store_memory(
+            "show repo info",
+            "repository info",
+            [{
+                "success": True,
+                "tool": "github",
+                "data": "commit abc123: fix bug",
+            }],
+        )
+
+        agent.long_term_memory.remember_convention.assert_called_once()
+
+    def test_remembers_solution_on_bug_query(self, agent):
+        """Test that error/bug queries with successful tool results store solutions."""
+        agent.long_term_memory = MagicMock()
+
+        agent._extract_and_store_memory(
+            "fix the error",
+            "error fixed",
+            [{
+                "success": True,
+                "tool": "debugger",
+                "data": "Fixed: missing import added",
+            }],
+        )
+
+        agent.long_term_memory.remember_solution.assert_called_once()
+        # remember_solution(problem=..., solution=..., ...) — all keyword args
+        call_kwargs = agent.long_term_memory.remember_solution.call_args.kwargs
+        assert "fix the error" in call_kwargs["problem"]  # problem keyword arg
+
+    def test_no_solution_memory_on_unsuccessful_tool(self, agent):
+        """Test that failed tool executions do not store solution memory."""
+        agent.long_term_memory = MagicMock()
+
+        agent._extract_and_store_memory(
+            "fix the error",
+            "could not fix",
+            [{"success": False, "tool": "debugger", "error": "failed"}],
+        )
+
+        agent.long_term_memory.remember_solution.assert_not_called()
