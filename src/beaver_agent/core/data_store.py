@@ -41,6 +41,15 @@ class DataVersion:
         return f"DataVersion({self.raw})"
     
     def _compare(self, other: "DataVersion", op) -> bool:
+        """Compare two DataVersion instances using the given comparison operator.
+
+        Args:
+            other: The DataVersion to compare against.
+            op: A comparison function (e.g., lambda a, b: a < b).
+
+        Returns:
+            True if the comparison succeeds, NotImplemented if types are incompatible.
+        """
         if not isinstance(other, DataVersion):
             return NotImplemented
         return op(self._parsed, other._parsed)
