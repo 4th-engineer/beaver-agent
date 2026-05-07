@@ -57,14 +57,18 @@ class CodeGenTool:
             if file_path:
                 from beaver_agent.tools.file_tool import FileTool
                 file_tool = FileTool(self.config)
-                save_result = file_tool.write_file(file_path, response.content)
+                try:
+                    save_result = file_tool.write_file(file_path, response.content)
+                except Exception as e:
+                    logger.error("code_save_failed", file_path=file_path, exc_info=e)
+                    return f"{response.content}\n\n❌ Save failed: {e}"
                 return f"{response.content}\n\n---\n{save_result}"
 
             return response.content
 
         except Exception as e:
-            logger.error("code_generation_or_save_failed", language=language, exc_info=e)
-            return "❌ Code generation or save failed. Check logs for details."
+            logger.error("code_generation_failed", language=language, exc_info=e)
+            return "❌ Code generation failed. Check logs for details."
 
     def _generate_skeleton(self, description: str, language: str) -> str:
         """Generate code skeleton without LLM"""
