@@ -43,7 +43,7 @@ class ToolRouter:
             self._llm_client = LLMClient(self.config.model)
             logger.info("llm_client_ready", provider=self.config.model.provider)
         except Exception as e:
-            logger.error("llm_init_failed", exc_info=e)
+            logger.warning("llm_init_failed", exc_info=e)
 
     def _register_tools(self) -> None:
         """Register all available tools in the tool registry.
