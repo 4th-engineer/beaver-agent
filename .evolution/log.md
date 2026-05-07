@@ -184,6 +184,8 @@
 
 | 2026-05-21 07:00 | beaver-agent | Added 5 error handling tests for FileTool exception paths (read/write permission denied, search_files/content exception, check_project_structure exception) — covers all untested exception handlers in FileTool | 708 tests passing |
 
+| 2026-05-21 08:00 | beaver-agent | Fixed stale schedule in architecture.md 自我进化 section (每日 09:00→每小时 :00) — now consistent with README which was corrected in a prior run | 708 tests passing |
+
 ## Current Stage
 - 708 tests passing
 - All public functions documented (100% docstring coverage)
