@@ -3,6 +3,8 @@
 from dataclasses import dataclass, field
 from typing import Optional
 
+__all__ = ["Task", "TaskResult", "Benchmark"]
+
 
 @dataclass
 class Task:

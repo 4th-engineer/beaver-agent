@@ -11,6 +11,8 @@ from .loader import get_benchmark_registry
 
 logger = structlog.get_logger()
 
+__all__ = ["BeaverHarness"]
+
 
 class BeaverHarness:
     """Unified evaluation harness combining all 6 components:

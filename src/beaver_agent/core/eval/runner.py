@@ -14,6 +14,8 @@ from .loader import get_benchmark_registry
 
 logger = structlog.get_logger()
 
+__all__ = ["Runner"]
+
 
 class Runner:
     """Executes tasks through the adapter and collects results."""

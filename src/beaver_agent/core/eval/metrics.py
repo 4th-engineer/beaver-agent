@@ -7,6 +7,15 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = [
+    "Scorer",
+    "ExactMatchScorer",
+    "SimilarityScorer",
+    "CodeExecutionScorer",
+    "CodeReviewScorer",
+    "get_scorer",
+]
+
 
 class Scorer(ABC):
     """Base class for all scoring strategies."""

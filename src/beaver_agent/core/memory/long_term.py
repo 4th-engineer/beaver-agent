@@ -14,6 +14,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["MemoryCategory", "MemoryEntry", "MemoryQuery", "LongTermMemory"]
+
 
 class MemoryCategory(Enum):
     """Categories of long-term memory."""

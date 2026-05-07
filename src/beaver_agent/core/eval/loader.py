@@ -4,9 +4,17 @@ import json
 import structlog
 from pathlib import Path
 
+from .task import Task, Benchmark
 
 logger = structlog.get_logger()
-from .task import Task, Benchmark
+
+__all__ = [
+    "TaskLoader",
+    "BenchmarkRegistry",
+    "get_benchmark_registry",
+    "register_benchmark",
+    "list_benchmarks",
+]
 
 
 class TaskLoader:

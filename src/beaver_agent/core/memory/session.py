@@ -7,6 +7,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["SessionMemory"]
+
 
 class SessionMemory:
     """In-memory session storage for conversation context.

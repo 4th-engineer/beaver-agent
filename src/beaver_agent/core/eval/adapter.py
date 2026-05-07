@@ -6,6 +6,8 @@ import structlog
 
 logger = structlog.get_logger()
 
+__all__ = ["ModelAdapter", "BeaverAdapter", "OpenAIAdapter", "MiniMaxAdapter"]
+
 
 class ModelAdapter(ABC):
     """Abstract adapter that all LLM providers must implement."""
