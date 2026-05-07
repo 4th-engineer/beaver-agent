@@ -151,10 +151,11 @@
 | 2026-05-17 12:00 | beaver-agent | Removed redundant nested try-except in CodeGenTool.generate — inner try-except around file_tool.write_file was unreachable dead code (inner except returned before reaching outer); unified to single exception handler with code_generation_or_save_failed event | 662 tests passing |
 | 2026-05-17 13:00 | beaver-agent | Fixed stale test count (661→662) and date (2026-05-16→2026-05-17) in architecture.md — documentation now accurate | 662 tests passing |
 | 2026-05-17 14:00 | beaver-agent | Changed llm_init_failed log level from error to warning in ToolRouter._register_llm — LLM init is recoverable fallback, consistent with agent.py behavior | 662 tests passing |
-| 2026-05-18 00:00 | beaver-agent | Added 3 tests for SkillManager (reload clears cache and re-discovers modified skills, get_skill returns None for nonexistent skill, list_skills returns complete skill info including category) | 665 tests passing |
+| 2026-05-18 00:00 | beaver-agent | Added 3 tests for SkillManager (reload, get_skill_not_found, list_skills_returns_all_fields) | 665 tests passing |
+| 2026-05-18 01:00 | beaver-agent | Added 2 tests for CodeReviewTool._basic_review: detects print statements and mutable default arguments — completes explicit coverage for all 4 Python issue detectors | 667 tests passing |
 
 ## Current Stage
-- 665 tests passing
+- 667 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
