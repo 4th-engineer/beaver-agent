@@ -93,7 +93,8 @@ beaver-agent/
 │   │   ├── config.py          # Pydantic 配置模型
 │   │   ├── memory/
 │   │   │   ├── __init__.py
-│   │   │   └── session.py     # 会话记忆
+│   │   │   ├── session.py     # 会话记忆
+│   │   │   └── long_term.py   # 长期记忆向量存储
 │   │   └── eval/
 │   │       ├── __init__.py
 │   │       ├── harness.py     # BeaverHarness 评估框架
@@ -290,6 +291,7 @@ github_operation →  github_tool.py
 | Scorers | `src/beaver_agent/core/eval/metrics.py` | 评分指标 |
 | Prompting | `src/beaver_agent/core/eval/prompting.py` | 提示词策略 |
 | Session Memory | `src/beaver_agent/core/memory/session.py` | 会话记忆 |
+| LongTerm Memory | `src/beaver_agent/core/memory/long_term.py` | 长期记忆向量存储 |
 
 ### 自我进化
 
