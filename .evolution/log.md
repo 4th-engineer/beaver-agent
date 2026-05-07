@@ -159,8 +159,10 @@
 | 2026-05-18 04:00 | beaver-agent | Separated file save error handling in CodeGenTool.generate — distinct code_save_failed (file_path captured) and code_generation_failed events; previously both shared code_generation_or_save_failed making failure source ambiguous | 667 tests passing |
 | 2026-05-18 05:00 | beaver-agent | Added 9 tests for BeaverAgent._extract_and_store_memory — Chinese preference patterns (4), project fact from code_analyzer/analyze, convention from git/github, solution on error query, no memory on failed tools | 675 tests passing |
 
+| 2026-05-18 06:00 | beaver-agent | Added 8 tests for TaskPlanner edge cases — unknown intent returns [], task structure preserved from INTENT_TASKS, validate_plan accepts extra fields, rejects missing tool/action; _extract_params captures GitHub owner/repo and issue numbers | 683 tests passing |
+
 ## Current Stage
-- 675 tests passing
+- 683 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
