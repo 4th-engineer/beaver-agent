@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+import structlog
 
 from beaver_agent.core.config import (
     BeaverConfig, MCPServerConfig, MCPConfig
@@ -196,6 +197,73 @@ mcp_servers:
         config = patched_load()
         assert "time" in config.mcp.servers
         assert config.mcp.servers["time"].command == "uvx"
+
+    def test_load_configs_from_directory(self):
+        """Test loading MCP server configs from a directory of YAML files"""
+        import tempfile
+        import os
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            # Create two MCP config files
+            time_config = """
+command: "uvx"
+args: ["mcp-server-time"]
+"""
+            files_config = """
+url: "https://mcp.files.io/mcp"
+headers:
+  Authorization: "Bearer token123"
+"""
+            time_file = os.path.join(tmpdir, "time.yaml")
+            files_file = os.path.join(tmpdir, "files.yaml")
+
+            with open(time_file, "w") as f:
+                f.write(time_config)
+            with open(files_file, "w") as f:
+                f.write(files_config)
+
+            config = BeaverConfig()
+            manager = MCPManager(config)
+            manager._load_configs_from_directory(Path(tmpdir))
+
+            assert "time" in config.mcp.servers
+            assert config.mcp.servers["time"].command == "uvx"
+            assert config.mcp.servers["time"].args == ["mcp-server-time"]
+            assert "files" in config.mcp.servers
+            assert config.mcp.servers["files"].url == "https://mcp.files.io/mcp"
+
+    def test_load_configs_from_directory_empty(self):
+        """Test _load_configs_from_directory handles empty directory"""
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            config = BeaverConfig()
+            manager = MCPManager(config)
+            # Should not raise, just log and continue
+            manager._load_configs_from_directory(Path(tmpdir))
+            assert config.mcp.servers == {}
+
+    def test_load_configs_from_directory_malformed_yaml(self):
+        """Test _load_configs_from_directory handles malformed YAML gracefully"""
+        import tempfile
+        import os
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            bad_file = os.path.join(tmpdir, "bad.yaml")
+            with open(bad_file, "w") as f:
+                f.write("invalid: yaml: content: [")
+
+            config = BeaverConfig()
+            manager = MCPManager(config)
+            # Should not raise - exceptions are caught and logged
+            manager._load_configs_from_directory(Path(tmpdir))
+
+    def test_load_configs_from_directory_nonexistent(self):
+        """Test _load_configs_from_directory handles non-existent directory"""
+        config = BeaverConfig()
+        manager = MCPManager(config)
+        # Should not raise, just do nothing
+        manager._load_configs_from_directory(Path("/nonexistent/path"))
 
 
 class TestMCPManagerIntegration:
