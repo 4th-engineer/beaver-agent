@@ -189,8 +189,10 @@
 | 2026-05-21 10:00 | beaver-agent | Export all config Pydantic models from core/__init__.py — AppConfig, ModelConfig, GitHubConfig, CLIConfig, LoggingConfig, FileToolConfig, MCPConfig, MCPServerConfig now part of public API | 709 tests (708 passing, 1 skipped) |
 | 2026-05-21 11:00 | beaver-agent | Enhanced IntentParser class docstring — replaced one-line placeholder with full pipeline documentation, Attributes section (INTENT_PATTERNS, skill_manager), and doctest examples for parse() | 709 tests (708 passing, 1 skipped) |
 
+| 2026-05-21 12:00 | beaver-agent | Added 2 tests for Benchmark.__len__ (empty/2-task count) and TaskResult (all 7 fields + 3 defaults: metrics={}, error=None, duration_ms=0.0) — previously untested dataclass members now covered | 710 tests passing |
+
 ## Current Stage
-- 709 tests (708 passing, 1 skipped)
+- 710 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
