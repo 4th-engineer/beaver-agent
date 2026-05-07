@@ -86,8 +86,12 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
 
     # Switch model
     if cmd.startswith("/model "):
-        config.model.name = cmd.split(" ", 1)[1].strip()
-        console.print(f"[green]模型已切换为:[/green] {config.model.name}")
+        new_model = cmd.split(" ", 1)[1].strip()
+        if new_model:
+            config.model.name = new_model
+            console.print(f"[green]模型已切换为:[/green] {config.model.name}")
+        else:
+            console.print("[yellow]请指定模型名称[/yellow]")
         return True
 
     # Debug toggle
