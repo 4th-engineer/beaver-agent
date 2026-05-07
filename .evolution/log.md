@@ -187,6 +187,7 @@
 | 2026-05-21 08:00 | beaver-agent | Fixed stale schedule in architecture.md 自我进化 section (每日 09:00→每小时 :00) — now consistent with README which was corrected in a prior run | 708 tests passing |
 | 2026-05-21 09:00 | beaver-agent | Fixed stale test counts in README badge (708→709) and project structure (708→709), updated architecture.md status (708→709, 2026-05-17→2026-05-21) — documentation now accurate | 709 tests (708 passing, 1 skipped) |
 | 2026-05-21 10:00 | beaver-agent | Export all config Pydantic models from core/__init__.py — AppConfig, ModelConfig, GitHubConfig, CLIConfig, LoggingConfig, FileToolConfig, MCPConfig, MCPServerConfig now part of public API | 709 tests (708 passing, 1 skipped) |
+| 2026-05-21 11:00 | beaver-agent | Enhanced IntentParser class docstring — replaced one-line placeholder with full pipeline documentation, Attributes section (INTENT_PATTERNS, skill_manager), and doctest examples for parse() | 709 tests (708 passing, 1 skipped) |
 
 ## Current Stage
 - 709 tests (708 passing, 1 skipped)
