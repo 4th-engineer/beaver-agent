@@ -189,13 +189,14 @@
 | 2026-05-21 10:00 | beaver-agent | Export all config Pydantic models from core/__init__.py — AppConfig, ModelConfig, GitHubConfig, CLIConfig, LoggingConfig, FileToolConfig, MCPConfig, MCPServerConfig now part of public API | 709 tests (708 passing, 1 skipped) |
 | 2026-05-21 11:00 | beaver-agent | Enhanced IntentParser class docstring — replaced one-line placeholder with full pipeline documentation, Attributes section (INTENT_PATTERNS, skill_manager), and doctest examples for parse() | 709 tests (708 passing, 1 skipped) |
 
-| 2026-05-21 12:00 | beaver-agent | Added 2 tests for Benchmark.__len__ (empty/2-task count) and TaskResult (all 7 fields + 3 defaults: metrics={}, error=None, duration_ms=0.0) — previously untested dataclass members now covered | 710 tests passing |
+| 2026-05-19 09:00 | beaver-agent | Synced stale test counts in README badge (690→698), README project structure (685→698), and architecture.md (685→698) — documentation now accurate | 698 tests passing |
+| 2026-05-22 06:00 | beaver-agent | Added __all__ declarations to all 6 eval/ modules (runner, metrics, loader, harness, task, adapter) and 2 memory/ modules (session, long_term) — completes __all__ sweep across entire codebase | 710 tests passing |
 
 ## Current Stage
 - 710 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
-- All 10 tool/CLI modules have __all__ declarations — public API sweep complete
+- All modules have __all__ declarations — public API sweep complete across tools/, core/, cli/, eval/, memory/
 - Next: Test edge cases and remaining untested paths
 
 ## Priority Areas
