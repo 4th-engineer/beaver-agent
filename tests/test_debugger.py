@@ -256,3 +256,53 @@ class TestAnalyzeCodeHealth:
         result = debugger_tool._analyze_code_health("code", "python")
 
         assert "❌" in result or "failed" in result.lower()
+
+
+class TestAnalyzeError:
+    """Tests for _analyze_error() internal method"""
+
+    def test_analyze_error_calls_llm_debug_code(self, debugger_tool, mock_llm_client):
+        """Test that _analyze_error calls LLM debug_code with correct parameters"""
+        mock_llm_client.debug_code.return_value = Mock(content="Fix: add null check")
+        result = debugger_tool._analyze_error("code", "NullReferenceException", "python")
+
+        mock_llm_client.debug_code.assert_called_once()
+        call_kwargs = mock_llm_client.debug_code.call_args.kwargs
+        assert call_kwargs["code"] == "code"
+        assert call_kwargs["error"] == "NullReferenceException"
+        assert call_kwargs["language"] == "python"
+        assert "Fix: add null check" in result
+
+    def test_analyze_error_not_configured_falls_back_to_basic(self, debugger_tool, mock_llm_client):
+        """Test that _analyze_error falls back to basic when LLM returns 'not configured'"""
+        mock_llm_client.debug_code.return_value = Mock(content="LLM not configured")
+        result = debugger_tool._analyze_error("code", "KeyError: 'x'", "python")
+
+        assert "KeyError" in result
+        assert "字典中不存在该键" in result
+
+    def test_analyze_error_empty_response_falls_back_to_basic(self, debugger_tool, mock_llm_client):
+        """Test that _analyze_error falls back to basic when LLM returns empty content"""
+        mock_llm_client.debug_code.return_value = Mock(content="")
+        result = debugger_tool._analyze_error("code", "TypeError", "python")
+
+        assert "TypeError" in result
+
+    def test_analyze_error_exception_returns_error_string(self, debugger_tool, mock_llm_client):
+        """Test that _analyze_error returns error string on exception"""
+        mock_llm_client.debug_code.side_effect = RuntimeError("LLM unavailable")
+        result = debugger_tool._analyze_error("code", "SomeError", "python")
+
+        assert "❌" in result or "failed" in result.lower()
+
+    def test_analyze_error_with_stack_trace_passes_to_llm(self, debugger_tool, mock_llm_client):
+        """Test that _analyze_error calls LLM debug_code with correct parameters"""
+        mock_llm_client.debug_code.return_value = Mock(content="Fix: add null check")
+        stack_trace = "  File 'main.py', line 10, in main\n    foo()"
+        result = debugger_tool._analyze_error("code", "RuntimeError", "python", stack_trace=stack_trace)
+
+        call_kwargs = mock_llm_client.debug_code.call_args.kwargs
+        assert call_kwargs["code"] == "code"
+        assert call_kwargs["error"] == "RuntimeError"
+        assert call_kwargs["language"] == "python"
+        assert "Fix: add null check" in result
