@@ -106,6 +106,50 @@ def test_analyze_builds_call_graph(temp_project):
     assert isinstance(analyzer.call_graph, dict)
 
 
+def test_analyze_call_graph_cross_module_edges(temp_project):
+    """Test that call graph captures cross-module call edges.
+
+    Verifies that when module A calls a function from module B,
+    the call graph correctly records B as a dependency of A.
+    """
+    # Create two modules where one imports from the other
+    src_dir = temp_project / "src" / "beaver_agent"
+    (src_dir / "__init__.py").write_text("")
+    (src_dir / "caller.py").write_text('''
+"""Caller module that uses ExampleClass."""
+from .example import ExampleClass
+
+def use_example():
+    """Use the example class."""
+    obj = ExampleClass("test")
+    return obj.greet()
+''')
+    # Overwrite the original example.py to be a proper module
+    (src_dir / "example.py").write_text('''
+"""Example module for testing."""
+
+class ExampleClass:
+    """An example class for testing."""
+
+    def __init__(self, name: str):
+        self.name = name
+
+    def greet(self) -> str:
+        """Return a greeting."""
+        return f"Hello, {self.name}"
+''')
+
+    analyzer = CodeAnalyzer(temp_project)
+    analyzer.analyze()
+
+    # The call graph should contain entries for both modules
+    assert "example" in analyzer.modules
+    assert "caller" in analyzer.modules
+
+    # caller should have example as a dependency (calls ExampleClass)
+    assert "example" in analyzer.call_graph.get("caller", set())
+
+
 def test_file_to_module_name():
     """Test conversion of file paths to module names"""
     # Use actual project structure for this test
@@ -359,3 +403,24 @@ class MyClass:
     methods = analyzer._find_class_methods(content, 1)  # line with "class MyClass:" (index 1)
     assert "method_one" in methods
     assert "method_two" in methods
+
+
+def test_generate_tree_output_structure(temp_project):
+    """Test that generate_tree produces the expected output sections.
+
+    Verifies that the tree output contains key structural sections:
+    - Beaver branding header
+    - Summary stats (modules, classes, functions)
+    - Module Dependencies section
+    """
+    analyzer = CodeAnalyzer(temp_project)
+    analyzer.analyze()
+
+    result = analyzer.generate_tree()
+
+    # Should contain branding header
+    assert "Beaver" in result
+    # Should contain summary stats
+    assert "Summary" in result or "modules" in result
+    # Should contain call graph / dependencies section
+    assert "Module Dependencies" in result or "Dependencies" in result
