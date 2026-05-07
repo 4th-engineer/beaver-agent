@@ -212,6 +212,51 @@ class TestHandleCommand:
                 assert "42 files" in captured.out
 
 
+class TestHandleCommandErrors:
+    """Tests for handle_command error handling on /status and /debug."""
+
+    def test_status_command_error_handling(self, mock_config, mock_agent, capsys):
+        """Test /status handles agent access errors gracefully."""
+        # Make agent.memory.get_history raise an exception
+        mock_agent.memory.get_history.side_effect = RuntimeError("memory unavailable")
+        mock_agent.long_term_memory.get_stats.side_effect = RuntimeError("memory unavailable")
+        mock_agent.tool_router.list_tools.side_effect = RuntimeError("tool router unavailable")
+        
+        result = handle_command("/status", mock_config, mock_agent)
+        
+        assert result is True
+        captured = capsys.readouterr()
+        assert "RuntimeError" in captured.out or "memory unavailable" in captured.out
+
+    def test_debug_command_error_handling(self, mock_config, mock_agent, capsys):
+        """Test /debug handles agent access errors gracefully."""
+        from beaver_agent.cli.commands import console
+        original_print = console.print
+        # First call raises, second call (in except block) succeeds
+        console.print = MagicMock(side_effect=[RuntimeError("console error"), None])
+
+        try:
+            result = handle_command("/debug", mock_config, mock_agent)
+            # Should still return True even if console errors
+            assert result is True
+        finally:
+            console.print = original_print
+
+    def test_status_with_missing_agent_attributes(self, mock_config, capsys):
+        """Test /status handles agent with missing optional attributes."""
+        minimal_agent = MagicMock()
+        minimal_agent.session_id = "test-session"
+        minimal_agent.memory.get_history.side_effect = AttributeError("no memory")
+        minimal_agent.long_term_memory.get_stats.side_effect = AttributeError("no ltm")
+        minimal_agent.tool_router.list_tools.side_effect = AttributeError("no router")
+        minimal_agent.config.model.name = "test"
+        minimal_agent.config.model.provider = "test"
+        
+        result = handle_command("/status", mock_config, minimal_agent)
+        assert result is True
+        # Should handle gracefully
+
+
 class TestPrintHelp:
     """Tests for print_help function."""
 

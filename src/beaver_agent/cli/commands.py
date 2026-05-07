@@ -77,7 +77,11 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
 
     # Status
     if cmd == "/status":
-        show_status(agent)
+        try:
+            show_status(agent)
+        except Exception as e:
+            logger.error("status_command_failed", exc_info=e)
+            console.print(f"[red]状态获取失败:[/red] {e}")
         return True
 
     # Switch model
@@ -88,8 +92,12 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
 
     # Debug toggle
     if cmd == "/debug":
-        config.app.debug = not config.app.debug
-        console.print(f"[yellow]调试模式:[/yellow] {'开启' if config.app.debug else '关闭'}")
+        try:
+            config.app.debug = not config.app.debug
+            console.print(f"[yellow]调试模式:[/yellow] {'开启' if config.app.debug else '关闭'}")
+        except Exception as e:
+            logger.error("debug_toggle_failed", exc_info=e)
+            console.print(f"[red]调试模式切换失败:[/red] {e}")
         return True
 
     # Analyze repository
