@@ -29,6 +29,10 @@ __all__ = [
     "MemoryEntry",
     "MemoryQuery",
     "ConversationLogger",
+    "ModelAdapter",
+    "BeaverAdapter",
+    "OpenAIAdapter",
+    "MiniMaxAdapter",
 ]
 
 from beaver_agent.core.agent import BeaverAgent
@@ -53,3 +57,5 @@ from beaver_agent.core.skill_manager import SkillManager
 from beaver_agent.core.mcp_manager import MCPManager, MCPTool
 from beaver_agent.core.memory.session import SessionMemory
 from beaver_agent.core.memory.long_term import LongTermMemory, MemoryCategory, MemoryEntry, MemoryQuery
+from beaver_agent.core.conversation_logger import ConversationLogger
+from beaver_agent.core.eval.adapter import ModelAdapter, BeaverAdapter, OpenAIAdapter, MiniMaxAdapter
