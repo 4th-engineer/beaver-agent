@@ -233,6 +233,7 @@ class BeaverAgent:
         context = self._build_context(tool_results)
 
         if not self.llm:
+            logger.debug("llm_unavailable_using_fallback", intent=intent)
             return self._generate_fallback_response(intent, context)
 
         # Build conversation context for LLM
