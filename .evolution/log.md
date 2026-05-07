@@ -167,6 +167,7 @@
 | 2026-05-19 02:00 | beaver-agent | Added 5 tests for DebuggerTool._analyze_error — LLM call params, not-configured/empty fallback, exception handling, stack_trace handling; covers previously untested internal method | 690 tests passing |
 | 2026-05-19 03:00 | beaver-agent | Added docstring to DataVersion._compare (internal comparison helper used by __lt__/__le__/__gt__/__ge__) — last undocumented internal method in data_store.py | 690 tests passing |
 | 2026-05-19 04:00 | beaver-agent | Fixed incomplete Returns docstrings in complete_code and refactor — both methods return error messages on failure but docstrings only listed success case; now document "or error message on failure" pattern consistent with generate() | 690 tests passing |
+| 2026-05-19 05:00 | beaver-agent | Export strategy constants from eval/__init__.py — CODE_GENERATION_STRATEGY, BUG_FIX_STRATEGY, CODE_REVIEW_STRATEGY, ARCHITECTURE_STRATEGY, and STRATEGY_MAP were imported from prompting.py but not re-exported, breaking "from beaver_agent.core.eval import STRATEGY_MAP" | 690 tests passing |
 
 ## Current Stage
 - 690 tests passing
