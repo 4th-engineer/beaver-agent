@@ -174,6 +174,7 @@
 | 2026-05-20 03:00 | beaver-agent | Added 2 tests for CodeAnalyzer call_graph edges and generate_tree output — test_analyze_call_graph_cross_module_edges verifies cross-module call edges are captured; test_generate_tree_output_structure verifies generate_tree() contains Beaver branding, Summary stats, and Module Dependencies sections | 700 tests passing |
 
 | 2026-05-20 04:00 | beaver-agent | Enhanced docstring for main.py model command — replaced short Chinese placeholder with full English Args/Example documenting --show behavior | 700 tests passing |
+| 2026-05-20 05:00 | beaver-agent | Added debug logging when BeaverAgent._generate_response() falls back to non-LLM mode (no LLM configured) — logs intent for traceability, consistent with surrounding debug logs | 700 tests passing |
 
 ## Current Stage
 - 700 tests passing
