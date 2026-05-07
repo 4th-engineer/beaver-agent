@@ -163,9 +163,10 @@
 | 2026-05-18 07:00 | beaver-agent | Fixed stale test counts in README.md and doc/architecture.md (675→683) — documentation now accurate | 683 tests passing |
 | 2026-05-18 08:00 | beaver-agent | Added ModelAdapter to architecture.md module table — was documented in tree diagram (line 106) but missing from module table, making adapter.py undocumented in the reference section | 683 tests passing |
 | 2026-05-18 09:00 | beaver-agent | Removed dead code URLError handler in pixel_pilot._post_event — except error.URLError was unreachable since URLError is subclass of Exception caught below and lacked exc_info; consolidated to single Exception handler with exc_info | 683 tests passing |
+| 2026-05-18 10:00 | beaver-agent | Added 2 tests for CodeGenTool.generate file_path parameter — file save success (FileTool.write_file called correctly) and save failure (graceful error with content preserved); covers previously untested code path | 685 tests passing |
 
 ## Current Stage
-- 683 tests passing
+- 685 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
