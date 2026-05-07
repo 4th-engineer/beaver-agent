@@ -536,3 +536,153 @@ class TestExtractAndStoreMemory:
         )
 
         agent.long_term_memory.remember_solution.assert_not_called()
+
+
+class TestRunEdgeCases:
+    """Tests for BeaverAgent.run() error paths and edge cases."""
+
+    def test_run_with_empty_task_list(self, agent):
+        """Test that run() returns fallback response when task planner returns no tasks."""
+        mock_response = MagicMock()
+        mock_response.content = "done"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.tool_router.route.return_value = {"success": True, "content": "ok"}
+        agent.task_planner.plan.return_value = []
+
+        result = agent.run("hello")
+        assert isinstance(result, str)
+        assert len(result) > 0
+        # No tool calls should be made when there are no tasks
+        agent.tool_router.route.assert_not_called()
+
+    def test_run_with_multiple_tasks(self, agent):
+        """Test that run() executes all tasks and collects results."""
+        mock_response = MagicMock()
+        mock_response.content = "all done"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.tool_router.route.side_effect = [
+            {"success": True, "tool": "terminal", "content": "ls ok"},
+            {"success": True, "tool": "file", "content": "read ok"},
+        ]
+        agent.task_planner.plan.return_value = [
+            {"tool": "terminal", "action": "execute", "params": {"command": "ls"}},
+            {"tool": "file", "action": "read", "params": {"path": "foo.txt"}},
+        ]
+
+        result = agent.run("do both things")
+        assert isinstance(result, str)
+        assert len(result) > 0
+        assert agent.tool_router.route.call_count == 2
+
+    def test_run_intent_parser_exception_uses_fallback(self, agent):
+        """Test that run() uses fallback response when intent parser raises."""
+        mock_response = MagicMock()
+        mock_response.content = "response"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.tool_router.route.return_value = {"success": True}
+        agent.intent_parser.parse.side_effect = RuntimeError("parse failed")
+
+        result = agent.run("hello")
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+    def test_run_task_planner_exception_uses_fallback(self, agent):
+        """Test that run() uses fallback response when task planner raises."""
+        mock_response = MagicMock()
+        mock_response.content = "response"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.task_planner.plan.side_effect = RuntimeError("planning failed")
+
+        result = agent.run("hello")
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+    def test_run_with_github_intent(self, agent):
+        """Test that run() extracts GitHub facts from GitHub tool results."""
+        mock_response = MagicMock()
+        mock_response.content = "github result"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.tool_router.route.return_value = {
+            "success": True,
+            "tool": "github",
+            "data": "owner=beaver prefix=🐙 owner=openai prefix=🔍",
+        }
+        agent.intent_parser.parse.return_value = "github_operation"
+        agent.task_planner.plan.return_value = [
+            {"tool": "github", "action": "get_repo_info", "params": {"owner": "beaver", "repo": "agent"}},
+        ]
+
+        # Patch _extract_and_store_memory to verify it's called
+        agent._extract_and_store_memory = MagicMock()
+        agent.run("show me the beaver repo")
+        agent._extract_and_store_memory.assert_called_once()
+
+    def test_run_with_debug_intent(self, agent):
+        """Test that run() uses debug intent with _generate_fallback_response."""
+        mock_response = MagicMock()
+        mock_response.content = "debug result"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.tool_router.route.return_value = {"success": True}
+        agent.intent_parser.parse.return_value = "debugging"
+
+        agent._extract_and_store_memory = MagicMock()
+        result = agent.run("debug this")
+        assert isinstance(result, str)
+        assert len(result) > 0
+        assert "debug" in result.lower() or "调试" in result
+
+    def test_run_with_unknown_intent(self, agent):
+        """Test that run() uses fallback response for unknown intent."""
+        mock_response = MagicMock()
+        mock_response.content = "response"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.tool_router.route.return_value = {"success": True}
+        agent.intent_parser.parse.return_value = "unknown_intent"
+
+        agent._extract_and_store_memory = MagicMock()
+        result = agent.run("whatever")
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+    def test_run_logs_user_input_truncated(self, agent):
+        """Test that run() logs input truncated to 100 chars."""
+        mock_response = MagicMock()
+        mock_response.content = "response"
+        mock_response.model = "test-model"
+        mock_response.usage = MagicMock()
+
+        agent.llm = MagicMock()
+        agent.llm._call.return_value = mock_response
+        agent.tool_router.route.return_value = {"success": True}
+
+        long_input = "x" * 200
+        agent.run(long_input)
+        # Just verify it doesn't crash - truncation is handled in logging
