@@ -12,7 +12,32 @@ __all__ = ["IntentParser"]
 
 
 class IntentParser:
-    """Parse user input to determine intent, with skill support"""
+    """Parse user input to determine intent, with skill-based routing.
+
+    Resolves user input through an ordered pipeline:
+    1. **Skill invocation** — lines starting with ``/skill`` → ``skill_invocation``
+    2. **Skill routing** — if a SkillManager is attached, matched skills via
+       ``skill:<name>`` prefix (0.95 confidence)
+    3. **Pattern matching** — keyword matching against ``INTENT_PATTERNS`` dict
+       (0.5–1.0 confidence based on keyword count)
+    4. **Fallback** — ``general_chat`` when no pattern matches
+
+    Attributes:
+        INTENT_PATTERNS: Class-level dict mapping intent names to keyword lists.
+            Keys: ``code_generation``, ``code_review``, ``debug``,
+            ``github_operation``, ``file_operation``, ``terminal_operation``,
+            ``skill_invocation``.
+        skill_manager: Optional SkillManager instance for skill-based routing.
+
+    Example:
+        >>> parser = IntentParser()
+        >>> parser.parse("帮我review代码")
+        'code_review'
+        >>> parser.parse("帮我写一个函数")
+        'code_generation'
+        >>> parser.parse("/skill github")
+        'skill_invocation'
+    """
 
     INTENT_PATTERNS = {
         "code_generation": [
