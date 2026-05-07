@@ -1,6 +1,6 @@
-# 🦫 Beaver Bot 全能智能体 — 架构设计 v2
+# 🦫 Beaver Bot 全能智能体 — 架构设计
 
-> 版本: v2.0
+> 版本: 1.0
 > 更新: 2026-05-20
 > 作者: Beaver Bot Team
 
