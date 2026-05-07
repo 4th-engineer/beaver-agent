@@ -44,6 +44,7 @@ except ImportError:
 _enabled = False
 _viewer_url = "http://localhost:7777"
 _initialized = False
+_verbose = True
 
 # PixelPilot logger — only active if structlog is available
 if _has_structlog:
@@ -78,9 +79,10 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
         url: PixelPilot 服务器地址
         verbose: 是否打印连接状态
     """
-    global _enabled, _viewer_url, _initialized
+    global _enabled, _viewer_url, _initialized, _verbose
 
     _viewer_url = url.rstrip("/")
+    _verbose = verbose
 
     # 测试连接（只调用一次）
     test_result = _test_connection()
@@ -161,7 +163,7 @@ def _test_connection() -> bool:
     except Exception as e:
         if _has_structlog:
             _logger.warning("connection_test_failed", url=_viewer_url, exc_info=e)
-        else:
+        elif _verbose:
             print(f"[PixelPilot] ⚠️  Connection test failed for {_viewer_url}: {e}")
         return False
 
@@ -183,7 +185,7 @@ def _post_event(event: Dict[str, Any]) -> bool:
     except Exception as e:
         if _has_structlog:
             _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"), exc_info=e)
-        else:
+        elif _verbose:
             print(f"[PixelPilot] ⚠️  Failed to post event ({event.get('type')}) to {_viewer_url}: {e}")
         return False
 
@@ -196,7 +198,7 @@ def _get_agent_name(self) -> str:
     except Exception as e:
         if _has_structlog:
             _logger.warning("get_agent_name_failed", exc_info=e)
-        else:
+        elif _verbose:
             print(f"[PixelPilot] Warning: Could not get agent name: {e}")
         return "beaver"
 
