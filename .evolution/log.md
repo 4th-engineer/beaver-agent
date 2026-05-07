@@ -162,6 +162,7 @@
 | 2026-05-18 06:00 | beaver-agent | Added 8 tests for TaskPlanner edge cases — unknown intent returns [], task structure preserved from INTENT_TASKS, validate_plan accepts extra fields, rejects missing tool/action; _extract_params captures GitHub owner/repo and issue numbers | 683 tests passing |
 | 2026-05-18 07:00 | beaver-agent | Fixed stale test counts in README.md and doc/architecture.md (675→683) — documentation now accurate | 683 tests passing |
 | 2026-05-18 08:00 | beaver-agent | Added ModelAdapter to architecture.md module table — was documented in tree diagram (line 106) but missing from module table, making adapter.py undocumented in the reference section | 683 tests passing |
+| 2026-05-18 09:00 | beaver-agent | Removed dead code URLError handler in pixel_pilot._post_event — except error.URLError was unreachable since URLError is subclass of Exception caught below and lacked exc_info; consolidated to single Exception handler with exc_info | 683 tests passing |
 
 ## Current Stage
 - 683 tests passing
