@@ -194,6 +194,7 @@
 | 2026-05-22 07:00 | beaver-agent | Added 3 direct tests for SkillManager._parse_skill_file — full frontmatter fields, legacy steps format, and no-frontmatter defaults — previously only tested indirectly via list_skills | 713 tests passing |
 | 2026-05-22 08:00 | beaver-agent | Synced stale test counts in README badge (710→713) and architecture.md (710→713, 2026-05-21→2026-05-22) — documentation now accurate | 713 tests passing |
 | 2026-05-22 09:00 | beaver-agent | Added 2 async tests for MCPTool.call() — test_mcp_tool_call (success case with AsyncMock) and test_mcp_tool_call_error (error dict propagation) — previously untested async method now covered | 715 tests passing |
+| 2026-05-22 10:00 | beaver-agent | Added ModelAdapter, BeaverAdapter, OpenAIAdapter, MiniMaxAdapter to core/__init__.py exports — these eval adapters were exported from top-level __init__.py but missing from core public API, completing consistent public API across all packages | 715 tests passing |
 
 ## Current Stage
 - 715 tests passing
