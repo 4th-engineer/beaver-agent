@@ -124,7 +124,7 @@ func main() {{
             language: Programming language of the code.
 
         Returns:
-            Completed code with TODO sections filled in.
+            Completed code with TODO sections filled in, or error message on failure.
         """
         logger.info("completing_code", language=language, description=description[:50])
 
@@ -158,7 +158,7 @@ Description: {description}
             language: Programming language of the code.
 
         Returns:
-            Refactored code string.
+            Refactored code string, or error message on failure.
         """
         logger.info("refactoring_code", language=language, style=style)
 
