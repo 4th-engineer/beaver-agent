@@ -78,7 +78,18 @@ def chat(
 def model(
     show: bool = typer.Option(False, "--show", help="显示当前模型"),
 ):
-    """查看/切换模型"""
+    """Display or switch the current LLM model.
+
+    When called with --show, prints the currently configured model name
+    and provider. Without --show, also displays model information.
+
+    Args:
+        show: If True, displays the current model name and provider.
+              Defaults to False.
+
+    Example:
+        beaver model --show    # Show current model
+    """
     model_command(show)
 
 
