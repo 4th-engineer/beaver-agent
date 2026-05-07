@@ -179,6 +179,8 @@
 | 2026-05-20 05:00 | beaver-agent | Removed stale v2 version markers from architecture.md header (架构设计 v2→架构设计, v2.0→1.0) — consistent with README.md and prior v2 cleanup in agent.py, intent_parser.py, tool_router.py | 700 tests passing |
 | 2026-05-21 04:00 | beaver-agent | Added error handling to /status and /debug CLI commands — both now wrapped in try/except with structlog error logging and console.print user feedback, consistent with /analyze, /browse, /screenshot | 703 tests passing |
 
+| 2026-05-21 05:00 | beaver-agent | Added verbose guards to _test_connection, _post_event, _get_agent_name fallback prints in pixel_pilot.py — these 3 functions printed regardless of verbose param unlike _patch_tool_router; added _verbose global state to track connect() param | 703 tests passing |
+
 ## Current Stage
 - 703 tests passing
 - All public functions documented (100% docstring coverage)
