@@ -169,9 +169,10 @@
 | 2026-05-19 04:00 | beaver-agent | Fixed incomplete Returns docstrings in complete_code and refactor — both methods return error messages on failure but docstrings only listed success case; now document "or error message on failure" pattern consistent with generate() | 690 tests passing |
 | 2026-05-19 06:00 | beaver-agent | Added exception handling to /analyze command in handle_command — the only CLI command without try/except protection; now consistent with /browse and /screenshot using logger.error with exc_info and console.print for user feedback | 690 tests passing |
 | 2026-05-19 07:00 | beaver-agent | Fixed stale test count badge (683→690) in README.md — documentation now accurate | 690 tests passing |
+| 2026-05-19 08:00 | beaver-agent | Added 8 tests for BeaverAgent.run() edge cases — empty task list, multiple tasks, intent/task planner exceptions, GitHub/debug/unknown intents, input truncation | 698 tests passing |
 
 ## Current Stage
-- 690 tests passing
+- 698 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
