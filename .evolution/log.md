@@ -150,6 +150,7 @@
 | 2026-05-17 11:00 | beaver-agent | Added test for BeaverAgent.reset() logger session lifecycle — verifies end_session() and start_session() are called with new session ID | 662 tests passing |
 | 2026-05-17 12:00 | beaver-agent | Removed redundant nested try-except in CodeGenTool.generate — inner try-except around file_tool.write_file was unreachable dead code (inner except returned before reaching outer); unified to single exception handler with code_generation_or_save_failed event | 662 tests passing |
 | 2026-05-17 13:00 | beaver-agent | Fixed stale test count (661→662) and date (2026-05-16→2026-05-17) in architecture.md — documentation now accurate | 662 tests passing |
+| 2026-05-17 14:00 | beaver-agent | Changed llm_init_failed log level from error to warning in ToolRouter._register_llm — LLM init is recoverable fallback, consistent with agent.py behavior | 662 tests passing |
 
 ## Current Stage
 - 662 tests passing
