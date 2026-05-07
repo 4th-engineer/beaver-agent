@@ -143,6 +143,65 @@ trigger: TeSt
         skill = manager.find_matching_skill("This is a TeSt input")
         assert skill is not None
 
+    def test_reload(self, temp_skills_dir):
+        """Test that reload() clears cache and re-discovers skills"""
+        skill_dir = temp_skills_dir / "reload-test"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: reload-test
+category: test
+description: Reload test
+trigger: reload-trigger
+---
+
+# Reload Test
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent,
+                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        assert manager.get_skill("reload-test") is not None
+
+        (skill_dir / "SKILL.md").write_text("""---
+name: reload-test
+category: test
+description: Reload test modified
+trigger: reload-trigger
+---
+
+# Reload Test Modified
+""")
+        manager.reload()
+        skill = manager.get_skill("reload-test")
+        assert skill is not None
+        assert skill.description == "Reload test modified"
+
+    def test_get_skill_not_found(self, temp_skills_dir):
+        """Test that get_skill returns None for nonexistent skill"""
+        manager = SkillManager(project_root=temp_skills_dir.parent,
+                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        assert manager.get_skill("nonexistent-skill") is None
+
+    def test_list_skills_returns_all_fields(self, temp_skills_dir):
+        """Test that list_skills returns complete skill info including category"""
+        skill_dir = temp_skills_dir / "fields-test"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: fields-test
+category: my-category
+description: Fields test
+trigger: fields-trigger
+---
+
+# Fields Test
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent,
+                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        skills = manager.list_skills()
+        assert len(skills) == 1
+        assert skills[0]["name"] == "fields-test"
+        assert skills[0]["category"] == "my-category"
+
 
 class TestSkill:
     """Test Skill class"""
