@@ -140,6 +140,8 @@ pytest
 | **Language** | Python 3.11+ |
 | **LLM** | MiniMax-M2.7 (Anthropic-compatible API) |
 | **Agent** | Custom async orchestration |
+| **Logging** | structlog (structured logging) |
+| **Memory** | SQLite + in-memory (LongTermMemory + SessionMemory) |
 | **Config** | Pydantic + YAML + python-dotenv |
 | **Testing** | pytest + pytest-asyncio |
 | **Linting** | ruff |
