@@ -192,6 +192,7 @@
 | 2026-05-19 09:00 | beaver-agent | Synced stale test counts in README badge (690→698), README project structure (685→698), and architecture.md (685→698) — documentation now accurate | 698 tests passing |
 | 2026-05-22 06:00 | beaver-agent | Added __all__ declarations to all 6 eval/ modules (runner, metrics, loader, harness, task, adapter) and 2 memory/ modules (session, long_term) — completes __all__ sweep across entire codebase | 710 tests passing |
 | 2026-05-22 07:00 | beaver-agent | Added 3 direct tests for SkillManager._parse_skill_file — full frontmatter fields, legacy steps format, and no-frontmatter defaults — previously only tested indirectly via list_skills | 713 tests passing |
+| 2026-05-22 08:00 | beaver-agent | Synced stale test counts in README badge (710→713) and architecture.md (710→713, 2026-05-21→2026-05-22) — documentation now accurate | 713 tests passing |
 
 ## Current Stage
 - 713 tests passing
