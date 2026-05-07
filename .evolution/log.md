@@ -156,8 +156,9 @@
 
 | 2026-05-18 02:00 | beaver-agent | Added long_term.py to architecture.md memory module docs (tree diagram and module table) — was documented in evolution log and test coverage but missing from architecture doc | 667 tests passing |
 | 2026-05-18 03:00 | beaver-agent | Added comprehensive docstring to TaskPlanner.plan() — replaced one-line placeholder with Args/Returns/Example documenting task template lookup, parameter extraction, and return format | 667 tests passing |
+| 2026-05-18 04:00 | beaver-agent | Separated file save error handling in CodeGenTool.generate — distinct code_save_failed (file_path captured) and code_generation_failed events; previously both shared code_generation_or_save_failed making failure source ambiguous | 667 tests passing |
 
-|## Current Stage
+## Current Stage
 - 667 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
