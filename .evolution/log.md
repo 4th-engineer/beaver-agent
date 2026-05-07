@@ -182,8 +182,10 @@
 | 2026-05-21 05:00 | beaver-agent | Added verbose guards to _test_connection, _post_event, _get_agent_name fallback prints in pixel_pilot.py — these 3 functions printed regardless of verbose param unlike _patch_tool_router; added _verbose global state to track connect() param | 703 tests passing |
 | 2026-05-21 06:00 | beaver-agent | Fixed README self-evolution description — incorrect "每日 09:00" corrected to "每小时 :00"; workflow steps updated to reflect actual hourly audit cycle (code audit, test coverage, doc improvements) | 703 tests passing |
 
+| 2026-05-21 07:00 | beaver-agent | Added 5 error handling tests for FileTool exception paths (read/write permission denied, search_files/content exception, check_project_structure exception) — covers all untested exception handlers in FileTool | 708 tests passing |
+
 ## Current Stage
-- 703 tests passing
+- 708 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
