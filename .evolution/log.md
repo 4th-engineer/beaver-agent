@@ -171,9 +171,10 @@
 | 2026-05-19 07:00 | beaver-agent | Fixed stale test count badge (683→690) in README.md — documentation now accurate | 690 tests passing |
 | 2026-05-19 08:00 | beaver-agent | Added 8 tests for BeaverAgent.run() edge cases — empty task list, multiple tasks, intent/task planner exceptions, GitHub/debug/unknown intents, input truncation | 698 tests passing |
 | 2026-05-19 09:00 | beaver-agent | Synced stale test counts in README badge (690→698), README project structure (685→698), and architecture.md (685→698) — documentation now accurate | 698 tests passing |
+| 2026-05-20 03:00 | beaver-agent | Added 2 tests for CodeAnalyzer call_graph edges and generate_tree output — test_analyze_call_graph_cross_module_edges verifies cross-module call edges are captured; test_generate_tree_output_structure verifies generate_tree() contains Beaver branding, Summary stats, and Module Dependencies sections | 700 tests passing |
 
 ## Current Stage
-- 698 tests passing
+- 700 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete

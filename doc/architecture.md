@@ -1,7 +1,7 @@
 # 🦫 Beaver Bot 全能智能体 — 架构设计 v2
 
 > 版本: v2.0
-> 更新: 2026-05-19
+> 更新: 2026-05-20
 > 作者: Beaver Bot Team
 
 ---
@@ -261,7 +261,7 @@ github_operation →  github_tool.py
 
 | 项目 | 状态 |
 |------|------|
-| **测试** | 698 tests passing |
+| **测试** | 700 tests passing |
 | **LLM** | MiniMax-M2.7 (api.minimaxi.com/anthropic/v1/messages) |
 | **CI/CD** | GitHub Actions ✓ |
 | **代码质量** | Self-evolution cron (每日 09:00) |
