@@ -177,9 +177,10 @@
 | 2026-05-20 05:00 | beaver-agent | Added debug logging when BeaverAgent._generate_response() falls back to non-LLM mode (no LLM configured) — logs intent for traceability, consistent with surrounding debug logs | 700 tests passing |
 | 2026-05-20 04:00 | beaver-agent | Added structlog (structured logging) and SQLite + in-memory (LongTermMemory + SessionMemory) to Tech Stack table in README.md — previously undocumented despite being core project dependencies | 700 tests passing |
 | 2026-05-20 05:00 | beaver-agent | Removed stale v2 version markers from architecture.md header (架构设计 v2→架构设计, v2.0→1.0) — consistent with README.md and prior v2 cleanup in agent.py, intent_parser.py, tool_router.py | 700 tests passing |
+| 2026-05-21 04:00 | beaver-agent | Added error handling to /status and /debug CLI commands — both now wrapped in try/except with structlog error logging and console.print user feedback, consistent with /analyze, /browse, /screenshot | 703 tests passing |
 
 ## Current Stage
-- 700 tests passing
+- 703 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All 10 tool/CLI modules have __all__ declarations — public API sweep complete
