@@ -6,7 +6,15 @@ from .runner import Runner
 from .loader import BenchmarkRegistry, TaskLoader, get_benchmark_registry, register_benchmark, list_benchmarks
 from .metrics import Scorer, ExactMatchScorer, SimilarityScorer, CodeExecutionScorer, CodeReviewScorer, get_scorer
 from .adapter import ModelAdapter, BeaverAdapter, OpenAIAdapter, MiniMaxAdapter
-from .prompting import PromptStrategy, get_strategy
+from .prompting import (
+    PromptStrategy,
+    get_strategy,
+    CODE_GENERATION_STRATEGY,
+    BUG_FIX_STRATEGY,
+    CODE_REVIEW_STRATEGY,
+    ARCHITECTURE_STRATEGY,
+    STRATEGY_MAP,
+)
 
 __all__ = [
     "BeaverHarness",
@@ -31,4 +39,9 @@ __all__ = [
     "MiniMaxAdapter",
     "PromptStrategy",
     "get_strategy",
+    "CODE_GENERATION_STRATEGY",
+    "BUG_FIX_STRATEGY",
+    "CODE_REVIEW_STRATEGY",
+    "ARCHITECTURE_STRATEGY",
+    "STRATEGY_MAP",
 ]
