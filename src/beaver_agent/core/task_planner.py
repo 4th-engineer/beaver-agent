@@ -56,7 +56,33 @@ class TaskPlanner:
     ]
 
     def plan(self, user_input: str, intent: str) -> List[Dict[str, Any]]:
-        """Plan tasks for given intent and user input"""
+        """Plan tasks for a given intent and user input.
+
+        Uses the intent type to look up predefined task templates, then
+        enriches each task with parameters extracted from the user input
+        (file paths, language hints, error messages, GitHub references).
+
+        Args:
+            user_input: Raw user input string describing the task. Used
+                by ``_extract_params`` to pull out structured parameters
+                like file paths and language preferences.
+            intent: Intent type string such as ``"code_generation"``,
+                ``"code_review"``, ``"debug"``, etc. Determines which
+                task template from ``INTENT_TASKS`` is used.
+
+        Returns:
+            A list of task dictionaries, each containing ``tool``,
+            ``action``, and ``params`` keys. Parameters are populated
+            by ``_extract_params`` from the user input.
+
+        Example:
+            >>> planner = TaskPlanner()
+            >>> tasks = planner.plan("帮我写一个快排算法", "code_generation")
+            >>> tasks[0]["tool"]
+            'code_gen'
+            >>> "description" in tasks[0]["params"]
+            True
+        """
 
         tasks = self.INTENT_TASKS.get(intent, [])
 
