@@ -302,6 +302,48 @@ class TestSummarizeContent:
         result = agent._summarize_content("execute_command", content)
         assert "not json at all" in result or len(result) > 0
 
+    def test_summarize_file_truncation(self, agent):
+        """Test _summarize_content truncates file content at 24 lines with stats."""
+        lines = [f"line {i}: some content here" for i in range(30)]
+        content = "\n".join(lines)
+        result = agent._summarize_content("read_file", content)
+        # Should show first 20 lines + truncation note + "文件预览"
+        assert "line 0" in result
+        assert "line 19" in result
+        assert "line 29" not in result  # truncated
+
+    def test_summarize_file_non_string_coerced(self, agent):
+        """Test _summarize_content converts non-string content to string."""
+        result = agent._summarize_content("file", 12345)
+        assert "12345" in result
+
+    def test_summarize_search_truncation(self, agent):
+        """Test _summarize_content truncates search results at 20 lines."""
+        lines = [f"match on line {i}" for i in range(25)]
+        content = "\n".join(lines)
+        result = agent._summarize_content("search", content)
+        # Should show first 10 + count summary
+        assert "match on line 0" in result
+        assert "match on line 9" in result
+        assert "共 25 条匹配结果" in result
+
+    def test_summarize_terminal_with_errors(self, agent):
+        """Test _summarize_content shows error lines for terminal output with errors."""
+        lines = ["normal line 1", "normal line 2", "ERROR: something failed", "WARNING: check this", "normal line 5"]
+        content = "\n".join(lines)
+        result = agent._summarize_content("terminal", content)
+        assert "ERROR" in result or "问题" in result
+
+    def test_summarize_terminal_long_truncation(self, agent):
+        """Test _summarize_content truncates long terminal output to last 30 lines."""
+        lines = [f"output line {i}" for i in range(40)]
+        content = "\n".join(lines)
+        result = agent._summarize_content("terminal", content)
+        # Should contain last 30 lines (10 through 39)
+        assert "output line 10" in result
+        assert "output line 39" in result
+        assert "output line 9" not in result  # truncated
+
 
 class TestAgentRun:
     """Tests for BeaverAgent.run()."""
