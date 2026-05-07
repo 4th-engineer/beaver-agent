@@ -197,9 +197,10 @@
 | 2026-05-22 10:00 | beaver-agent | Added ModelAdapter, BeaverAdapter, OpenAIAdapter, MiniMaxAdapter to core/__init__.py exports — these eval adapters were exported from top-level __init__.py but missing from core public API, completing consistent public API across all packages | 715 tests passing |
 | 2026-05-22 11:00 | beaver-agent | Fixed /model command empty name bug — empty model name after /model command now shows warning instead of silently switching to empty string | 715 tests passing |
 | 2026-05-23 07:00 | beaver-agent | Added 5 tests for _summarize_content untested paths — file/search/terminal truncation, non-string coercion — extends TestSummarizeContent class | 720 tests passing |
+| 2026-05-23 08:00 | beaver-agent | Added 4 tests for MCPManager._load_configs_from_directory — covers YAML loading, empty dir, malformed YAML, nonexistent dir; completes untested internal method coverage | 724 tests passing |
 
 ## Current Stage
-- 720 tests passing
+- 724 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All modules have __all__ declarations — public API sweep complete across tools/, core/, cli/, eval/, memory/
