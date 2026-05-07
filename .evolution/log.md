@@ -154,6 +154,8 @@
 | 2026-05-18 00:00 | beaver-agent | Added 3 tests for SkillManager (reload, get_skill_not_found, list_skills_returns_all_fields) | 665 tests passing |
 | 2026-05-18 01:00 | beaver-agent | Added 2 tests for CodeReviewTool._basic_review: detects print statements and mutable default arguments — completes explicit coverage for all 4 Python issue detectors | 667 tests passing |
 
+| 2026-05-18 02:00 | beaver-agent | Added long_term.py to architecture.md memory module docs (tree diagram and module table) — was documented in evolution log and test coverage but missing from architecture doc | 667 tests passing |
+
 ## Current Stage
 - 667 tests passing
 - All public functions documented (100% docstring coverage)
