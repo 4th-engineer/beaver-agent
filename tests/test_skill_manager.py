@@ -51,6 +51,101 @@ Test content
         assert skills[0]["name"] == "test-skill"
         assert skills[0]["trigger"] == "test"
 
+    def test_parse_skill_file_full_frontmatter(self, temp_skills_dir):
+        """Test _parse_skill_file extracts all frontmatter fields correctly"""
+        skill_dir = temp_skills_dir / "full-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: full-skill
+category: engineering
+description: A comprehensive test skill
+trigger: build
+required_commands:
+  - git
+  - pytest
+required_environment_variables:
+  - MINIMAX_API_KEY
+when_to_use: When you need to build something
+checklist:
+  - Item A
+  - Item B
+examples:
+  - Example 1
+  - Example 2
+---
+
+# Full Skill
+Skill body content
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent,
+                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        skill = manager._parse_skill_file(skill_dir / "SKILL.md")
+
+        assert skill is not None
+        assert skill.name == "full-skill"
+        assert skill.category == "engineering"
+        assert skill.description == "A comprehensive test skill"
+        assert skill.trigger == "build"
+        assert skill.required_commands == ["git", "pytest"]
+        assert skill.required_environment_variables == ["MINIMAX_API_KEY"]
+        assert skill.when_to_use == "When you need to build something"
+        assert skill.checklist == ["Item A", "Item B"]
+        assert skill.examples == ["Example 1", "Example 2"]
+        assert "# Full Skill" in skill.content
+
+    def test_parse_skill_file_legacy_steps_format(self, temp_skills_dir):
+        """Test _parse_skill_file handles legacy steps frontmatter"""
+        skill_dir = temp_skills_dir / "legacy-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""---
+name: legacy-skill
+category: testing
+description: Legacy format skill
+trigger: test
+steps:
+  - Step one
+  - instruction: Step two with dict
+    check: Verify step two
+  - Step three
+---
+
+# Legacy Skill
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent,
+                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        skill = manager._parse_skill_file(skill_dir / "SKILL.md")
+
+        assert skill is not None
+        assert len(skill.phases) == 1
+        phase = skill.phases[0]
+        assert phase.name == "Steps"
+        assert len(phase.steps) == 3
+        assert phase.steps[0].instruction == "Step one"
+        assert phase.steps[1].instruction == "Step two with dict"
+        assert phase.steps[1].check == "Verify step two"
+        assert phase.steps[2].instruction == "Step three"
+
+    def test_parse_skill_file_no_frontmatter(self, temp_skills_dir):
+        """Test _parse_skill_file uses defaults when no frontmatter"""
+        skill_dir = temp_skills_dir / "no-fm-skill"
+        skill_dir.mkdir()
+        (skill_dir / "SKILL.md").write_text("""# No Frontmatter Skill
+
+Just content, no YAML frontmatter.
+""")
+
+        manager = SkillManager(project_root=temp_skills_dir.parent,
+                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        skill = manager._parse_skill_file(skill_dir / "SKILL.md")
+
+        assert skill is not None
+        assert skill.name == "no-fm-skill"
+        assert skill.category == "general"
+        assert skill.description == ""
+        assert skill.trigger == ""
+
     def test_find_matching_skill(self, temp_skills_dir):
         """Test finding a matching skill by trigger"""
         skill_dir = temp_skills_dir / "hello-skill"
