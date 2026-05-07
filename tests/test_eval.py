@@ -60,6 +60,46 @@ class TestTaskAndBenchmark:
         bm = Benchmark(name="empty")
         assert bm.get_task("nonexistent") is None
 
+    def test_benchmark_len(self):
+        """Test Benchmark.__len__ returns correct task count"""
+        bm = Benchmark(name="len-test")
+        assert len(bm) == 0
+        bm.add_task(Task(id="t1", name="t1", prompt="p1", task_type="code_generation"))
+        assert len(bm) == 1
+        bm.add_task(Task(id="t2", name="t2", prompt="p2", task_type="bug_fix"))
+        assert len(bm) == 2
+
+    def test_task_result_attributes(self):
+        """Test TaskResult dataclass fields and default values"""
+        # All fields present
+        result_full = TaskResult(
+            task_id="test-1",
+            success=True,
+            prediction="hello world",
+            score=0.95,
+            metrics={"accuracy": 0.9, "latency_ms": 150},
+            error=None,
+            duration_ms=250.5,
+        )
+        assert result_full.task_id == "test-1"
+        assert result_full.success is True
+        assert result_full.prediction == "hello world"
+        assert result_full.score == 0.95
+        assert result_full.metrics == {"accuracy": 0.9, "latency_ms": 150}
+        assert result_full.error is None
+        assert result_full.duration_ms == 250.5
+
+        # Defaults: metrics={}, error=None, duration_ms=0.0
+        result_minimal = TaskResult(
+            task_id="test-2",
+            success=False,
+            prediction="",
+            score=0.0,
+        )
+        assert result_minimal.metrics == {}
+        assert result_minimal.error is None
+        assert result_minimal.duration_ms == 0.0
+
 
 class TestBenchmarkRegistry:
     """Tests for BenchmarkRegistry and related loader functions."""
