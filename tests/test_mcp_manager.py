@@ -220,3 +220,43 @@ class TestMCPManagerIntegration:
         asyncio.run(manager.initialize())
         assert manager.get_tools() == []
 
+    @pytest.mark.asyncio
+    async def test_mcp_tool_call(self):
+        """Test MCPTool.call() async method delegates to MCPManager.call_tool"""
+        mock_manager = MagicMock()
+        mock_manager.call_tool = AsyncMock(return_value={
+            "success": True,
+            "result": {"output": "hello"}
+        })
+        tool = MCPTool(
+            name="get_time",
+            server_name="time_server",
+            description="Get current time",
+            input_schema={"type": "object"},
+            mcp_manager=mock_manager,
+        )
+        result = await tool.call(zone="UTC")
+        assert result == {"success": True, "result": {"output": "hello"}}
+        mock_manager.call_tool.assert_called_once_with(
+            "time_server", "get_time", {"zone": "UTC"}
+        )
+
+    @pytest.mark.asyncio
+    async def test_mcp_tool_call_error(self):
+        """Test MCPTool.call() returns error dict when manager fails"""
+        mock_manager = MagicMock()
+        mock_manager.call_tool = AsyncMock(return_value={
+            "success": False,
+            "error": {"code": -32600, "message": "Invalid request"}
+        })
+        tool = MCPTool(
+            name="get_time",
+            server_name="time_server",
+            description="Get current time",
+            input_schema={"type": "object"},
+            mcp_manager=mock_manager,
+        )
+        result = await tool.call()
+        assert result["success"] is False
+        assert result["error"]["code"] == -32600
+

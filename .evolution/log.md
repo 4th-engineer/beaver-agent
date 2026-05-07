@@ -193,9 +193,10 @@
 | 2026-05-22 06:00 | beaver-agent | Added __all__ declarations to all 6 eval/ modules (runner, metrics, loader, harness, task, adapter) and 2 memory/ modules (session, long_term) — completes __all__ sweep across entire codebase | 710 tests passing |
 | 2026-05-22 07:00 | beaver-agent | Added 3 direct tests for SkillManager._parse_skill_file — full frontmatter fields, legacy steps format, and no-frontmatter defaults — previously only tested indirectly via list_skills | 713 tests passing |
 | 2026-05-22 08:00 | beaver-agent | Synced stale test counts in README badge (710→713) and architecture.md (710→713, 2026-05-21→2026-05-22) — documentation now accurate | 713 tests passing |
+| 2026-05-22 09:00 | beaver-agent | Added 2 async tests for MCPTool.call() — test_mcp_tool_call (success case with AsyncMock) and test_mcp_tool_call_error (error dict propagation) — previously untested async method now covered | 715 tests passing |
 
 ## Current Stage
-- 713 tests passing
+- 715 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All modules have __all__ declarations — public API sweep complete across tools/, core/, cli/, eval/, memory/
