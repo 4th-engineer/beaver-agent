@@ -221,6 +221,22 @@ class TestCodeReviewToolBasicReview:
 
         assert "bare except" in result.lower() or "裸 except" in result or "发现问题" in result
 
+    def test_basic_review_finds_print(self, code_review_tool):
+        """Test _basic_review() detects print statements"""
+        code = "def foo():\n    print('debug')\n    return 42\n"
+
+        result = code_review_tool._basic_review(code, "python", None)
+
+        assert "print" in result.lower() or "发现问题" in result
+
+    def test_basic_review_finds_mutable_default(self, code_review_tool):
+        """Test _basic_review() detects mutable default arguments"""
+        code = "def foo(items=[]):\n    items.append(1)\n    return items\n"
+
+        result = code_review_tool._basic_review(code, "python", None)
+
+        assert "mutable" in result.lower() or "默认参数" in result or "发现问题" in result
+
     def test_basic_review_python_language(self, code_review_tool):
         """Test _basic_review() with python language"""
         code = "# TODO: fix this"
