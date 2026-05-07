@@ -180,12 +180,6 @@ def _post_event(event: Dict[str, Any]) -> bool:
         )
         with request.urlopen(req, timeout=2) as resp:
             return resp.status == 200
-    except error.URLError:
-        if _has_structlog:
-            _logger.warning("post_event_url_error", url=_viewer_url)
-        else:
-            print(f"[PixelPilot] ⚠️  URL error posting event to {_viewer_url}")
-        return False
     except Exception as e:
         if _has_structlog:
             _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"), exc_info=e)
