@@ -94,8 +94,12 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
 
     # Analyze repository
     if cmd == "/analyze":
-        result = analyze_repository(str(Path(__file__).parent.parent.parent.parent))
-        console.print(result)
+        try:
+            result = analyze_repository(str(Path(__file__).parent.parent.parent.parent))
+            console.print(result)
+        except Exception as e:
+            logger.error("analyze_command_failed", exc_info=e)
+            console.print(f"[red]分析失败:[/red] {e}")
         return True
 
     # Browse URL
