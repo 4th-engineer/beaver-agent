@@ -282,11 +282,7 @@ class LongTermMemory:
 
         scored_entries: list[tuple[float, MemoryEntry]] = []
 
-        categories_to_search = (
-            query.categories
-            if query.categories
-            else list(MemoryCategory)
-        )
+        categories_to_search = query.categories if query.categories else list(MemoryCategory)
 
         for category in categories_to_search:
             self._ensure_category_loaded(category)
@@ -299,9 +295,7 @@ class LongTermMemory:
                         continue
 
                 # Calculate relevance score
-                score = self._calculate_relevance(
-                    entry, query_terms, query.recency_weight
-                )
+                score = self._calculate_relevance(entry, query_terms, query.recency_weight)
 
                 if score > 0:
                     scored_entries.append((score, entry))
@@ -338,9 +332,7 @@ class LongTermMemory:
         keyword_score = match_count / len(query_terms)
 
         # Tag bonus (exact match with query terms as tags)
-        tag_bonus = sum(
-            0.1 for term in query_terms if term in entry.tags
-        )
+        tag_bonus = sum(0.1 for term in query_terms if term in entry.tags)
 
         # Recency score (exponential decay, half-life ~30 days)
         age_days = (time.time() - entry.created_at) / 86400
@@ -507,9 +499,7 @@ class LongTermMemory:
             or empty string if no relevant memories found.
         """
         if query:
-            results = self.search(
-                MemoryQuery(query=query, categories=categories, limit=limit)
-            )
+            results = self.search(MemoryQuery(query=query, categories=categories, limit=limit))
         else:
             # Get recent memories
             all_recent = []

@@ -49,15 +49,17 @@ class ConversationLogger:
             self._session_file = self.log_dir / f"conversation_{timestamp}_{session_id}.jsonl"
 
             # Write session start marker
-            self._write_entry({
-                "type": "session_start",
-                "session_id": session_id,
-                "timestamp": datetime.now().isoformat(),
-            })
+            self._write_entry(
+                {
+                    "type": "session_start",
+                    "session_id": session_id,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            )
 
-        logger.info("conversation_logger_started",
-                   session_id=session_id,
-                   log_file=str(self._session_file))
+        logger.info(
+            "conversation_logger_started", session_id=session_id, log_file=str(self._session_file)
+        )
 
     def log_user_input(self, user_input: str, intent: str = None) -> None:
         """Log a user message to the current session.
@@ -72,15 +74,16 @@ class ConversationLogger:
         if len(user_input) > 2000:
             user_input = user_input[:2000] + "... [truncated]"
 
-        self._write_entry({
-            "type": "user_input",
-            "timestamp": datetime.now().isoformat(),
-            "intent": intent,
-            "content": user_input,
-        })
+        self._write_entry(
+            {
+                "type": "user_input",
+                "timestamp": datetime.now().isoformat(),
+                "intent": intent,
+                "content": user_input,
+            }
+        )
 
-    def log_llm_request(self, messages: List[Dict[str, Any]],
-                        model: str, provider: str) -> None:
+    def log_llm_request(self, messages: List[Dict[str, Any]], model: str, provider: str) -> None:
         """Log an LLM API request to the current session.
 
         Args:
@@ -95,20 +98,26 @@ class ConversationLogger:
         truncated_messages = []
         for msg in messages:
             truncated_msg = dict(msg)
-            if isinstance(truncated_msg.get("content"), str) and len(truncated_msg["content"]) > 2000:
+            if (
+                isinstance(truncated_msg.get("content"), str)
+                and len(truncated_msg["content"]) > 2000
+            ):
                 truncated_msg["content"] = truncated_msg["content"][:2000] + "... [truncated]"
             truncated_messages.append(truncated_msg)
 
-        self._write_entry({
-            "type": "llm_request",
-            "timestamp": datetime.now().isoformat(),
-            "model": model,
-            "provider": provider,
-            "messages": truncated_messages,
-        })
+        self._write_entry(
+            {
+                "type": "llm_request",
+                "timestamp": datetime.now().isoformat(),
+                "model": model,
+                "provider": provider,
+                "messages": truncated_messages,
+            }
+        )
 
-    def log_llm_response(self, content: str, model: str,
-                          usage: Dict = None, error: str = None) -> None:
+    def log_llm_response(
+        self, content: str, model: str, usage: Dict = None, error: str = None
+    ) -> None:
         """Log an LLM API response to the current session.
 
         Args:
@@ -138,9 +147,15 @@ class ConversationLogger:
 
         self._write_entry(entry)
 
-    def log_tool_call(self, tool_name: str, action: str,
-                      params: Dict = None, result: Any = None,
-                      success: bool = True, error: str = None) -> None:
+    def log_tool_call(
+        self,
+        tool_name: str,
+        action: str,
+        params: Dict = None,
+        result: Any = None,
+        success: bool = True,
+        error: str = None,
+    ) -> None:
         """Log a tool invocation to the current session.
 
         Args:
@@ -184,8 +199,7 @@ class ConversationLogger:
 
         self._write_entry(entry)
 
-    def log_skill_invocation(self, skill_name: str, trigger: str,
-                            matched: bool = True) -> None:
+    def log_skill_invocation(self, skill_name: str, trigger: str, matched: bool = True) -> None:
         """Log a skill invocation attempt.
 
         Args:
@@ -195,13 +209,15 @@ class ConversationLogger:
                 False indicates a near-miss where intent was detected but
                 skill execution was not attempted.
         """
-        self._write_entry({
-            "type": "skill_invocation",
-            "timestamp": datetime.now().isoformat(),
-            "skill": skill_name,
-            "trigger": trigger,
-            "matched": matched,
-        })
+        self._write_entry(
+            {
+                "type": "skill_invocation",
+                "timestamp": datetime.now().isoformat(),
+                "skill": skill_name,
+                "trigger": trigger,
+                "matched": matched,
+            }
+        )
 
     def end_session(self) -> None:
         """End the current logging session.
@@ -210,11 +226,13 @@ class ConversationLogger:
         reference. Safe to call even if no session is active (no-op).
         """
         if self._session_file:
-            self._write_entry({
-                "type": "session_end",
-                "timestamp": datetime.now().isoformat(),
-                "session_id": self._session_id,
-            })
+            self._write_entry(
+                {
+                    "type": "session_end",
+                    "timestamp": datetime.now().isoformat(),
+                    "session_id": self._session_id,
+                }
+            )
 
         logger.info("conversation_logger_ended", session_id=self._session_id)
         self._session_file = None

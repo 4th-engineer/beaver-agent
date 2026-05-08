@@ -21,8 +21,10 @@ class TestSkillManager:
     @pytest.fixture
     def skill_manager(self, temp_skills_dir):
         """Create a SkillManager with test skills"""
-        return SkillManager(project_root=temp_skills_dir.parent, 
-                          skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        return SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
 
     def test_load_empty_skills_dir(self, skill_manager):
         """Test loading from empty directory"""
@@ -43,8 +45,10 @@ trigger: test
 Test content
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skills = manager.list_skills()
 
         assert len(skills) == 1
@@ -78,8 +82,10 @@ examples:
 Skill body content
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager._parse_skill_file(skill_dir / "SKILL.md")
 
         assert skill is not None
@@ -113,8 +119,10 @@ steps:
 # Legacy Skill
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager._parse_skill_file(skill_dir / "SKILL.md")
 
         assert skill is not None
@@ -136,8 +144,10 @@ steps:
 Just content, no YAML frontmatter.
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager._parse_skill_file(skill_dir / "SKILL.md")
 
         assert skill is not None
@@ -160,8 +170,10 @@ trigger: hello
 # Hello Skill
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager.find_matching_skill("Hello, how are you?")
 
         assert skill is not None
@@ -169,8 +181,10 @@ trigger: hello
 
     def test_no_matching_skill(self, temp_skills_dir):
         """Test no match returns None"""
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager.find_matching_skill("Some unrelated input")
         assert skill is None
 
@@ -188,8 +202,10 @@ trigger: trigger-word
 # My Skill
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager.get_skill("my-skill")
 
         assert skill is not None
@@ -210,8 +226,10 @@ trigger: {name}
 # {name}
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
 
         utils = manager.list_skills_by_category("utils")
         assert len(utils) == 2
@@ -233,8 +251,10 @@ trigger: TeSt
 # Case Test
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager.find_matching_skill("This is a TeSt input")
         assert skill is not None
 
@@ -252,8 +272,10 @@ trigger: reload-trigger
 # Reload Test
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         assert manager.get_skill("reload-test") is not None
 
         (skill_dir / "SKILL.md").write_text("""---
@@ -272,8 +294,10 @@ trigger: reload-trigger
 
     def test_get_skill_not_found(self, temp_skills_dir):
         """Test that get_skill returns None for nonexistent skill"""
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         assert manager.get_skill("nonexistent-skill") is None
 
     def test_list_skills_returns_all_fields(self, temp_skills_dir):
@@ -290,8 +314,10 @@ trigger: fields-trigger
 # Fields Test
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skills = manager.list_skills()
         assert len(skills) == 1
         assert skills[0]["name"] == "fields-test"
@@ -368,8 +394,10 @@ examples:
 # Skill Content
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager.get_skill("structured-skill")
 
         assert skill is not None
@@ -403,8 +431,10 @@ phases:
 Content
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager.get_skill("prompt-skill")
         prompt = skill.get_prompt()
 
@@ -433,8 +463,10 @@ steps:
 Content
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         skill = manager.get_skill("legacy-skill")
 
         assert skill is not None
@@ -465,8 +497,10 @@ examples:
 Content
 """)
 
-        manager = SkillManager(project_root=temp_skills_dir.parent,
-                             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")})
+        manager = SkillManager(
+            project_root=temp_skills_dir.parent,
+            skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},
+        )
         d = manager.get_skill("dict-skill").to_dict()
 
         assert d["when_to_use"] == "Testing"

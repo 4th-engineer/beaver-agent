@@ -148,7 +148,9 @@ class TestBasicErrorAnalysis:
 
     def test_detects_attribute_error(self, debugger_tool):
         """Test AttributeError detection and Chinese fix"""
-        result = debugger_tool._basic_error_analysis("AttributeError: 'NoneType' has no attribute 'split'")
+        result = debugger_tool._basic_error_analysis(
+            "AttributeError: 'NoneType' has no attribute 'split'"
+        )
         assert "AttributeError" in result
         assert "对象没有该属性" in result
 
@@ -186,7 +188,9 @@ class TestBasicErrorAnalysis:
 
     def test_none_check_message(self, debugger_tool):
         """Test None check message when 'None' in error"""
-        result = debugger_tool._basic_error_analysis("AttributeError: 'NoneType' object has no attribute")
+        result = debugger_tool._basic_error_analysis(
+            "AttributeError: 'NoneType' object has no attribute"
+        )
         assert "None" in result or "对象为 None" in result
 
     def test_unknown_error_shows_llm_prompt(self, debugger_tool):
@@ -198,8 +202,7 @@ class TestBasicErrorAnalysis:
         """Test that stack trace is included in output"""
         stack = "  File 'main.py', line 10, in main\n    foo()"
         result = debugger_tool._basic_error_analysis(
-            "RuntimeError: something failed",
-            stack_trace=stack
+            "RuntimeError: something failed", stack_trace=stack
         )
         assert "堆栈跟踪" in result or "main.py" in result
 
@@ -299,7 +302,9 @@ class TestAnalyzeError:
         """Test that _analyze_error calls LLM debug_code with correct parameters"""
         mock_llm_client.debug_code.return_value = Mock(content="Fix: add null check")
         stack_trace = "  File 'main.py', line 10, in main\n    foo()"
-        result = debugger_tool._analyze_error("code", "RuntimeError", "python", stack_trace=stack_trace)
+        result = debugger_tool._analyze_error(
+            "code", "RuntimeError", "python", stack_trace=stack_trace
+        )
 
         call_kwargs = mock_llm_client.debug_code.call_args.kwargs
         assert call_kwargs["code"] == "code"

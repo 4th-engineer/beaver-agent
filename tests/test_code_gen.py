@@ -47,7 +47,7 @@ class TestGenerateSkeleton:
         skeleton = code_gen_tool._generate_skeleton("Create a web server", "python")
         assert "# Python Code for: Create a web server" in skeleton
         assert "def main():" in skeleton
-        assert "__name__ == \"__main__\"" in skeleton
+        assert '__name__ == "__main__"' in skeleton
 
     def test_skeleton_javascript(self, code_gen_tool):
         """Test JavaScript skeleton generation"""
@@ -71,8 +71,8 @@ class TestGenerateSkeleton:
 
     def test_generate_skeleton_is_internal(self, code_gen_tool):
         """Test that _generate_skeleton is a private method (prefixed with _)"""
-        assert hasattr(code_gen_tool, '_generate_skeleton')
-        assert '_generate_skeleton' in dir(code_gen_tool)
+        assert hasattr(code_gen_tool, "_generate_skeleton")
+        assert "_generate_skeleton" in dir(code_gen_tool)
 
 
 class TestGenerate:
@@ -87,9 +87,7 @@ class TestGenerate:
         result = code_gen_tool.generate("Hello world function", language="python")
 
         mock_llm_client.generate_code.assert_called_once_with(
-            description="Hello world function",
-            language="python",
-            context=None
+            description="Hello world function", language="python", context=None
         )
         assert "def hello():" in result
 
@@ -103,9 +101,11 @@ class TestGenerate:
 
         mock_llm_client.generate_code.assert_called_once()
         call_kwargs = mock_llm_client.generate_code.call_args
-        assert call_kwargs.kwargs.get('context') == "Use type hints"
+        assert call_kwargs.kwargs.get("context") == "Use type hints"
 
-    def test_generate_with_file_path_saves_and_returns_content(self, code_gen_tool, mock_llm_client, mock_config):
+    def test_generate_with_file_path_saves_and_returns_content(
+        self, code_gen_tool, mock_llm_client, mock_config
+    ):
         """Test that generate() with file_path calls FileTool.write_file and returns save result"""
         mock_response = Mock()
         mock_response.content = "def hello():\n    return 'world'"
@@ -114,13 +114,19 @@ class TestGenerate:
         mock_file_tool = Mock()
         mock_file_tool.write_file.return_value = "✓ Saved to /tmp/hello.py"
         with patch("beaver_agent.tools.file_tool.FileTool", return_value=mock_file_tool):
-            result = code_gen_tool.generate("hello function", language="python", file_path="/tmp/hello.py")
+            result = code_gen_tool.generate(
+                "hello function", language="python", file_path="/tmp/hello.py"
+            )
 
-        mock_file_tool.write_file.assert_called_once_with("/tmp/hello.py", "def hello():\n    return 'world'")
+        mock_file_tool.write_file.assert_called_once_with(
+            "/tmp/hello.py", "def hello():\n    return 'world'"
+        )
         assert "def hello():" in result
         assert "✓ Saved to /tmp/hello.py" in result
 
-    def test_generate_file_path_save_failure_returns_error_with_content(self, code_gen_tool, mock_llm_client, mock_config):
+    def test_generate_file_path_save_failure_returns_error_with_content(
+        self, code_gen_tool, mock_llm_client, mock_config
+    ):
         """Test that generate() with file_path handles write errors gracefully"""
         mock_response = Mock()
         mock_response.content = "def hello():\n    return 'world'"
@@ -129,7 +135,9 @@ class TestGenerate:
         mock_file_tool = Mock()
         mock_file_tool.write_file.side_effect = RuntimeError("Disk full")
         with patch("beaver_agent.tools.file_tool.FileTool", return_value=mock_file_tool):
-            result = code_gen_tool.generate("hello function", language="python", file_path="/tmp/hello.py")
+            result = code_gen_tool.generate(
+                "hello function", language="python", file_path="/tmp/hello.py"
+            )
 
         assert "def hello():" in result
         assert "❌ Save failed" in result

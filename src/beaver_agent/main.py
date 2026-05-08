@@ -1,6 +1,7 @@
 """Beaver Agent CLI - Main Entry Point"""
 
 import typer
+from pathlib import Path
 from rich.console import Console
 from typing import Optional
 
@@ -126,9 +127,37 @@ def model(
 
 
 @app.command()
+def map(
+    path: str = typer.Option(".", "--path", help="要扫描的目录路径"),
+):
+    """生成代码地图索引 (.beaver/)
+
+    对指定目录进行 AST 静态分析，生成机器可读的代码索引：
+    - index.json       文件树 + 模块导入/导出关系
+    - dep_graph.json   依赖图
+    - entry_points.json 入口点 (main 函数等)
+
+    纯静态分析，零 LLM 调用。
+
+    Examples:
+        beaver map                  # 扫描当前目录
+        beaver map --path ./myproject  # 扫描指定目录
+    """
+    from beaver_agent.tools.mapper import generate
+
+    result = generate(Path(path))
+    console.print(
+        f"[green]✓[/green] 解析 {result['parsed_files']}/{result['total_files']} 个 Python 文件"
+    )
+    console.print(f"[green]✓[/green] 找到 {result['entry_points']} 个入口点")
+    console.print(f"[green]✓[/green] 输出目录: {result['output_dir']}")
+
+
+@app.command()
 def version():
     """显示版本信息"""
     from beaver_agent import __version__
+
     console.print(f"[green]Beaver Agent[/green] v{__version__}")
 
 
@@ -181,6 +210,7 @@ def setup(
     editor = os.environ.get("EDITOR")
     if editor:
         import subprocess
+
         subprocess.run([editor, str(env_file)])
     else:
         console.print("[dim]请手动编辑 .env 文件填入 API Key[/dim]")

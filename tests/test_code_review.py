@@ -31,10 +31,7 @@ class TestCodeReviewIssue:
     def test_init_stores_fields(self):
         """Test that __init__ stores all fields"""
         issue = CodeReviewIssue(
-            severity="major",
-            line=42,
-            message="Test issue",
-            suggestion="Fix this"
+            severity="major", line=42, message="Test issue", suggestion="Fix this"
         )
         assert issue.severity == "major"
         assert issue.line == 42
@@ -43,11 +40,7 @@ class TestCodeReviewIssue:
 
     def test_init_optional_suggestion(self):
         """Test that suggestion is optional"""
-        issue = CodeReviewIssue(
-            severity="minor",
-            line=10,
-            message="Minor issue"
-        )
+        issue = CodeReviewIssue(severity="minor", line=10, message="Minor issue")
         assert issue.suggestion is None
 
     def test_format_with_suggestion(self):
@@ -56,7 +49,7 @@ class TestCodeReviewIssue:
             severity="major",
             line=42,
             message="Found bare except",
-            suggestion="Use except Exception:"
+            suggestion="Use except Exception:",
         )
         result = issue.format()
         assert "🟠" in result
@@ -68,33 +61,21 @@ class TestCodeReviewIssue:
 
     def test_format_critical_severity(self):
         """Test format() with critical severity"""
-        issue = CodeReviewIssue(
-            severity="critical",
-            line=1,
-            message="Critical issue"
-        )
+        issue = CodeReviewIssue(severity="critical", line=1, message="Critical issue")
         result = issue.format()
         assert "🔴" in result
         assert "CRITICAL" in result
 
     def test_format_minor_severity(self):
         """Test format() with minor severity"""
-        issue = CodeReviewIssue(
-            severity="minor",
-            line=5,
-            message="Minor issue"
-        )
+        issue = CodeReviewIssue(severity="minor", line=5, message="Minor issue")
         result = issue.format()
         assert "🟡" in result
         assert "MINOR" in result
 
     def test_format_suggestion_severity(self):
         """Test format() with suggestion severity"""
-        issue = CodeReviewIssue(
-            severity="suggestion",
-            line=None,
-            message="Consider refactoring"
-        )
+        issue = CodeReviewIssue(severity="suggestion", line=None, message="Consider refactoring")
         result = issue.format()
         assert "💡" in result
         assert "SUGGESTION" in result
@@ -102,11 +83,7 @@ class TestCodeReviewIssue:
 
     def test_format_no_line_number(self):
         """Test format() when line is None"""
-        issue = CodeReviewIssue(
-            severity="major",
-            line=None,
-            message="File-level issue"
-        )
+        issue = CodeReviewIssue(severity="major", line=None, message="File-level issue")
         result = issue.format()
         assert "Line" not in result
         assert "File-level issue" in result
@@ -138,9 +115,7 @@ class TestCodeReviewToolReview:
         result = code_review_tool.review("def foo(): pass", language="python")
 
         mock_llm_client.review_code.assert_called_once_with(
-            code="def foo(): pass",
-            language="python",
-            file_path=None
+            code="def foo(): pass", language="python", file_path=None
         )
         assert "Review" in result
 

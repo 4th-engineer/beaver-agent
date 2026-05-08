@@ -43,6 +43,7 @@ class PromptStrategy:
         >>> print(user[:50])
         Example: def double(x):
     """
+
     name: str
     system_template: str = ""
     user_template: str = "{prompt}"
@@ -64,8 +65,7 @@ class PromptStrategy:
 
         if self.few_shot_examples:
             shots = "\n\n".join(
-                f"Example: {ex['input']}\nResponse: {ex['output']}"
-                for ex in self.few_shot_examples
+                f"Example: {ex['input']}\nResponse: {ex['output']}" for ex in self.few_shot_examples
             )
             user = f"{shots}\n\nNow you:\n{user}"
 

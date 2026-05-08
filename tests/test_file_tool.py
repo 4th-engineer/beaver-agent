@@ -13,7 +13,7 @@ from beaver_agent.core.config import BeaverConfig, AppConfig, FileToolConfig
 def config():
     return BeaverConfig(
         app=AppConfig(debug=True),
-        file_tool=FileToolConfig(root_path=Path("/"))  # Allow temp files in tests
+        file_tool=FileToolConfig(root_path=Path("/")),  # Allow temp files in tests
     )
 
 
@@ -25,7 +25,7 @@ def file_tool(config):
 @pytest.fixture
 def temp_file():
     """Create a temporary test file"""
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False) as f:
         f.write("# Test file\nprint('hello')\n")
         f.write("x = 1 + 2\n")
         temp_path = f.name
@@ -112,6 +112,7 @@ class TestFileToolErrorHandling:
 
     def test_read_file_permission_denied(self, file_tool, monkeypatch):
         """Test that read_file handles permission errors gracefully"""
+
         # Mock Path.exists to return True so we get past the existence check
         # but open() will raise PermissionError
         def mock_open(path, *args, **kwargs):
@@ -139,17 +140,40 @@ class TestFileToolErrorHandling:
 
     def test_list_directory_permission_denied(self, file_tool, monkeypatch):
         """Test that list_directory handles permission errors gracefully"""
-        monkeypatch.setattr("pathlib.Path.iterdir", lambda self: iter([
-            type("MockItem", (), {"name": "a", "is_dir": lambda: True, "stat": lambda: type("s", (), {"st_size": 0})()})(),
-            type("MockItem", (), {"name": "b", "is_dir": lambda: True, "stat": lambda: type("s", (), {"st_size": 0})()})(),
-        ]))
+        monkeypatch.setattr(
+            "pathlib.Path.iterdir",
+            lambda self: iter(
+                [
+                    type(
+                        "MockItem",
+                        (),
+                        {
+                            "name": "a",
+                            "is_dir": lambda: True,
+                            "stat": lambda: type("s", (), {"st_size": 0})(),
+                        },
+                    )(),
+                    type(
+                        "MockItem",
+                        (),
+                        {
+                            "name": "b",
+                            "is_dir": lambda: True,
+                            "stat": lambda: type("s", (), {"st_size": 0})(),
+                        },
+                    )(),
+                ]
+            ),
+        )
         # Can't easily mock Path.iterdir in isolation, so skip this complex test
         # and verify error path exists via exception handler test below instead
         import pytest
+
         pytest.skip("Complex to mock Path.iterdir isolation")
 
     def test_search_files_exception(self, file_tool, monkeypatch, tmp_path):
         """Test that search_files handles exceptions gracefully"""
+
         def mock_rglob(pattern):
             raise OSError("Disk error")
 
@@ -159,15 +183,17 @@ class TestFileToolErrorHandling:
 
     def test_search_content_exception(self, file_tool, monkeypatch, tmp_path):
         """Test that search_content handles exceptions gracefully"""
-        monkeypatch.setattr("pathlib.Path.rglob", lambda self, p: iter([
-            type("MockFile", (), {"is_file": lambda: True})()
-        ]))
+        monkeypatch.setattr(
+            "pathlib.Path.rglob",
+            lambda self, p: iter([type("MockFile", (), {"is_file": lambda: True})()]),
+        )
         result = file_tool.search_content("query", path=str(tmp_path))
         # Should handle gracefully (UnicodeDecodeError/PermissionError are caught internally)
         assert isinstance(result, str)
 
     def test_check_project_structure_exception(self, file_tool, monkeypatch, tmp_path):
         """Test that check_project_structure handles exceptions gracefully"""
+
         def mock_exists(path):
             raise OSError("Stat failed")
 

@@ -18,6 +18,7 @@ class TestPixelPilotPublicAPI:
         # Re-import to reset module state (pixel_pilot is module-level global state)
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         assert pixel_pilot.is_enabled() is False
@@ -26,6 +27,7 @@ class TestPixelPilotPublicAPI:
         """send() returns False when not connected."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         result = pixel_pilot.send("thinking", message="test")
@@ -35,6 +37,7 @@ class TestPixelPilotPublicAPI:
         """send() returns False when _viewer_url is empty."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         pixel_pilot._viewer_url = ""
@@ -46,6 +49,7 @@ class TestPixelPilotPublicAPI:
         """connect() sets _enabled=True when server responds 200."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_response = MagicMock()
@@ -65,6 +69,7 @@ class TestPixelPilotPublicAPI:
         """connect() leaves _enabled=False when server unreachable."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_urlopen.side_effect = Exception("Connection refused")
@@ -78,6 +83,7 @@ class TestPixelPilotPublicAPI:
         """disconnect() sets _enabled=False."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_response = MagicMock()
@@ -99,6 +105,7 @@ class TestPixelPilotPublicAPI:
         """connect() strips trailing slash from URL."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_response = MagicMock()
@@ -120,6 +127,7 @@ class TestPixelPilotGetToolDisplayName:
         """Exact (tool, action) match returns mapped name."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         assert pixel_pilot._get_tool_display_name("file_tool", "read_file") == "Read"
@@ -130,6 +138,7 @@ class TestPixelPilotGetToolDisplayName:
         """Wildcard (tool, *) match returns mapped name."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         assert pixel_pilot._get_tool_display_name("code_gen", "generate") == "CodeGen"
@@ -139,6 +148,7 @@ class TestPixelPilotGetToolDisplayName:
         """No match returns title-cased tool/action."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         # action.replace("_", " ").title() — "doThing".replace("_", " ").title() = "Dothing"
@@ -149,9 +159,12 @@ class TestPixelPilotGetToolDisplayName:
         """Action only returns title-cased action."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
-        assert pixel_pilot._get_tool_display_name("unknown_tool", "custom_action") == "Custom Action"
+        assert (
+            pixel_pilot._get_tool_display_name("unknown_tool", "custom_action") == "Custom Action"
+        )
 
 
 class TestPixelPilotPostEvent:
@@ -162,6 +175,7 @@ class TestPixelPilotPostEvent:
         """_post_event returns True when server responds 200."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_response = MagicMock()
@@ -180,6 +194,7 @@ class TestPixelPilotPostEvent:
         from urllib import error
 
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_urlopen.side_effect = error.URLError("Not found")
@@ -192,6 +207,7 @@ class TestPixelPilotPostEvent:
         """_post_event returns False on other exceptions."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_urlopen.side_effect = OSError("Network error")
@@ -204,6 +220,7 @@ class TestPixelPilotPostEvent:
         """_test_connection returns True when server responds 200."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_response = MagicMock()
@@ -220,6 +237,7 @@ class TestPixelPilotPostEvent:
         """_test_connection returns False when connection fails."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_urlopen.side_effect = Exception("Connection refused")
@@ -236,6 +254,7 @@ class TestPixelPilotSendEvent:
         """send() builds event with all fields and calls _post_event."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_response = MagicMock()
@@ -269,6 +288,7 @@ class TestPixelPilotSendEvent:
         """send() uses default values for optional fields."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_response = MagicMock()
@@ -294,6 +314,7 @@ class TestPixelPilotPatchToolRouter:
         """_patch_tool_router skips if already patched."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         with patch.object(pixel_pilot, "_test_connection", return_value=True):
@@ -307,6 +328,7 @@ class TestPixelPilotPatchToolRouter:
         """_get_agent_name returns 'beaver' when config is None."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_self = MagicMock()
@@ -319,6 +341,7 @@ class TestPixelPilotPatchToolRouter:
         """_get_agent_name returns app name from config."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_app = MagicMock()
@@ -333,6 +356,7 @@ class TestPixelPilotPatchToolRouter:
         """_get_agent_name returns 'beaver' when config.app is None."""
         import importlib
         import pixel_pilot
+
         importlib.reload(pixel_pilot)
 
         mock_self = MagicMock()

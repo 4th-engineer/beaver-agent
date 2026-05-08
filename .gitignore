@@ -32,7 +32,8 @@ dist/
 build/
 *.egg-info/
 
-# Environment
+# beaver cache
+.beaver/
 .env
 _minimax_api_key
 data/memory/

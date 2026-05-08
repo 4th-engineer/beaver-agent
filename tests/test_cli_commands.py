@@ -5,7 +5,14 @@ from unittest.mock import MagicMock, patch
 from typer.testing import CliRunner
 
 from beaver_agent.main import app
-from beaver_agent.cli.commands import handle_command, print_help, show_model_info, show_status, chat_command, model_command
+from beaver_agent.cli.commands import (
+    handle_command,
+    print_help,
+    show_model_info,
+    show_status,
+    chat_command,
+    model_command,
+)
 from rich.markdown import Markdown
 from beaver_agent.cli.interactive import print_welcome, _print_response
 
@@ -33,7 +40,10 @@ def mock_agent():
     agent.config.model.name = "test-model"
     agent.config.model.provider = "test-provider"
     agent.memory = MagicMock()
-    agent.memory.get_history.return_value = [{"role": "user", "content": "hello"}, {"role": "assistant", "content": "hi"}]
+    agent.memory.get_history.return_value = [
+        {"role": "user", "content": "hello"},
+        {"role": "assistant", "content": "hi"},
+    ]
     agent.long_term_memory = MagicMock()
     agent.long_term_memory.get_stats.return_value = {"total_entries": 5, "categories": {}}
     agent.tool_router = MagicMock()
@@ -221,9 +231,9 @@ class TestHandleCommandErrors:
         mock_agent.memory.get_history.side_effect = RuntimeError("memory unavailable")
         mock_agent.long_term_memory.get_stats.side_effect = RuntimeError("memory unavailable")
         mock_agent.tool_router.list_tools.side_effect = RuntimeError("tool router unavailable")
-        
+
         result = handle_command("/status", mock_config, mock_agent)
-        
+
         assert result is True
         captured = capsys.readouterr()
         assert "RuntimeError" in captured.out or "memory unavailable" in captured.out
@@ -231,6 +241,7 @@ class TestHandleCommandErrors:
     def test_debug_command_error_handling(self, mock_config, mock_agent, capsys):
         """Test /debug handles agent access errors gracefully."""
         from beaver_agent.cli.commands import console
+
         original_print = console.print
         # First call raises, second call (in except block) succeeds
         console.print = MagicMock(side_effect=[RuntimeError("console error"), None])
@@ -251,7 +262,7 @@ class TestHandleCommandErrors:
         minimal_agent.tool_router.list_tools.side_effect = AttributeError("no router")
         minimal_agent.config.model.name = "test"
         minimal_agent.config.model.provider = "test"
-        
+
         result = handle_command("/status", mock_config, minimal_agent)
         assert result is True
         # Should handle gracefully
@@ -433,8 +444,7 @@ class TestPrintResponse:
                 # Verify Markdown was called (rendered as markdown, not plain text)
                 MockMarkdown.assert_called_once()
                 MockMarkdown.assert_called_with(
-                    "Hello\n```python\nprint('hi')\n```",
-                    code_theme="monokai"
+                    "Hello\n```python\nprint('hi')\n```", code_theme="monokai"
                 )
                 # The console.print was called with the Markdown instance (mock)
                 call_args = mock_console.print.call_args[0]

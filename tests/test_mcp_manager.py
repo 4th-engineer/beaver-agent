@@ -7,9 +7,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 import structlog
 
-from beaver_agent.core.config import (
-    BeaverConfig, MCPServerConfig, MCPConfig
-)
+from beaver_agent.core.config import BeaverConfig, MCPServerConfig, MCPConfig
 from beaver_agent.core.mcp_manager import MCPManager, MCPTool
 
 
@@ -18,18 +16,14 @@ class TestMCPServerConfig:
 
     def test_stdio_config(self):
         """Test stdio transport config"""
-        config = MCPServerConfig(
-            command="npx",
-            args=["-y", "@modelcontextprotocol/server-time"]
-        )
+        config = MCPServerConfig(command="npx", args=["-y", "@modelcontextprotocol/server-time"])
         assert config.command == "npx"
         assert config.url is None
 
     def test_http_config(self):
         """Test HTTP transport config"""
         config = MCPServerConfig(
-            url="https://mcp.example.com/mcp",
-            headers={"Authorization": "Bearer test"}
+            url="https://mcp.example.com/mcp", headers={"Authorization": "Bearer test"}
         )
         assert config.url == "https://mcp.example.com/mcp"
         assert config.command is None
@@ -157,6 +151,7 @@ class TestMCPManager:
     def test_build_env_does_not_leak_all_env(self, mcp_manager):
         """Test that not all env vars are passed through"""
         import os
+
         # Set a test env var
         os.environ["MY_SECRET_TOKEN"] = "should_not_be_passed"
 
@@ -171,22 +166,25 @@ class TestMCPManager:
         """Test that mcp_servers config is parsed correctly"""
         # Create a temporary config file with mcp_servers
         import tempfile
+
         config_content = """
 mcp_servers:
   time:
     command: "uvx"
     args: ["mcp-server-time"]
 """
-        with tempfile.NamedTemporaryFile(mode='w', suffix='.yaml', delete=False) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
             f.write(config_content)
             temp_path = f.name
 
         # Patch the config path to use our temp file
         from beaver_agent.core import config as config_module
+
         original_find = config_module.load_config
 
         def patched_load():
             import yaml
+
             with open(temp_path) as f:
                 data = yaml.safe_load(f)
             # Apply the same remapping that load_config does
@@ -273,10 +271,7 @@ class TestMCPManagerIntegration:
     def config_with_server(self):
         """Config with a test MCP server"""
         config = BeaverConfig()
-        config.mcp.servers["test"] = MCPServerConfig(
-            command="echo",
-            args=["test"]
-        )
+        config.mcp.servers["test"] = MCPServerConfig(command="echo", args=["test"])
         return config
 
     def test_init_empty_config(self):
@@ -285,6 +280,7 @@ class TestMCPManagerIntegration:
         manager = MCPManager(config)
         # Should not raise
         import asyncio
+
         asyncio.run(manager.initialize())
         assert manager.get_tools() == []
 
@@ -292,10 +288,9 @@ class TestMCPManagerIntegration:
     async def test_mcp_tool_call(self):
         """Test MCPTool.call() async method delegates to MCPManager.call_tool"""
         mock_manager = MagicMock()
-        mock_manager.call_tool = AsyncMock(return_value={
-            "success": True,
-            "result": {"output": "hello"}
-        })
+        mock_manager.call_tool = AsyncMock(
+            return_value={"success": True, "result": {"output": "hello"}}
+        )
         tool = MCPTool(
             name="get_time",
             server_name="time_server",
@@ -305,18 +300,15 @@ class TestMCPManagerIntegration:
         )
         result = await tool.call(zone="UTC")
         assert result == {"success": True, "result": {"output": "hello"}}
-        mock_manager.call_tool.assert_called_once_with(
-            "time_server", "get_time", {"zone": "UTC"}
-        )
+        mock_manager.call_tool.assert_called_once_with("time_server", "get_time", {"zone": "UTC"})
 
     @pytest.mark.asyncio
     async def test_mcp_tool_call_error(self):
         """Test MCPTool.call() returns error dict when manager fails"""
         mock_manager = MagicMock()
-        mock_manager.call_tool = AsyncMock(return_value={
-            "success": False,
-            "error": {"code": -32600, "message": "Invalid request"}
-        })
+        mock_manager.call_tool = AsyncMock(
+            return_value={"success": False, "error": {"code": -32600, "message": "Invalid request"}}
+        )
         tool = MCPTool(
             name="get_time",
             server_name="time_server",
@@ -327,4 +319,3 @@ class TestMCPManagerIntegration:
         result = await tool.call()
         assert result["success"] is False
         assert result["error"]["code"] == -32600
-

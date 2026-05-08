@@ -29,13 +29,15 @@ def mock_data_store():
 @pytest.fixture
 def agent(mock_config, mock_data_store):
     """Agent instance with mocked dependencies."""
-    with patch("beaver_agent.core.agent.init_data_store", return_value=mock_data_store), \
-         patch("beaver_agent.core.agent.ConversationLogger"), \
-         patch("beaver_agent.core.agent.SessionMemory"), \
-         patch("beaver_agent.core.agent.LongTermMemory"), \
-         patch("beaver_agent.core.agent.IntentParser"), \
-         patch("beaver_agent.core.agent.TaskPlanner"), \
-         patch("beaver_agent.core.agent.ToolRouter"):
+    with (
+        patch("beaver_agent.core.agent.init_data_store", return_value=mock_data_store),
+        patch("beaver_agent.core.agent.ConversationLogger"),
+        patch("beaver_agent.core.agent.SessionMemory"),
+        patch("beaver_agent.core.agent.LongTermMemory"),
+        patch("beaver_agent.core.agent.IntentParser"),
+        patch("beaver_agent.core.agent.TaskPlanner"),
+        patch("beaver_agent.core.agent.ToolRouter"),
+    ):
         agent = BeaverAgent(mock_config)
         return agent
 
@@ -45,13 +47,15 @@ class TestBeaverAgentInit:
 
     def test_init_creates_session_id(self, mock_config, mock_data_store):
         """Test that __init__ generates an 8-character session ID."""
-        with patch("beaver_agent.core.agent.init_data_store", return_value=mock_data_store), \
-             patch("beaver_agent.core.agent.ConversationLogger"), \
-             patch("beaver_agent.core.agent.SessionMemory"), \
-             patch("beaver_agent.core.agent.LongTermMemory"), \
-             patch("beaver_agent.core.agent.IntentParser"), \
-             patch("beaver_agent.core.agent.TaskPlanner"), \
-             patch("beaver_agent.core.agent.ToolRouter"):
+        with (
+            patch("beaver_agent.core.agent.init_data_store", return_value=mock_data_store),
+            patch("beaver_agent.core.agent.ConversationLogger"),
+            patch("beaver_agent.core.agent.SessionMemory"),
+            patch("beaver_agent.core.agent.LongTermMemory"),
+            patch("beaver_agent.core.agent.IntentParser"),
+            patch("beaver_agent.core.agent.TaskPlanner"),
+            patch("beaver_agent.core.agent.ToolRouter"),
+        ):
             agent = BeaverAgent(mock_config)
             assert agent.session_id is not None
             assert len(agent.session_id) == 8
@@ -87,14 +91,16 @@ class TestBeaverAgentInit:
 
     def test_init_handles_llm_failure(self, mock_config, mock_data_store):
         """Test that __init__ handles LLM initialization failure gracefully."""
-        with patch("beaver_agent.core.agent.init_data_store", return_value=mock_data_store), \
-             patch("beaver_agent.core.agent.ConversationLogger"), \
-             patch("beaver_agent.core.agent.SessionMemory"), \
-             patch("beaver_agent.core.agent.LongTermMemory"), \
-             patch("beaver_agent.core.agent.IntentParser"), \
-             patch("beaver_agent.core.agent.TaskPlanner"), \
-             patch("beaver_agent.core.agent.ToolRouter") as mock_router, \
-             patch("beaver_agent.core.agent.logger") as mock_logger:
+        with (
+            patch("beaver_agent.core.agent.init_data_store", return_value=mock_data_store),
+            patch("beaver_agent.core.agent.ConversationLogger"),
+            patch("beaver_agent.core.agent.SessionMemory"),
+            patch("beaver_agent.core.agent.LongTermMemory"),
+            patch("beaver_agent.core.agent.IntentParser"),
+            patch("beaver_agent.core.agent.TaskPlanner"),
+            patch("beaver_agent.core.agent.ToolRouter") as mock_router,
+            patch("beaver_agent.core.agent.logger") as mock_logger,
+        ):
             mock_router.return_value.get_llm_client.side_effect = RuntimeError("LLM init failed")
             agent = BeaverAgent(mock_config)
             assert agent.llm is None
@@ -119,8 +125,10 @@ class TestBeaverAgentReset:
     def test_reset_calls_logger_end_and_start_session(self, agent):
         """Test that reset() ends the old session and starts a new one with the new ID."""
         old_session_id = agent.session_id
-        with patch.object(agent.logger, "end_session") as mock_end, \
-             patch.object(agent.logger, "start_session") as mock_start:
+        with (
+            patch.object(agent.logger, "end_session") as mock_end,
+            patch.object(agent.logger, "start_session") as mock_start,
+        ):
             agent.reset()
             mock_end.assert_called_once()
             mock_start.assert_called_once_with(agent.session_id)
@@ -261,6 +269,7 @@ class TestSummarizeContent:
     def test_summarize_json_valid(self, agent):
         """Test that _summarize_content parses and formats valid JSON."""
         import json
+
         data = {"key": "value", "nested": {"inner": 42}}
         content = json.dumps(data)
         result = agent._summarize_content("git", content)
@@ -291,6 +300,7 @@ class TestSummarizeContent:
     def test_summarize_execute_command_with_json(self, agent):
         """Test that _summarize_content parses JSON from execute_command output."""
         import json
+
         data = {"result": "success", "items": [1, 2, 3]}
         content = json.dumps(data)
         result = agent._summarize_content("execute_command", content)
@@ -329,7 +339,13 @@ class TestSummarizeContent:
 
     def test_summarize_terminal_with_errors(self, agent):
         """Test _summarize_content shows error lines for terminal output with errors."""
-        lines = ["normal line 1", "normal line 2", "ERROR: something failed", "WARNING: check this", "normal line 5"]
+        lines = [
+            "normal line 1",
+            "normal line 2",
+            "ERROR: something failed",
+            "WARNING: check this",
+            "normal line 5",
+        ]
         content = "\n".join(lines)
         result = agent._summarize_content("terminal", content)
         assert "ERROR" in result or "问题" in result
@@ -498,20 +514,20 @@ class TestExtractAndStoreMemory:
 
         agent.long_term_memory.remember_user_preference.assert_not_called()
 
-    def test_remembers_project_fact_from_code_analyzer_via_analyze_tool_name(
-        self, agent
-    ):
+    def test_remembers_project_fact_from_code_analyzer_via_analyze_tool_name(self, agent):
         """Test that 'analyze' tool name also triggers project fact memory."""
         agent.long_term_memory = MagicMock()
 
         agent._extract_and_store_memory(
             "analyze",
             "done",
-            [{
-                "success": True,
-                "tool": "analyze",
-                "data": "src/core/agent.py - 500 lines",
-            }],
+            [
+                {
+                    "success": True,
+                    "tool": "analyze",
+                    "data": "src/core/agent.py - 500 lines",
+                }
+            ],
         )
 
         agent.long_term_memory.remember_project_fact.assert_called_once()
@@ -523,11 +539,13 @@ class TestExtractAndStoreMemory:
         agent._extract_and_store_memory(
             "check git status",
             "on branch main",
-            [{
-                "success": True,
-                "tool": "git",
-                "data": "On branch main, 3 files changed",
-            }],
+            [
+                {
+                    "success": True,
+                    "tool": "git",
+                    "data": "On branch main, 3 files changed",
+                }
+            ],
         )
 
         agent.long_term_memory.remember_convention.assert_called_once()
@@ -539,11 +557,13 @@ class TestExtractAndStoreMemory:
         agent._extract_and_store_memory(
             "show repo info",
             "repository info",
-            [{
-                "success": True,
-                "tool": "github",
-                "data": "commit abc123: fix bug",
-            }],
+            [
+                {
+                    "success": True,
+                    "tool": "github",
+                    "data": "commit abc123: fix bug",
+                }
+            ],
         )
 
         agent.long_term_memory.remember_convention.assert_called_once()
@@ -555,11 +575,13 @@ class TestExtractAndStoreMemory:
         agent._extract_and_store_memory(
             "fix the error",
             "error fixed",
-            [{
-                "success": True,
-                "tool": "debugger",
-                "data": "Fixed: missing import added",
-            }],
+            [
+                {
+                    "success": True,
+                    "tool": "debugger",
+                    "data": "Fixed: missing import added",
+                }
+            ],
         )
 
         agent.long_term_memory.remember_solution.assert_called_once()
@@ -671,7 +693,11 @@ class TestRunEdgeCases:
         }
         agent.intent_parser.parse.return_value = "github_operation"
         agent.task_planner.plan.return_value = [
-            {"tool": "github", "action": "get_repo_info", "params": {"owner": "beaver", "repo": "agent"}},
+            {
+                "tool": "github",
+                "action": "get_repo_info",
+                "params": {"owner": "beaver", "repo": "agent"},
+            },
         ]
 
         # Patch _extract_and_store_memory to verify it's called

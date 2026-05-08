@@ -43,12 +43,14 @@ def run_repl(config: BeaverConfig) -> None:
 
     # Print welcome banner
     if config.cli.welcome_banner:
-        console.print(Panel(
-            config.cli.welcome_banner,
-            title="🦫 Beaver Agent",
-            border_style="cyan",
-            padding=(1, 2),
-        ))
+        console.print(
+            Panel(
+                config.cli.welcome_banner,
+                title="🦫 Beaver Agent",
+                border_style="cyan",
+                padding=(1, 2),
+            )
+        )
 
     # Initialize agent
     agent = BeaverAgent(config)
@@ -74,8 +76,7 @@ def run_repl(config: BeaverConfig) -> None:
 
             # Process through agent
             with console.status(
-                "[bold green]🦫 思考中...[/bold green]\n"
-                "[dim]分析意图 → 规划任务 → 执行工具[/dim]"
+                "[bold green]🦫 思考中...[/bold green]\n[dim]分析意图 → 规划任务 → 执行工具[/dim]"
             ):
                 response = agent.run(user_input)
 
@@ -93,6 +94,7 @@ def run_repl(config: BeaverConfig) -> None:
             console.print(f"[red]✗ 错误:[/red] {e}")
             if config.app.debug:
                 import traceback
+
                 traceback.print_exc()
 
     console.print("[blue]下次见! 👋[/blue]")
@@ -126,10 +128,12 @@ def print_welcome(config: BeaverConfig) -> None:
     Args:
         config: The Beaver configuration containing app version and CLI settings.
     """
-    console.print(Panel(
-        f"[bold cyan]🦫 Beaver Agent[/bold cyan] v{config.app.version}\n\n"
-        f"[dim]输入 [green]/help[/green] 查看帮助    [dim]输入 [red]/exit[/red] 退出[/dim]",
-        title="Welcome",
-        border_style="cyan",
-        padding=(1, 2),
-    ))
+    console.print(
+        Panel(
+            f"[bold cyan]🦫 Beaver Agent[/bold cyan] v{config.app.version}\n\n"
+            f"[dim]输入 [green]/help[/green] 查看帮助    [dim]输入 [red]/exit[/red] 退出[/dim]",
+            title="Welcome",
+            border_style="cyan",
+            padding=(1, 2),
+        )
+    )

@@ -68,7 +68,9 @@ class TestOpenAIAdapter:
 
     def test_init_with_params(self):
         """OpenAIAdapter initializes with custom parameters."""
-        adapter = OpenAIAdapter(model="gpt-4o", api_key="sk-test", base_url="https://api.example.com")
+        adapter = OpenAIAdapter(
+            model="gpt-4o", api_key="sk-test", base_url="https://api.example.com"
+        )
         assert adapter.model == "gpt-4o"
         assert adapter.api_key == "sk-test"
         assert adapter.base_url == "https://api.example.com"

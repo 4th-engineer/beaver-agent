@@ -5,7 +5,13 @@ import tempfile
 import os
 from pathlib import Path
 
-from beaver_agent.tools.code_analyzer import CodeAnalyzer, analyze_repository, ModuleInfo, ClassInfo, FunctionInfo
+from beaver_agent.tools.code_analyzer import (
+    CodeAnalyzer,
+    analyze_repository,
+    ModuleInfo,
+    ClassInfo,
+    FunctionInfo,
+)
 
 
 @pytest.fixture
@@ -157,24 +163,28 @@ def test_file_to_module_name():
     analyzer = CodeAnalyzer(root)
 
     # Test __init__.py handling - returns "root" when it's the only item
-    result = analyzer._file_to_module(Path("/home/agentuser/beaver-agent/src/beaver_agent/__init__.py"))
+    result = analyzer._file_to_module(
+        Path("/home/agentuser/beaver-agent/src/beaver_agent/__init__.py")
+    )
     assert result == "root"
 
     # Test regular module
-    result = analyzer._file_to_module(Path("/home/agentuser/beaver-agent/src/beaver_agent/tools/code_gen.py"))
+    result = analyzer._file_to_module(
+        Path("/home/agentuser/beaver-agent/src/beaver_agent/tools/code_gen.py")
+    )
     assert result == "tools.code_gen"
 
 
 def test_parse_imports():
     """Test import statement parsing"""
     analyzer = CodeAnalyzer("/fake")
-    content = '''
+    content = """
 import os
 import json
 from typing import List
 from . import module
 from .utils import helper
-'''
+"""
     imports, from_imports = analyzer._parse_imports(content)
 
     assert "os" in imports
@@ -231,13 +241,7 @@ def _private():
 def test_get_docstring():
     """Test docstring extraction"""
     analyzer = CodeAnalyzer("/fake")
-    lines = [
-        'def my_func():',
-        '    """This is',
-        '    a multi-line',
-        '    docstring"""',
-        '    pass'
-    ]
+    lines = ["def my_func():", '    """This is', "    a multi-line", '    docstring"""', "    pass"]
     doc = analyzer._get_docstring(lines, 0)
     assert doc is not None
     assert "multi-line" in doc
@@ -246,12 +250,7 @@ def test_get_docstring():
 def test_get_decorators():
     """Test decorator detection"""
     analyzer = CodeAnalyzer("/fake")
-    lines = [
-        '@property',
-        '@retry(max_attempts=3)',
-        'def my_method():',
-        '    pass'
-    ]
+    lines = ["@property", "@retry(max_attempts=3)", "def my_method():", "    pass"]
     decorators = analyzer._get_decorators(lines, 2)
     # Decorators are stored without the @ symbol
     assert "property" in decorators
@@ -310,7 +309,7 @@ def test_class_info_dataclass():
 def test_find_calls():
     """Test function call extraction from code body"""
     analyzer = CodeAnalyzer("/fake")
-    
+
     # Simple function calls
     body = """
     result = foo()
@@ -319,7 +318,7 @@ def test_find_calls():
     calls = analyzer._find_calls(body)
     assert "foo" in calls
     assert "items.append" in calls  # method call stored as 'module.method'
-    
+
     # Module-qualified calls (regex captures only immediate dotted part, e.g. 'path.join' not 'os.path.join')
     body = """
     path.join(a, b)
@@ -328,7 +327,7 @@ def test_find_calls():
     calls = analyzer._find_calls(body)
     assert "path.join" in calls
     assert "json.loads" in calls
-    
+
     # Filter out keywords
     body = """
     if x == y:
@@ -347,7 +346,7 @@ def test_find_calls():
 def test_find_calls_excludes_keywords():
     """Test that _find_calls properly excludes Python keywords and built-ins"""
     analyzer = CodeAnalyzer("/fake")
-    
+
     body = """
     x = True if condition else False
     while running:

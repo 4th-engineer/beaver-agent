@@ -168,7 +168,9 @@ class TaskPlanner:
                 if "/" in pattern and isinstance(matches[0], tuple):
                     params["repo"] = f"{matches[0][0]}/{matches[0][1]}"
                 elif "#" in pattern:
-                    params["number"] = int(matches[0][0] if isinstance(matches[0], tuple) else matches[0])
+                    params["number"] = int(
+                        matches[0][0] if isinstance(matches[0], tuple) else matches[0]
+                    )
                 break
 
         return params

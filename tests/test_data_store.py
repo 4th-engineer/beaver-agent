@@ -264,7 +264,9 @@ class TestDataStoreMigrations:
         def failing_migration(ds):
             return False
 
-        store.register_migration("0.1.0", "failing_migration", "Failing migration", failing_migration)
+        store.register_migration(
+            "0.1.0", "failing_migration", "Failing migration", failing_migration
+        )
         store.set_version("0.0.0")
 
         result = store.migrate()
@@ -301,6 +303,7 @@ class TestDataStoreMigrations:
     def test_register_migration_stores_migration(self, store):
         """Test register_migration() stores the migration in the registry."""
         initial_count = len(store._migrations)
+
         def dummy(ds):
             return True
 
@@ -340,6 +343,7 @@ class TestDataStoreDataAccess:
         # Write A first
         file_a.write_text("entry a\n")
         import time
+
         time.sleep(0.05)
         # Write B after A — B should be newer
         file_b.write_text("entry b\n")

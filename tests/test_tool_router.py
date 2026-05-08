@@ -58,20 +58,24 @@ class TestToolRouterRouteErrors:
 
     def test_route_tool_raises_exception(self, router, caplog):
         """route() catches tool exception and returns error with exc_info logged."""
-        result = router.route({
-            "tool": "mock_tool",
-            "action": "failing_action",
-        })
+        result = router.route(
+            {
+                "tool": "mock_tool",
+                "action": "failing_action",
+            }
+        )
         assert result["success"] is False
         assert result["error_code"] == "ERR_TOOL_EXECUTION"
         assert "deliberate test failure" in result["error"]
 
     def test_route_success(self, router):
         """route() returns success result when tool action succeeds."""
-        result = router.route({
-            "tool": "mock_tool",
-            "action": "healthy_action",
-        })
+        result = router.route(
+            {
+                "tool": "mock_tool",
+                "action": "healthy_action",
+            }
+        )
         assert result["success"] is True
         assert result["data"]["status"] == "ok"
 

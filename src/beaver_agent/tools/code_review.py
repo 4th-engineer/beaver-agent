@@ -17,7 +17,7 @@ class CodeReviewIssue:
         severity: str,  # critical, major, minor, suggestion
         line: Optional[int],
         message: str,
-        suggestion: Optional[str] = None
+        suggestion: Optional[str] = None,
     ):
         """Initialize a code review issue.
 
@@ -42,12 +42,9 @@ class CodeReviewIssue:
             emoji severity indicator, severity level, line number (if applicable),
             issue message, and an optional suggestion.
         """
-        emoji = {
-            "critical": "🔴",
-            "major": "🟠",
-            "minor": "🟡",
-            "suggestion": "💡"
-        }.get(self.severity, "⚪")
+        emoji = {"critical": "🔴", "major": "🟠", "minor": "🟡", "suggestion": "💡"}.get(
+            self.severity, "⚪"
+        )
 
         line_info = f" Line {self.line}:" if self.line else ""
         result = f"{emoji} [{self.severity.upper()}] {line_info} {self.message}"
@@ -76,7 +73,7 @@ class CodeReviewTool:
         code: str,
         language: str = "python",
         file_path: Optional[str] = None,
-        context: Optional[str] = None
+        context: Optional[str] = None,
     ) -> str:
         """Review code and return findings.
 
@@ -97,11 +94,7 @@ class CodeReviewTool:
         logger.info("reviewing_code", file_path=file_path, language=language)
 
         try:
-            response = self.llm.review_code(
-                code=code,
-                language=language,
-                file_path=file_path
-            )
+            response = self.llm.review_code(code=code, language=language, file_path=file_path)
 
             if not response.content or "not configured" in response.content:
                 return self._basic_review(code, language, file_path)
@@ -151,14 +144,16 @@ class CodeReviewTool:
 
 如需深度分析，请配置 `OPENROUTER_API_KEY` 或 `ANTHROPIC_API_KEY`"""
 
-        result = [f"""## 🔍 代码审查
+        result = [
+            f"""## 🔍 代码审查
 
 **文件**: {file_path or "未指定"}
 **语言**: {language}
 
 **发现问题**: {len(issues)} 个
 
-"""]
+"""
+        ]
 
         for issue in issues:
             result.append(issue.format())
@@ -184,39 +179,47 @@ class CodeReviewTool:
 
             # Check for TODO
             if "TODO" in stripped or "FIXME" in stripped:
-                issues.append(CodeReviewIssue(
-                    severity="minor",
-                    line=i,
-                    message=f"发现未完成代码: {stripped[:50]}",
-                    suggestion="完成后移除 TODO 注释"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="minor",
+                        line=i,
+                        message=f"发现未完成代码: {stripped[:50]}",
+                        suggestion="完成后移除 TODO 注释",
+                    )
+                )
 
             # Check for bare except
             if stripped.startswith("except:") or stripped == "except:":
-                issues.append(CodeReviewIssue(
-                    severity="major",
-                    line=i,
-                    message="使用裸 except 子句",
-                    suggestion="使用 `except Exception:` 并指定具体异常类型"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="major",
+                        line=i,
+                        message="使用裸 except 子句",
+                        suggestion="使用 `except Exception:` 并指定具体异常类型",
+                    )
+                )
 
             # Check for print statements
             if stripped.startswith("print(") and not stripped.startswith('"""'):
-                issues.append(CodeReviewIssue(
-                    severity="minor",
-                    line=i,
-                    message="发现 print 语句",
-                    suggestion="考虑使用日志模块 (logging)"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="minor",
+                        line=i,
+                        message="发现 print 语句",
+                        suggestion="考虑使用日志模块 (logging)",
+                    )
+                )
 
             # Check for mutable default arguments
             if "def " in stripped and "=[]" in stripped:
-                issues.append(CodeReviewIssue(
-                    severity="major",
-                    line=i,
-                    message="使用可变默认参数",
-                    suggestion="使用 None 作为默认值，在函数内检查"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="major",
+                        line=i,
+                        message="使用可变默认参数",
+                        suggestion="使用 None 作为默认值，在函数内检查",
+                    )
+                )
 
         return issues
 
@@ -238,21 +241,25 @@ class CodeReviewTool:
 
             # Check for console.log
             if "console.log" in stripped:
-                issues.append(CodeReviewIssue(
-                    severity="minor",
-                    line=i,
-                    message="发现 console.log",
-                    suggestion="移除生产代码中的调试语句"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="minor",
+                        line=i,
+                        message="发现 console.log",
+                        suggestion="移除生产代码中的调试语句",
+                    )
+                )
 
             # Check for var (prefer let/const)
             if stripped.startswith("var "):
-                issues.append(CodeReviewIssue(
-                    severity="minor",
-                    line=i,
-                    message="使用 var 声明变量",
-                    suggestion="使用 let 或 const 替代"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="minor",
+                        line=i,
+                        message="使用 var 声明变量",
+                        suggestion="使用 let 或 const 替代",
+                    )
+                )
 
         return issues
 
@@ -274,21 +281,25 @@ class CodeReviewTool:
 
             # Check for very long lines
             if len(line) > 120:
-                issues.append(CodeReviewIssue(
-                    severity="minor",
-                    line=i,
-                    message=f"行长度 {len(line)} 超过 120 字符",
-                    suggestion="考虑拆分为多行"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="minor",
+                        line=i,
+                        message=f"行长度 {len(line)} 超过 120 字符",
+                        suggestion="考虑拆分为多行",
+                    )
+                )
 
             # Check for trailing whitespace
             if line != line.rstrip():
-                issues.append(CodeReviewIssue(
-                    severity="suggestion",
-                    line=i,
-                    message="行尾存在多余空格",
-                    suggestion="移除尾随空格"
-                ))
+                issues.append(
+                    CodeReviewIssue(
+                        severity="suggestion",
+                        line=i,
+                        message="行尾存在多余空格",
+                        suggestion="移除尾随空格",
+                    )
+                )
 
         return issues
 

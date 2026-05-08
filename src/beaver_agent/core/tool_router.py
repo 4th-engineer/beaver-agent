@@ -113,7 +113,11 @@ class ToolRouter:
             return {"success": False, "error": "No tool specified", "error_code": self.ERR_NO_TOOL}
 
         if tool_name not in self._tool_registry:
-            return {"success": False, "error": f"Unknown tool: {tool_name}", "error_code": self.ERR_UNKNOWN_TOOL}
+            return {
+                "success": False,
+                "error": f"Unknown tool: {tool_name}",
+                "error_code": self.ERR_UNKNOWN_TOOL,
+            }
 
         tool = self._tool_registry[tool_name]
 
@@ -123,12 +127,22 @@ class ToolRouter:
                 result = getattr(tool, action)(**params)
                 return {"success": True, "tool": tool_name, "action": action, "data": result}
             else:
-                return {"success": False, "error": f"Tool {tool_name} has no action: {action}",
-                        "error_code": self.ERR_NO_ACTION, "tool": tool_name, "action": action}
+                return {
+                    "success": False,
+                    "error": f"Tool {tool_name} has no action: {action}",
+                    "error_code": self.ERR_NO_ACTION,
+                    "tool": tool_name,
+                    "action": action,
+                }
         except Exception as e:
             logger.error("tool_execution_failed", tool=tool_name, action=action, exc_info=e)
-            return {"success": False, "error": str(e), "error_code": self.ERR_TOOL_EXECUTION,
-                    "tool": tool_name, "action": action}
+            return {
+                "success": False,
+                "error": str(e),
+                "error_code": self.ERR_TOOL_EXECUTION,
+                "tool": tool_name,
+                "action": action,
+            }
 
     def list_tools(self) -> list:
         """List all registered tool names.

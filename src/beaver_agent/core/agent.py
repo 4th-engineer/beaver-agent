@@ -37,17 +37,19 @@ class BeaverAgent:
             Exception: Re-raises data store initialization failures after logging.
         """
         self.config = config
-        
+
         # Initialize data store and run migrations BEFORE other init
         try:
             self.data_store = init_data_store()
-            logger.info("data_store_initialized", 
-                       version=self.data_store.get_version().raw,
-                       stats=self.data_store.get_stats())
+            logger.info(
+                "data_store_initialized",
+                version=self.data_store.get_version().raw,
+                stats=self.data_store.get_stats(),
+            )
         except Exception as e:
             logger.error("data_store_init_failed", exc_info=e)
             raise
-        
+
         self.session_id = str(uuid.uuid4())[:8]
         self.memory = SessionMemory()
         self.long_term_memory = LongTermMemory(self.data_store.data_dir / "memory")
@@ -211,10 +213,7 @@ class BeaverAgent:
         )
 
     def _generate_response(
-        self,
-        user_input: str,
-        intent: str,
-        tool_results: List[Dict[str, Any]]
+        self, user_input: str, intent: str, tool_results: List[Dict[str, Any]]
     ) -> str:
         """Generate final response using LLM with tool results.
 
@@ -375,7 +374,14 @@ Always provide actionable suggestions."""
             lines = content.strip().split("\n")
             if len(lines) > 35:
                 # Try to find error/warning patterns
-                error_lines = [l for l in lines if any(k in l.lower() for k in ("error", "fail", "exception", "traceback", "warning", "warn"))]
+                error_lines = [
+                    l
+                    for l in lines
+                    if any(
+                        k in l.lower()
+                        for k in ("error", "fail", "exception", "traceback", "warning", "warn")
+                    )
+                ]
                 if error_lines:
                     # Show last 15 normal + all error lines
                     last_normal = lines[-20:] if len(lines) > 20 else lines
@@ -384,10 +390,7 @@ Always provide actionable suggestions."""
                         f"{chr(10).join(last_normal[:15])}\n\n"
                         f"[red]⚠️ 发现问题 ({len(error_lines)} 处):[/red]\n{errors}"
                     )
-                return (
-                    f"{chr(10).join(lines[-30:])}\n\n"
-                    f"[dim]↑ 前 {len(lines) - 30} 行...[/dim]"
-                )
+                return f"{chr(10).join(lines[-30:])}\n\n[dim]↑ 前 {len(lines) - 30} 行...[/dim]"
             return content
 
         # For search results: show top matches with context
@@ -395,15 +398,13 @@ Always provide actionable suggestions."""
             lines = content.strip().split("\n")
             if len(lines) > 20:
                 # Show first 10 + count summary
-                return (
-                    f"{chr(10).join(lines[:10])}\n\n"
-                    f"[dim]... 共 {len(lines)} 条匹配结果[/dim]"
-                )
+                return f"{chr(10).join(lines[:10])}\n\n[dim]... 共 {len(lines)} 条匹配结果[/dim]"
             return content
 
         # For JSON data: pretty-print with syntax highlight
         if tool in ("mcp", "API", "http", "fetch"):
             import json
+
             try:
                 parsed = json.loads(content)
                 formatted = json.dumps(parsed, indent=2, ensure_ascii=False)
@@ -422,10 +423,7 @@ Always provide actionable suggestions."""
         if tool in ("git", "git_status", "git_log"):
             lines = content.strip().split("\n")
             if len(lines) > 25:
-                return (
-                    f"{chr(10).join(lines[-20:])}\n\n"
-                    f"[dim]↑ 前 {len(lines) - 20} 行...[/dim]"
-                )
+                return f"{chr(10).join(lines[-20:])}\n\n[dim]↑ 前 {len(lines) - 20} 行...[/dim]"
             return content
 
         # Default: if really long, show structure summary
@@ -456,8 +454,8 @@ Always provide actionable suggestions."""
             return "..."
         if isinstance(obj, dict):
             keys = list(obj.keys())[:5]
-            summary = ", ".join(f"{k}={self._json_summary(obj[k], depth+1)}" for k in keys)
-            suffix = f" (+{len(obj)-5} keys)" if len(obj) > 5 else ""
+            summary = ", ".join(f"{k}={self._json_summary(obj[k], depth + 1)}" for k in keys)
+            suffix = f" (+{len(obj) - 5} keys)" if len(obj) > 5 else ""
             return f"{{{summary}{suffix}}}"
         elif isinstance(obj, list):
             return f"[{len(obj)} items]"

@@ -47,7 +47,9 @@ class TestTaskAndBenchmark:
     def test_benchmark_add_task(self):
         """Test adding tasks to a Benchmark"""
         bm = Benchmark(name="test-benchmark")
-        task1 = Task(id="t1", name="task 1", prompt="p1", reference="r1", task_type="code_generation")
+        task1 = Task(
+            id="t1", name="task 1", prompt="p1", reference="r1", task_type="code_generation"
+        )
         task2 = Task(id="t2", name="task 2", prompt="p2", reference="r2", task_type="bug_fix")
         bm.add_task(task1)
         bm.add_task(task2)
@@ -131,13 +133,24 @@ class TestBenchmarkRegistry:
         """Test register_benchmark convenience function"""
         # Create a temp JSON benchmark file
         import json
+
         benchmark_file = tmp_path / "test.json"
-        benchmark_file.write_text(json.dumps({
-            "name": "convenience-test",
-            "tasks": [
-                {"id": "t1", "name": "t1", "prompt": "p1", "reference": "r1", "task_type": "code_generation"}
-            ]
-        }))
+        benchmark_file.write_text(
+            json.dumps(
+                {
+                    "name": "convenience-test",
+                    "tasks": [
+                        {
+                            "id": "t1",
+                            "name": "t1",
+                            "prompt": "p1",
+                            "reference": "r1",
+                            "task_type": "code_generation",
+                        }
+                    ],
+                }
+            )
+        )
         bm = TaskLoader.from_harness_format(str(benchmark_file))
         register_benchmark(bm)
         assert get_benchmark_registry().get("convenience-test") == bm
@@ -157,8 +170,20 @@ class TestTaskLoader:
     def test_from_dict_list(self):
         """Test loading tasks from a list of dicts"""
         tasks_data = [
-            {"id": "d1", "name": "task d1", "prompt": "p1", "reference": "r1", "task_type": "code_generation"},
-            {"id": "d2", "name": "task d2", "prompt": "p2", "reference": "r2", "task_type": "bug_fix"},
+            {
+                "id": "d1",
+                "name": "task d1",
+                "prompt": "p1",
+                "reference": "r1",
+                "task_type": "code_generation",
+            },
+            {
+                "id": "d2",
+                "name": "task d2",
+                "prompt": "p2",
+                "reference": "r2",
+                "task_type": "bug_fix",
+            },
         ]
         tasks = TaskLoader.from_dict_list(tasks_data)
         assert len(tasks) == 2
@@ -168,27 +193,32 @@ class TestTaskLoader:
     def test_from_harness_format(self, tmp_path):
         """Test loading a complete benchmark from JSON"""
         import json
+
         benchmark_file = tmp_path / "mbpp_sample.json"
-        benchmark_file.write_text(json.dumps({
-            "name": "mbpp",
-            "description": "MBPP benchmark subset",
-            "tasks": [
+        benchmark_file.write_text(
+            json.dumps(
                 {
-                    "id": "mbpp-1",
-                    "name": "return 42",
-                    "prompt": "Write a function that returns 42",
-                    "reference": "def answer(): return 42",
-                    "task_type": "code_generation",
-                },
-                {
-                    "id": "mbpp-2",
-                    "name": "return hello",
-                    "prompt": "Write a function that returns 'hello'",
-                    "reference": "def greet(): return 'hello'",
-                    "task_type": "code_generation",
-                },
-            ]
-        }))
+                    "name": "mbpp",
+                    "description": "MBPP benchmark subset",
+                    "tasks": [
+                        {
+                            "id": "mbpp-1",
+                            "name": "return 42",
+                            "prompt": "Write a function that returns 42",
+                            "reference": "def answer(): return 42",
+                            "task_type": "code_generation",
+                        },
+                        {
+                            "id": "mbpp-2",
+                            "name": "return hello",
+                            "prompt": "Write a function that returns 'hello'",
+                            "reference": "def greet(): return 'hello'",
+                            "task_type": "code_generation",
+                        },
+                    ],
+                }
+            )
+        )
         bm = TaskLoader.from_harness_format(str(benchmark_file))
         assert bm.name == "mbpp"
         assert len(bm.tasks) == 2
@@ -372,6 +402,7 @@ class TestRunner:
 
     def test_runner_initialization(self):
         """Test Runner initializes with correct defaults"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "mock response"
@@ -382,6 +413,7 @@ class TestRunner:
 
     def test_runner_with_custom_workers_and_timeout(self):
         """Test Runner accepts custom max_workers and timeout"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "mock"
@@ -392,15 +424,37 @@ class TestRunner:
 
     def test_summarize_results(self):
         """Test summarize_results aggregates correctly"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "response"
 
         runner = Runner(FakeAdapter())
         results = [
-            TaskResult(task_id="t1", success=True, prediction="p1", score=1.0, metrics={}, duration_ms=100.0),
-            TaskResult(task_id="t2", success=True, prediction="p2", score=0.5, metrics={}, duration_ms=200.0),
-            TaskResult(task_id="t3", success=False, prediction="", score=0.0, error="failed", duration_ms=50.0),
+            TaskResult(
+                task_id="t1",
+                success=True,
+                prediction="p1",
+                score=1.0,
+                metrics={},
+                duration_ms=100.0,
+            ),
+            TaskResult(
+                task_id="t2",
+                success=True,
+                prediction="p2",
+                score=0.5,
+                metrics={},
+                duration_ms=200.0,
+            ),
+            TaskResult(
+                task_id="t3",
+                success=False,
+                prediction="",
+                score=0.0,
+                error="failed",
+                duration_ms=50.0,
+            ),
         ]
         summary = runner.summarize_results(results)
         assert summary["total"] == 3
@@ -416,6 +470,7 @@ class TestBeaverHarness:
 
     def test_harness_initialization(self):
         """Test BeaverHarness initializes correctly"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "mock"
@@ -426,6 +481,7 @@ class TestBeaverHarness:
 
     def test_add_task_returns_self_for_chaining(self):
         """Test add_task returns self (builder pattern)"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "mock"
@@ -441,12 +497,22 @@ class TestBeaverHarness:
 
         # Create a benchmark JSON file with all required Task fields
         benchmark_file = tmp_path / "mini.json"
-        benchmark_file.write_text(json.dumps({
-            "name": "mini",
-            "tasks": [
-                {"id": "m1", "name": "m1", "prompt": "p1", "reference": "r1", "task_type": "code_generation"}
-            ]
-        }))
+        benchmark_file.write_text(
+            json.dumps(
+                {
+                    "name": "mini",
+                    "tasks": [
+                        {
+                            "id": "m1",
+                            "name": "m1",
+                            "prompt": "p1",
+                            "reference": "r1",
+                            "task_type": "code_generation",
+                        }
+                    ],
+                }
+            )
+        )
 
         class FakeAdapter:
             def generate(self, prompt):
@@ -458,6 +524,7 @@ class TestBeaverHarness:
 
     def test_run_single_returns_task_result(self):
         """Test run_single executes a task and returns a TaskResult"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "hello world"
@@ -478,6 +545,7 @@ class TestBeaverHarness:
 
     def test_run_single_with_failing_adapter_returns_failed_result(self):
         """Test run_single returns failed TaskResult when adapter raises"""
+
         class BrokenAdapter:
             def generate(self, prompt):
                 raise RuntimeError("adapter broken")
@@ -497,6 +565,7 @@ class TestBeaverHarness:
 
     def test_benchmark_info_returns_metadata(self):
         """Test benchmark_info returns name, description, task_count, task_types"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "mock"
@@ -504,7 +573,9 @@ class TestBeaverHarness:
         harness = BeaverHarness(FakeAdapter())
         # Register a dedicated benchmark to avoid interference from other tests
         bm = Benchmark(name="info-test-bm")
-        bm.add_task(Task(id="b1-t1", name="t1", prompt="p1", reference="r1", task_type="code_generation"))
+        bm.add_task(
+            Task(id="b1-t1", name="t1", prompt="p1", reference="r1", task_type="code_generation")
+        )
         bm.add_task(Task(id="b1-t2", name="t2", prompt="p2", reference="r2", task_type="bug_fix"))
         harness.register_benchmark(bm)
 
@@ -515,6 +586,7 @@ class TestBeaverHarness:
 
     def test_benchmark_info_unknown_returns_empty_dict(self):
         """Test benchmark_info returns empty dict for unknown benchmark"""
+
         class FakeAdapter:
             def generate(self, prompt):
                 return "mock"

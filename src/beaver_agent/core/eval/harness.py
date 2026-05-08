@@ -120,9 +120,13 @@ class BeaverHarness:
         results = self.runner.run_benchmark(benchmark_name)
         if summarize:
             summary = self.runner.summarize_results(results)
-            logger.info("benchmark_completed", benchmark_name=benchmark_name, result_count=len(results))
+            logger.info(
+                "benchmark_completed", benchmark_name=benchmark_name, result_count=len(results)
+            )
             return summary
-        logger.info("benchmark_completed_raw", benchmark_name=benchmark_name, result_count=len(results))
+        logger.info(
+            "benchmark_completed_raw", benchmark_name=benchmark_name, result_count=len(results)
+        )
         return results
 
     def run_single(self, task: Task) -> TaskResult:
@@ -140,7 +144,9 @@ class BeaverHarness:
         """
         logger.debug("running_single_task", task_id=task.id, task_type=task.task_type)
         result = self.runner.run_task(task)
-        logger.debug("single_task_completed", task_id=task.id, success=result.success, score=result.score)
+        logger.debug(
+            "single_task_completed", task_id=task.id, success=result.success, score=result.score
+        )
         return result
 
     def list_benchmarks(self) -> list[str]:

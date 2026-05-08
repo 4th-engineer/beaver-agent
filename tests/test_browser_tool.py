@@ -219,6 +219,7 @@ class TestRunBrowserCmd:
     def test_timeout(self, mock_run, mock_validate):
         """Test command timeout"""
         import subprocess
+
         mock_validate.return_value = None
         mock_run.side_effect = subprocess.TimeoutExpired("test", timeout=5)
 

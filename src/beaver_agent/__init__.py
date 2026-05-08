@@ -12,7 +12,12 @@ from beaver_agent.core.task_planner import TaskPlanner
 from beaver_agent.core.skill_manager import SkillManager, Skill
 from beaver_agent.core.mcp_manager import MCPManager, MCPTool
 from beaver_agent.core.memory.session import SessionMemory
-from beaver_agent.core.memory.long_term import LongTermMemory, MemoryCategory, MemoryEntry, MemoryQuery
+from beaver_agent.core.memory.long_term import (
+    LongTermMemory,
+    MemoryCategory,
+    MemoryEntry,
+    MemoryQuery,
+)
 from beaver_agent.core.eval.harness import BeaverHarness
 from beaver_agent.core.eval.task import Task, Benchmark, TaskResult
 from beaver_agent.core.eval.runner import Runner
@@ -26,7 +31,12 @@ from beaver_agent.core.eval.metrics import (
     get_scorer,
 )
 from beaver_agent.core.eval.prompting import PromptStrategy, get_strategy
-from beaver_agent.core.eval.adapter import BeaverAdapter, OpenAIAdapter, MiniMaxAdapter, ModelAdapter
+from beaver_agent.core.eval.adapter import (
+    BeaverAdapter,
+    OpenAIAdapter,
+    MiniMaxAdapter,
+    ModelAdapter,
+)
 from beaver_agent.tools.code_review import CodeReviewIssue
 from beaver_agent.core.conversation_logger import ConversationLogger
 

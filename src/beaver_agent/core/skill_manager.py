@@ -17,6 +17,7 @@ __all__ = ["SkillStep", "SkillPhase", "Skill", "SkillManager"]
 @dataclass
 class SkillStep:
     """A single step in a skill phase"""
+
     order: int
     instruction: str
     check: Optional[str] = None  # What to verify after this step
@@ -25,6 +26,7 @@ class SkillStep:
 @dataclass
 class SkillPhase:
     """A phase in a skill (e.g., Requirements, Implementation, Review)"""
+
     name: str
     instruction: str
     steps: List[SkillStep] = field(default_factory=list)
@@ -44,10 +46,10 @@ class Skill:
     required_environment_variables: List[str] = field(default_factory=list)
 
     # New structured fields (Matt Pocock style)
-    when_to_use: str = ""           # When to invoke this skill
+    when_to_use: str = ""  # When to invoke this skill
     phases: List[SkillPhase] = field(default_factory=list)
     checklist: List[str] = field(default_factory=list)  # Final verification checklist
-    examples: List[str] = field(default_factory=list)     # Usage examples
+    examples: List[str] = field(default_factory=list)  # Usage examples
 
     # Backward compatibility: if no phases, use the whole content as one phase
     @property
@@ -87,8 +89,10 @@ class Skill:
                 {
                     "name": p.name,
                     "instruction": p.instruction,
-                    "steps": [{"order": s.order, "instruction": s.instruction, "check": s.check}
-                              for s in p.steps]
+                    "steps": [
+                        {"order": s.order, "instruction": s.instruction, "check": s.check}
+                        for s in p.steps
+                    ],
                 }
                 for p in self.phases
             ],
@@ -133,11 +137,11 @@ class Skill:
 class SkillManager:
     """
     Manages skill loading, discovery, and execution.
-    
+
     Supports user/system skill separation:
     - data/skills/builtin/  → System skills (overwritten on upgrade)
     - data/skills/user/      → User skills (preserved on upgrade)
-    
+
     User skills take priority over builtin skills with the same name.
     """
 
@@ -158,7 +162,7 @@ class SkillManager:
         """
         self.project_root = project_root
         self._skills: Dict[str, Skill] = {}
-        
+
         # Default: check new data/ location, fall back to legacy skills/
         if skills_dirs:
             self.skills_dirs = skills_dirs
@@ -168,17 +172,17 @@ class SkillManager:
                 "builtin": data_dir / "skills" / "builtin",
                 "user": data_dir / "skills" / "user",
             }
-        
+
         self._load_skills()
 
     def _load_skills(self) -> None:
         """Discover and load all skills from skills directories.
-        
+
         Loads in order: builtin first, then user.
         User skills with same name override builtin skills.
         """
         loaded = set()
-        
+
         # Load builtin skills first
         builtin_dir = self.skills_dirs.get("builtin")
         if builtin_dir and builtin_dir.exists():
@@ -187,9 +191,13 @@ class SkillManager:
                 if skill:
                     self._skills[skill.name] = skill
                     loaded.add(skill.name)
-                    logger.info("skill_loaded", name=skill.name, 
-                               source="builtin", structured=skill.is_structured)
-        
+                    logger.info(
+                        "skill_loaded",
+                        name=skill.name,
+                        source="builtin",
+                        structured=skill.is_structured,
+                    )
+
         # Load user skills (can override builtin)
         user_dir = self.skills_dirs.get("user")
         if user_dir and user_dir.exists():
@@ -200,10 +208,13 @@ class SkillManager:
                     is_override = skill.name in loaded
                     self._skills[skill.name] = skill
                     loaded.add(skill.name)
-                    logger.info("skill_loaded", name=skill.name,
-                               source="user" if is_override else "user_new",
-                               structured=skill.is_structured)
-        
+                    logger.info(
+                        "skill_loaded",
+                        name=skill.name,
+                        source="user" if is_override else "user_new",
+                        structured=skill.is_structured,
+                    )
+
         # Also check legacy skills/ directory for backward compatibility
         legacy_dir = self.project_root / "skills"
         if legacy_dir.exists():
@@ -212,8 +223,12 @@ class SkillManager:
                 if skill and skill.name not in loaded:
                     self._skills[skill.name] = skill
                     loaded.add(skill.name)
-                    logger.info("skill_loaded", name=skill.name,
-                               source="legacy", structured=skill.is_structured)
+                    logger.info(
+                        "skill_loaded",
+                        name=skill.name,
+                        source="legacy",
+                        structured=skill.is_structured,
+                    )
 
         logger.info("skills_loaded_total", count=len(self._skills))
 
@@ -266,11 +281,13 @@ class SkillManager:
                 steps = []
                 for i, step_text in enumerate(raw_steps, 1):
                     if isinstance(step_text, dict):
-                        steps.append(SkillStep(
-                            order=i,
-                            instruction=step_text.get("instruction", str(step_text)),
-                            check=step_text.get("check")
-                        ))
+                        steps.append(
+                            SkillStep(
+                                order=i,
+                                instruction=step_text.get("instruction", str(step_text)),
+                                check=step_text.get("check"),
+                            )
+                        )
                     else:
                         steps.append(SkillStep(order=i, instruction=str(step_text)))
                 phases.append(SkillPhase(name="Steps", instruction="", steps=steps))
@@ -284,21 +301,21 @@ class SkillManager:
                 steps = []
                 for i, step_text in enumerate(raw_steps, 1):
                     if isinstance(step_text, dict):
-                        steps.append(SkillStep(
-                            order=i,
-                            instruction=step_text.get("instruction", str(step_text)),
-                            check=step_text.get("check")
-                        ))
+                        steps.append(
+                            SkillStep(
+                                order=i,
+                                instruction=step_text.get("instruction", str(step_text)),
+                                check=step_text.get("check"),
+                            )
+                        )
                     elif isinstance(step_text, str):
                         steps.append(SkillStep(order=i, instruction=step_text))
                     else:
                         steps.append(SkillStep(order=i, instruction=str(step_text)))
 
-                phases.append(SkillPhase(
-                    name=phase_name,
-                    instruction=phase_instruction,
-                    steps=steps
-                ))
+                phases.append(
+                    SkillPhase(name=phase_name, instruction=phase_instruction, steps=steps)
+                )
 
         return phases
 
@@ -381,10 +398,7 @@ class SkillManager:
         Example:
             >>> testing_skills = manager.list_skills_by_category("testing")
         """
-        return [
-            skill.to_dict() for skill in self._skills.values()
-            if skill.category == category
-        ]
+        return [skill.to_dict() for skill in self._skills.values() if skill.category == category]
 
     def reload(self) -> None:
         """Reload all skills from disk.

@@ -27,7 +27,7 @@ class CodeGenTool:
         description: str,
         language: str = "python",
         file_path: Optional[str] = None,
-        context: Optional[str] = None
+        context: Optional[str] = None,
     ) -> str:
         """Generate code based on a description.
 
@@ -45,9 +45,7 @@ class CodeGenTool:
 
         try:
             response = self.llm.generate_code(
-                description=description,
-                language=language,
-                context=context
+                description=description, language=language, context=context
             )
 
             if not response.content or "not configured" in response.content:
@@ -56,6 +54,7 @@ class CodeGenTool:
             # If file_path provided, offer to save
             if file_path:
                 from beaver_agent.tools.file_tool import FileTool
+
                 file_tool = FileTool(self.config)
                 try:
                     save_result = file_tool.write_file(file_path, response.content)
@@ -86,7 +85,7 @@ def main():
 if __name__ == "__main__":
     main()
 ''',
-            "javascript": f'''// JavaScript/Node.js for: {description}
+            "javascript": f"""// JavaScript/Node.js for: {description}
 
 // This is a placeholder - configure MINIMAX_API_KEY for full generation
 
@@ -95,8 +94,8 @@ function main() {{
 }}
 
 module.exports = {{ main }};
-''',
-            "go": f'''// Go code for: {description}
+""",
+            "go": f"""// Go code for: {description}
 
 // This is a placeholder - configure MINIMAX_API_KEY for full generation
 
@@ -105,17 +104,15 @@ package main
 func main() {{
     // Your implementation here
 }}
-''',
+""",
         }
 
-        return templates.get(language, f"// Code for: {description}\n// Configure MINIMAX_API_KEY in .env for full generation")
+        return templates.get(
+            language,
+            f"// Code for: {description}\n// Configure MINIMAX_API_KEY in .env for full generation",
+        )
 
-    def complete_code(
-        self,
-        partial_code: str,
-        description: str,
-        language: str = "python"
-    ) -> str:
+    def complete_code(self, partial_code: str, description: str, language: str = "python") -> str:
         """Complete partial code by filling in TODO sections via LLM.
 
         Args:
@@ -144,12 +141,7 @@ Description: {description}
             logger.error("code_completion_failed", language=language, exc_info=e)
             return "❌ Code completion failed. Check logs for details."
 
-    def refactor(
-        self,
-        code: str,
-        style: str = "clean",
-        language: str = "python"
-    ) -> str:
+    def refactor(self, code: str, style: str = "clean", language: str = "python") -> str:
         """Refactor code to follow best practices using LLM.
 
         Args:

@@ -27,7 +27,7 @@ class DebuggerTool:
         code: str,
         error: Optional[str] = None,
         language: str = "python",
-        stack_trace: Optional[str] = None
+        stack_trace: Optional[str] = None,
     ) -> str:
         """Analyze code and/or error to provide debugging assistance.
 
@@ -54,11 +54,7 @@ class DebuggerTool:
             return f"❌ Debug analysis failed: {e}"
 
     def _analyze_error(
-        self,
-        code: str,
-        error: str,
-        language: str,
-        stack_trace: Optional[str] = None
+        self, code: str, error: str, language: str, stack_trace: Optional[str] = None
     ) -> str:
         """Analyze a specific error using LLM or fallback to basic analysis.
 
@@ -73,11 +69,7 @@ class DebuggerTool:
         """
 
         try:
-            response = self.llm.debug_code(
-                code=code,
-                error=error,
-                language=language
-            )
+            response = self.llm.debug_code(code=code, error=error, language=language)
 
             if not response.content or "not configured" in response.content:
                 return self._basic_error_analysis(error, stack_trace)
@@ -118,11 +110,7 @@ Code:
             logger.error("code_health_analysis_failed", language=language, exc_info=e)
             return f"❌ Code health analysis failed: {e}"
 
-    def _basic_error_analysis(
-        self,
-        error: str,
-        stack_trace: Optional[str] = None
-    ) -> str:
+    def _basic_error_analysis(self, error: str, stack_trace: Optional[str] = None) -> str:
         """Perform basic error analysis without LLM by pattern-matching common errors.
 
         Uses a built-in dictionary of common Python error types to provide
@@ -152,44 +140,26 @@ Code:
         common_errors = {
             "indexerror": {
                 "cause": "索引超出序列范围",
-                "fix": "检查索引是否在有效范围内，使用 len() 验证"
+                "fix": "检查索引是否在有效范围内，使用 len() 验证",
             },
             "keyerror": {
                 "cause": "字典中不存在该键",
-                "fix": "使用 dict.get() 方法或先检查键是否存在"
+                "fix": "使用 dict.get() 方法或先检查键是否存在",
             },
             "attributeerror": {
                 "cause": "对象没有该属性或方法",
-                "fix": "检查对象类型，确保属性/方法存在"
+                "fix": "检查对象类型，确保属性/方法存在",
             },
-            "typeerror": {
-                "cause": "类型不匹配",
-                "fix": "检查变量类型，使用 isinstance() 验证"
-            },
-            "valueerror": {
-                "cause": "值不合法",
-                "fix": "检查输入值的有效范围和格式"
-            },
+            "typeerror": {"cause": "类型不匹配", "fix": "检查变量类型，使用 isinstance() 验证"},
+            "valueerror": {"cause": "值不合法", "fix": "检查输入值的有效范围和格式"},
             "filenotfounderror": {
                 "cause": "文件路径不存在",
-                "fix": "检查文件路径是否正确，使用 os.path.exists() 验证"
+                "fix": "检查文件路径是否正确，使用 os.path.exists() 验证",
             },
-            "permissionerror": {
-                "cause": "权限不足",
-                "fix": "检查文件/目录权限"
-            },
-            "timeout": {
-                "cause": "操作超时",
-                "fix": "增加超时时间或优化操作"
-            },
-            "connectionerror": {
-                "cause": "网络连接失败",
-                "fix": "检查网络连接和目标地址"
-            },
-            "none": {
-                "cause": "对象为 None",
-                "fix": "添加 None 检查，使用 if obj is not None"
-            }
+            "permissionerror": {"cause": "权限不足", "fix": "检查文件/目录权限"},
+            "timeout": {"cause": "操作超时", "fix": "增加超时时间或优化操作"},
+            "connectionerror": {"cause": "网络连接失败", "fix": "检查网络连接和目标地址"},
+            "none": {"cause": "对象为 None", "fix": "添加 None 检查，使用 if obj is not None"},
         }
 
         # Detect error type
@@ -199,7 +169,8 @@ Code:
                 detected_type = err_type
                 break
 
-        result = ["""## 🐛 调试分析
+        result = [
+            """## 🐛 调试分析
 
 **错误信息**:
 ```
@@ -214,9 +185,9 @@ Code:
 
         if detected_type:
             info = common_errors[detected_type]
-            result.append(f"""**问题类型**: {error.split(':')[0] if ':' in error else detected_type}
-**可能原因**: {info['cause']}
-**修复建议**: {info['fix']}
+            result.append(f"""**问题类型**: {error.split(":")[0] if ":" in error else detected_type}
+**可能原因**: {info["cause"]}
+**修复建议**: {info["fix"]}
 """)
         else:
             result.append("""**分析**: 检测到错误
@@ -259,12 +230,7 @@ Code:
 
         return header + llm_response
 
-    def suggest_fixes(
-        self,
-        code: str,
-        issue: str,
-        language: str = "python"
-    ) -> str:
+    def suggest_fixes(self, code: str, issue: str, language: str = "python") -> str:
         """Suggest fixes for a specific issue.
 
         Args:

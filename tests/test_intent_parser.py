@@ -123,6 +123,7 @@ class TestIntentParserWithSkillManager:
     def test_set_skill_manager(self, parser, temp_skills_dir):
         """Test that set_skill_manager correctly attaches a SkillManager"""
         from beaver_agent.core.skill_manager import SkillManager
+
         sm = SkillManager(
             project_root=temp_skills_dir.parent,
             skills_dirs={"user": temp_skills_dir, "builtin": Path("/nonexistent")},

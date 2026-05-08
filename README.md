@@ -1,94 +1,65 @@
 # 🦫 Beaver Agent
 
-> A self-evolving AI coding assistant — built for developers who want an agent that grows with their projects.
+> Self-evolving AI coding assistant — 让代码自己变好。
 
-[![Tests](https://img.shields.io/badge/tests-720%20total-blue)](https://github.com/4th-engineer/beaver-agent)
+[![Tests](https://img.shields.io/badge/tests-723%20passed-blue)](https://github.com/4th-engineer/beaver-agent)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
 ---
 
-## 🚀 Quick Start
+## 安装
 
 ```bash
 git clone https://github.com/4th-engineer/beaver-agent.git
 cd beaver-agent
-
-# 创建虚拟环境
 python3 -m venv .venv
 source .venv/bin/activate
-
-# 安装依赖
 pip install -e ".[dev]"
-
-# 首次配置
 beaver setup
-
-# 运行
-beaver run
 ```
 
 ---
 
-## 📋 Commands
+## 命令
 
-| Command | Description |
-|---------|-------------|
-| `beaver setup` | 首次配置（创建 .env） |
-| `beaver run` | 启动交互式 CLI |
+| 命令 | 说明 |
+|------|------|
+| `beaver run` | 启动交互式 REPL |
 | `beaver chat -q "问题"` | 单次查询 |
+| `beaver map` | 生成代码地图索引（AST 分析，零 LLM 调用） |
 | `beaver model` | 查看/切换模型 |
-| `pytest` | 运行测试 |
-| `ruff check .` | 代码检查 |
-| `ruff format .` | 格式化代码 |
-| `mypy src/` | 类型检查 |
+| `beaver setup` | 首次配置 |
+| `beaver version` | 版本信息 |
+
+**REPL 内置命令：** `/help` `/exit` `/clear` `/model` `/status` `/debug` `/analyze` `/browse` `/screenshot` `/map`
 
 ---
 
-## ⚙️ Configuration
+## 功能
 
-创建 `.env` 文件（复制 `.env.example`），填入：
+**代码智能**
+- 代码生成、审查、调试
+- GitHub 集成（仓库、Issue、PR）
+- 网页浏览 + 截图
 
-```bash
-MINIMAX_API_KEY=your_key_here
-GITHUB_TOKEN=your_token_here
-```
+**自我进化**
+- 每小时自动运行改进周期：代码审计 → 添加测试 → 改进文档
+- 所有变更记录到 `.evolution/log.md`
 
-.env 文件会被自动加载。
+**可扩展架构**
+- `skills/` — 关键词触发的可插拔技能模块
+- `mcp_configs/` — YAML 配置 MCP 服务器
+- `src/beaver_agent/tools/` — 模块化工具系统
 
----
-
-## ✨ Features
-
-### 🤖 Core Capabilities
-
-| Feature | Description |
-|---------|-------------|
-| **Code Generation** | 描述需求 → 生成代码（Python, JS, Go, Rust 等） |
-| **Code Review** | AI 代码审查，inline 建议 |
-| **Debug Assistant** | 错误分析 + 修复建议 |
-| **GitHub Integration** | 管理仓库、Issue、PR |
-| **Web Research** | 网页搜索、文档抓取 |
-
-### 🔧 Extensible Architecture
-
-| Extension | 说明 |
-|-----------|------|
-| **Skills** (`skills/`) | 可插拔技能模块，关键词触发 |
-| **MCP Servers** (`mcp_configs/`) | YAML 配置 MCP 服务器 |
-| **Tools** (`src/beaver_agent/tools/`) | 模块化工具系统 |
-
-### 🦫 Self-Evolution
-
-每小时 :00 自动运行改进周期：
-1. 运行全面代码审计（TODO、异常处理、日志一致性）
-2. 添加测试覆盖边缘情况
-3. 改进文档和代码质量
-4. 所有变更记录到 `.evolution/log.md`
+**代码地图**
+- `beaver map` 对项目做 AST 静态分析，生成 `.beaver/` 索引
+- 包含文件树、导入/导出关系、依赖图、入口点
+- 纯静态分析，不调用 LLM
 
 ---
 
-## 📁 Project Structure
+## 项目结构
 
 ```
 beaver-agent/
@@ -101,54 +72,53 @@ beaver-agent/
 │   │   ├── skill_manager.py      # Skill 管理
 │   │   ├── mcp_manager.py        # MCP 服务器管理
 │   │   ├── llm_client.py         # LLM 客户端
-│   │   └── conversation_logger.py # 调试日志
+│   │   ├── memory/               # 记忆系统（Session + LongTerm）
+│   │   └── eval/                 # 评测框架（BeaverHarness）
 │   ├── tools/
-│   │   ├── code_gen.py, code_review.py, debugger.py
-│   │   ├── github_tool.py, browser_tool.py
-│   │   ├── file_tool.py, terminal_tool.py
+│   │   ├── code_gen.py           # 代码生成
+│   │   ├── code_review.py        # 代码审查
+│   │   ├── debugger.py           # 调试助手
+│   │   ├── github_tool.py        # GitHub 集成
+│   │   ├── browser_tool.py       # 网页浏览
+│   │   ├── file_tool.py          # 文件操作
+│   │   ├── terminal_tool.py      # 终端操作
+│   │   ├── code_analyzer.py      # 仓库分析
+│   │   └── mapper.py             # 代码地图生成
 │   └── cli/
-│       ├── interactive.py, commands.py
-├── skills/                      # 用户可扩展 skills
-├── mcp_configs/                  # 用户可配置 MCP
-├── logs/                         # 对话日志
-├── tests/                        # 710 tests
-└── doc/
-    └── architecture.md           # 架构文档
+│       ├── interactive.py        # REPL 主循环
+│       └── commands.py           # 内置命令
+├── skills/                        # 用户可扩展 Skills
+├── mcp_configs/                   # MCP 服务器配置
+├── tests/                         # 723 tests
+└── doc/architecture.md            # 架构文档
 ```
 
 ---
 
-## 🧪 Test Suite
+## 开发
 
 ```bash
-pytest
+pytest tests/ -q      # 运行测试
+ruff check .         # 代码检查
+ruff format .        # 格式化
+mypy src/            # 类型检查
 ```
 
 ---
 
-## 📚 Documentation
+## 技术栈
 
-- **[Architecture](doc/architecture.md)** — 系统架构详解
-- **[Evolution Log](.evolution/log.md)** — 自我进化记录
-
----
-
-## 🏗️ Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| **Language** | Python 3.11+ |
-| **LLM** | MiniMax-M2.7 (Anthropic-compatible API) |
-| **Agent** | Custom async orchestration |
-| **Logging** | structlog (structured logging) |
-| **Memory** | SQLite + in-memory (LongTermMemory + SessionMemory) |
-| **Config** | Pydantic + YAML + python-dotenv |
-| **Testing** | pytest + pytest-asyncio |
-| **Linting** | ruff |
-| **Type Check** | mypy |
+| 层次 | 技术 |
+|------|------|
+| 语言 | Python 3.11+ |
+| LLM | MiniMax-M2.7（Anthropic 兼容 API） |
+| 日志 | structlog |
+| 配置 | Pydantic + YAML + python-dotenv |
+| 测试 | pytest + pytest-asyncio |
+| 代码检查 | ruff + mypy |
 
 ---
 
-## 📄 License
+## License
 
-MIT License
+MIT

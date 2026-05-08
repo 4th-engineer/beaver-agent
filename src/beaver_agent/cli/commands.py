@@ -10,6 +10,7 @@ from beaver_agent.core.config import BeaverConfig, load_config
 from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.tools.browser_tool import BrowserTool
 from beaver_agent.tools.code_analyzer import analyze_repository
+from beaver_agent.tools.mapper import generate
 
 
 logger = structlog.get_logger()
@@ -141,6 +142,20 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
             console.print(f"[red]截图失败:[/red] {e}")
         return True
 
+    # Map / code index
+    if cmd == "/map":
+        try:
+            result = generate(Path.cwd())
+            console.print(
+                f"[green]✓[/green] 解析 {result['parsed_files']}/{result['total_files']} 个 Python 文件"
+            )
+            console.print(f"[green]✓[/green] 找到 {result['entry_points']} 个入口点")
+            console.print(f"[green]✓[/green] 输出目录: {result['output_dir']}")
+        except Exception as e:
+            logger.error("map_command_failed", exc_info=e)
+            console.print(f"[red]代码地图生成失败:[/red] {e}")
+        return True
+
     # Unknown command
     console.print(f"[red]未知命令:[/red] {cmd}\n输入 [green]/help[/green] 查看可用命令")
     return True
@@ -169,6 +184,7 @@ def print_help() -> None:
 | `/analyze` | 分析代码仓库结构 |
 | `/browse <url>` | 打开网页并获取内容 |
 | `/screenshot` | 截取当前页面截图 |
+| `/map` | 生成代码地图索引 |
 
 ## 功能
 - **代码生成**: 描述你想要的功能，我帮你写代码
@@ -184,6 +200,7 @@ def print_help() -> None:
 ```
 """
     from rich.markdown import Markdown
+
     console.print(Markdown(help_text))
 
 
@@ -219,7 +236,7 @@ def show_status(agent: BeaverAgent) -> None:
 
 def chat_command(config: BeaverConfig, query: str) -> None:
     """Execute a single chat query and exit.
-    
+
     Args:
         config: The Beaver configuration object
         query: The user's query string to process
@@ -231,7 +248,7 @@ def chat_command(config: BeaverConfig, query: str) -> None:
 
 def model_command(show: bool) -> None:
     """Display or manage the current LLM model.
-    
+
     Args:
         show: If True, display current model information
     """

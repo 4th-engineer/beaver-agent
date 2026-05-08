@@ -15,8 +15,12 @@ class TerminalTool:
 
     # Commands that are blocked for security
     BLOCKED_COMMANDS = [
-        "rm -rf /", "rm -rf ~", ":(){ :|:& };:",  # Dangerous commands
-        "mkfs", "dd if=", "> /dev/sd",  # Disk operations
+        "rm -rf /",
+        "rm -rf ~",
+        ":(){ :|:& };:",  # Dangerous commands
+        "mkfs",
+        "dd if=",
+        "> /dev/sd",  # Disk operations
     ]
 
     def __init__(self, config):
@@ -30,11 +34,7 @@ class TerminalTool:
         self.config = config
 
     def execute(
-        self,
-        command: str,
-        cwd: Optional[str] = None,
-        timeout: int = 60,
-        shell: bool = True
+        self, command: str, cwd: Optional[str] = None, timeout: int = 60, shell: bool = True
     ) -> str:
         """Execute a terminal command.
 
@@ -70,12 +70,7 @@ class TerminalTool:
             logger.info("executing_command", command=command, cwd=cwd)
 
             result = subprocess.run(
-                command,
-                shell=shell,
-                cwd=cwd,
-                capture_output=True,
-                text=True,
-                timeout=timeout
+                command, shell=shell, cwd=cwd, capture_output=True, text=True, timeout=timeout
             )
 
             output = []
@@ -161,10 +156,13 @@ class TerminalTool:
         if system == "windows":
             try:
                 result = subprocess.run(
-                    ["powershell", "-Command",
-                     "Get-WinEvent -LogName System -MaxEvents 50 | "
-                     "Where-Object {$_.LevelDisplayName -eq 'Error'} | "
-                     "Format-List TimeCreated,Message"],
+                    [
+                        "powershell",
+                        "-Command",
+                        "Get-WinEvent -LogName System -MaxEvents 50 | "
+                        "Where-Object {$_.LevelDisplayName -eq 'Error'} | "
+                        "Format-List TimeCreated,Message",
+                    ],
                     capture_output=True,
                     text=True,
                     timeout=10,
@@ -185,8 +183,11 @@ class TerminalTool:
                 if os.path.isdir(path):
                     try:
                         log_files_in_dir = sorted(
-                            [os.path.join(path, f) for f in os.listdir(path)
-                             if f.endswith(".log") or "error" in f.lower()],
+                            [
+                                os.path.join(path, f)
+                                for f in os.listdir(path)
+                                if f.endswith(".log") or "error" in f.lower()
+                            ],
                             key=os.path.getmtime,
                             reverse=True,
                         )[:3]
@@ -224,12 +225,14 @@ class TerminalTool:
             or an empty string if no errors are found or on PermissionError.
         """
         import os
+
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as f:
                 all_lines = f.readlines()
             recent = all_lines[-lines:] if len(all_lines) > lines else all_lines
             errors = [
-                l for l in recent
+                l
+                for l in recent
                 if "error" in l.lower() or "exception" in l.lower() or "fail" in l.lower()
             ]
             if errors:

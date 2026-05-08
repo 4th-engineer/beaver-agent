@@ -95,11 +95,16 @@ class TestExecute:
         result = terminal_tool.execute("echo test", timeout=5)
         assert "test" in result
 
-    def test_execute_timeout_expired_exception_returns_timeout_message(self, terminal_tool, mock_config):
+    def test_execute_timeout_expired_exception_returns_timeout_message(
+        self, terminal_tool, mock_config
+    ):
         """Test that subprocess.TimeoutExpired is caught and returns timeout message"""
         import subprocess
+
         # Patch subprocess.run to raise TimeoutExpired
-        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired(cmd="sleep 10", timeout=1)):
+        with patch(
+            "subprocess.run", side_effect=subprocess.TimeoutExpired(cmd="sleep 10", timeout=1)
+        ):
             result = terminal_tool.execute("sleep 10", timeout=1)
             assert "timed out" in result.lower()
             assert "1" in result  # timeout value in message

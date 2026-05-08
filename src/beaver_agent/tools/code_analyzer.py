@@ -199,13 +199,11 @@ class CodeAnalyzer:
                 # Find methods in this class
                 methods = self._find_class_methods(content, i)
 
-                classes.append(ClassInfo(
-                    name=name,
-                    line=i + 1,
-                    docstring=docstring,
-                    methods=methods,
-                    bases=bases
-                ))
+                classes.append(
+                    ClassInfo(
+                        name=name, line=i + 1, docstring=docstring, methods=methods, bases=bases
+                    )
+                )
 
         return classes
 
@@ -231,13 +229,15 @@ class CodeAnalyzer:
                     func_body = self._get_function_body(content, i)
                     calls = self._find_calls(func_body)
 
-                    functions.append(FunctionInfo(
-                        name=name,
-                        line=i + 1,
-                        docstring=docstring,
-                        calls=calls,
-                        decorators=decorators
-                    ))
+                    functions.append(
+                        FunctionInfo(
+                            name=name,
+                            line=i + 1,
+                            docstring=docstring,
+                            calls=calls,
+                            decorators=decorators,
+                        )
+                    )
             i += 1
 
         return functions
@@ -315,11 +315,40 @@ class CodeAnalyzer:
         # Match function calls like foo() or module.foo()
         matches = self._RE_FUNC_CALLS.findall(body)
         for match in matches:
-            if match[1] not in ("if", "else", "for", "while", "try", "except", "finally",
-                                "with", "as", "in", "is", "not", "and", "or", "True",
-                                "False", "None", "class", "def", "return", "yield",
-                                "raise", "import", "from", "pass", "break", "continue",
-                                "lambda", "assert", "del", "global", "nonlocal"):
+            if match[1] not in (
+                "if",
+                "else",
+                "for",
+                "while",
+                "try",
+                "except",
+                "finally",
+                "with",
+                "as",
+                "in",
+                "is",
+                "not",
+                "and",
+                "or",
+                "True",
+                "False",
+                "None",
+                "class",
+                "def",
+                "return",
+                "yield",
+                "raise",
+                "import",
+                "from",
+                "pass",
+                "break",
+                "continue",
+                "lambda",
+                "assert",
+                "del",
+                "global",
+                "nonlocal",
+            ):
                 calls.append(f"{match[0]}.{match[1]}" if match[0] else match[1])
         return list(set(calls))
 
@@ -389,7 +418,9 @@ class CodeAnalyzer:
         total_classes = sum(len(m.classes) for m in self.modules.values())
         total_functions = sum(len(m.functions) for m in self.modules.values())
 
-        lines.append(f"📊 Summary: {total_modules} modules | {total_classes} classes | {total_functions} functions")
+        lines.append(
+            f"📊 Summary: {total_modules} modules | {total_classes} classes | {total_functions} functions"
+        )
         lines.append("")
 
         # Sort modules
@@ -411,7 +442,7 @@ class CodeAnalyzer:
 
         def print_tree(items: List[str], prefix: str = "", is_last: bool = True) -> None:
             """Recursively build ASCII tree lines for module hierarchy display.
-            
+
             Args:
                 items: Module names to display at this level.
                 prefix: Prefix string for indentation (tree branches).
@@ -434,10 +465,18 @@ class CodeAnalyzer:
                     for j, cls in enumerate(module.classes):
                         cls_connector = "└── " if j == len(module.classes) - 1 else "├── "
                         cls_prefix = prefix + ("    " if is_last_item else "│   ")
-                        methods_str = f"({', '.join(cls.methods[:3])}{'...' if len(cls.methods) > 3 else ''})" if cls.methods else ""
+                        methods_str = (
+                            f"({', '.join(cls.methods[:3])}{'...' if len(cls.methods) > 3 else ''})"
+                            if cls.methods
+                            else ""
+                        )
                         bases_str = f" ← {', '.join(cls.bases)}" if cls.bases else ""
                         lines.append(f"{cls_prefix}{cls_connector}📦 {cls.name}{bases_str}")
-                        lines.append(f"{cls_prefix}    └─ methods: {', '.join(cls.methods)}" if cls.methods else f"{cls_prefix}    └─ methods: (none)")
+                        lines.append(
+                            f"{cls_prefix}    └─ methods: {', '.join(cls.methods)}"
+                            if cls.methods
+                            else f"{cls_prefix}    └─ methods: (none)"
+                        )
 
                 # Show functions
                 if module.functions:
@@ -446,7 +485,9 @@ class CodeAnalyzer:
                     for func in module.functions[:5]:  # Limit to 5
                         lines.append(f"{prefix}{func_indent}   └─ {func.name}()")
                     if len(module.functions) > 5:
-                        lines.append(f"{prefix}{func_indent}   └─ ... and {len(module.functions) - 5} more")
+                        lines.append(
+                            f"{prefix}{func_indent}   └─ ... and {len(module.functions) - 5} more"
+                        )
 
         # Print each directory
         for dir_name, modules in sorted(dirs.items()):
@@ -543,6 +584,3 @@ def analyze_repository(root_path: str) -> str:
     analyzer = CodeAnalyzer(root_path)
     analyzer.analyze()
     return analyzer.generate_tree()
-
-
-

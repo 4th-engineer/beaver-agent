@@ -50,6 +50,8 @@ class BrowserResult:
     success: bool
     content: Any = None
     message: str = ""
+
+
 AGENT_BROWSER_BIN = None  # Resolved on first use via _resolve_browser_binary()
 
 
@@ -96,8 +98,8 @@ def _resolve_browser_binary() -> Optional[str]:
     if system == "darwin":
         # macOS: Homebrew node, nvm, or standard install
         search_paths = [
-            Path("/opt/homebrew/bin/agent-browser"),        # Apple Silicon Homebrew
-            Path("/usr/local/bin/agent-browser"),            # Intel Homebrew / standard
+            Path("/opt/homebrew/bin/agent-browser"),  # Apple Silicon Homebrew
+            Path("/usr/local/bin/agent-browser"),  # Intel Homebrew / standard
             Path.home() / ".nvm/versions/node/*/bin/agent-browser",
             Path.home() / ".local/bin/agent-browser",
             Path.home() / ".npm-global/bin/agent-browser",
@@ -111,7 +113,9 @@ def _resolve_browser_binary() -> Optional[str]:
         ]
     elif system == "windows":
         search_paths = [
-            Path(os.environ.get("PROGRAMFILES", "C:/Program Files")) / "nodejs" / "agent-browser.cmd",
+            Path(os.environ.get("PROGRAMFILES", "C:/Program Files"))
+            / "nodejs"
+            / "agent-browser.cmd",
             Path(os.environ.get("APPDATA", "")) / "npm" / "agent-browser.cmd",
         ]
     else:
@@ -149,10 +153,7 @@ def _validate_browser_binary() -> Optional[str]:
         AGENT_BROWSER_BIN = _resolve_browser_binary()
 
     if not AGENT_BROWSER_BIN:
-        return (
-            "agent-browser not found. "
-            "Install with: npm install -g @agent-browser/cli"
-        )
+        return "agent-browser not found. Install with: npm install -g @agent-browser/cli"
     if not Path(AGENT_BROWSER_BIN).exists():
         return (
             f"agent-browser not found at {AGENT_BROWSER_BIN}. "
@@ -185,7 +186,9 @@ def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
         if result.returncode == 0:
             return BrowserResult(success=True, content=result.stdout, message=result.stdout.strip())
         else:
-            return BrowserResult(success=False, message=result.stderr.strip() or result.stdout.strip())
+            return BrowserResult(
+                success=False, message=result.stderr.strip() or result.stdout.strip()
+            )
     except subprocess.TimeoutExpired:
         return BrowserResult(success=False, message=f"Command timed out after {timeout}s")
     except Exception as e:
@@ -241,7 +244,9 @@ def snapshot(interactive_only: bool = True, compact: bool = True, depth: int = 1
     return _run_browser_cmd(cmd)
 
 
-def screenshot(path: Optional[str] = None, full_page: bool = False, annotate: bool = False) -> BrowserResult:
+def screenshot(
+    path: Optional[str] = None, full_page: bool = False, annotate: bool = False
+) -> BrowserResult:
     """Take screenshot of current page.
 
     Args:
@@ -545,15 +550,15 @@ def close() -> BrowserResult:
 
 def fetch_content(url: str, timeout: int = 30) -> Dict[str, Any]:
     """Fetch URL and return structured content including title, snapshot, and page state.
-    
+
     Args:
         url: The URL to navigate to and fetch content from.
         timeout: Maximum time in seconds to wait for page load (default: 30).
-    
+
     Returns:
         Dict with keys: success (bool), url (str), title (str), snapshot (str), message (str).
         On failure, includes 'error' key instead of content fields.
-    
+
     Example:
         >>> result = fetch_content("https://example.com")
         >>> if result["success"]:
@@ -577,24 +582,26 @@ def fetch_content(url: str, timeout: int = 30) -> Dict[str, Any]:
         "url": url_result.content or url,
         "title": title_result.content,
         "snapshot": snapshot_result.content,
-        "message": "Page fetched successfully"
+        "message": "Page fetched successfully",
     }
 
 
-def take_screenshot(url: str, output_path: str = None, full_page: bool = False, timeout: int = 30) -> Dict[str, Any]:
+def take_screenshot(
+    url: str, output_path: str = None, full_page: bool = False, timeout: int = 30
+) -> Dict[str, Any]:
     """Navigate to URL and take a screenshot.
-    
+
     Combines navigation, waiting for page load, and screenshot capture into a single operation.
-    
+
     Args:
         url: The URL to navigate to.
         output_path: File path to save screenshot. If None, a temp file is created.
         full_page: If True, capture the entire scrollable page (default: False).
         timeout: Maximum time in seconds to wait for navigation (default: 30).
-    
+
     Returns:
         Dict with keys: success (bool), path (str), url (str), error (str if failed).
-    
+
     Example:
         >>> result = take_screenshot("https://example.com", "/tmp/ss.png")
         >>> if result["success"]:
@@ -618,28 +625,28 @@ def take_screenshot(url: str, output_path: str = None, full_page: bool = False, 
         "success": ss_result.success,
         "path": ss_result.content if ss_result.success else None,
         "error": ss_result.error if not ss_result.success else None,
-        "url": url
+        "url": url,
     }
 
 
 # Convenience class for unified interface
 class BrowserTool:
     """Browser automation tool providing a high-level interface for web scraping and automation.
-    
+
     This class wraps the module-level browser functions (navigate, snapshot, click, etc.)
     into a stateful interface that tracks current_url and last_snapshot across operations.
-    
+
     Attributes:
         current_url: The URL of the currently open page, or None if no page is open.
         last_snapshot: The most recent accessibility tree snapshot, or None.
-    
+
     Example:
         >>> tool = BrowserTool()
         >>> tool.open("https://example.com")
         >>> elements = tool.interactive()
         >>> tool.click("@e5")
         >>> info = tool.get_page_info()
-    
+
     Note:
         All methods that perform actions (open, click, fill, scroll) automatically
         refresh the last_snapshot, so subsequent calls to interactive() or snapshot()
@@ -783,7 +790,4 @@ class BrowserTool:
         """
         title = get_title()
         url = get_url()
-        return {
-            "title": title.content or "",
-            "url": url.content or ""
-        }
+        return {"title": title.content or "", "url": url.content or ""}

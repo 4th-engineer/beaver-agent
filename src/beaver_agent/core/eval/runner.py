@@ -118,14 +118,16 @@ class Runner:
                     results.append(result)
                 except TimeoutError:
                     logger.warning("task_timeout", task_id=task.id, timeout_s=self.timeout)
-                    results.append(TaskResult(
-                        task_id=task.id,
-                        success=False,
-                        prediction="",
-                        score=0.0,
-                        error=f"Task timed out after {self.timeout}s",
-                        duration_ms=self.timeout * 1000,
-                    ))
+                    results.append(
+                        TaskResult(
+                            task_id=task.id,
+                            success=False,
+                            prediction="",
+                            score=0.0,
+                            error=f"Task timed out after {self.timeout}s",
+                            duration_ms=self.timeout * 1000,
+                        )
+                    )
 
         logger.info("benchmark_completed", benchmark=benchmark_name, result_count=len(results))
         return results

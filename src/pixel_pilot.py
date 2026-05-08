@@ -36,6 +36,7 @@ __all__ = [
 
 try:
     import structlog
+
     _has_structlog = True
 except ImportError:
     _has_structlog = False
@@ -184,9 +185,13 @@ def _post_event(event: Dict[str, Any]) -> bool:
             return resp.status == 200
     except Exception as e:
         if _has_structlog:
-            _logger.warning("post_event_failed", url=_viewer_url, event_type=event.get("type"), exc_info=e)
+            _logger.warning(
+                "post_event_failed", url=_viewer_url, event_type=event.get("type"), exc_info=e
+            )
         elif _verbose:
-            print(f"[PixelPilot] ⚠️  Failed to post event ({event.get('type')}) to {_viewer_url}: {e}")
+            print(
+                f"[PixelPilot] ⚠️  Failed to post event ({event.get('type')}) to {_viewer_url}: {e}"
+            )
         return False
 
 
@@ -246,16 +251,18 @@ def _patch_tool_router(verbose: bool = True) -> None:
 
             # 发送 tool 事件（工具开始）
             if _enabled:
-                _post_event({
-                    "type": "tool",
-                    "agent": agent_name,
-                    "tool": _get_tool_display_name(tool_name, action),
-                    "action": action,
-                    "file": str(file) if file else "",
-                    "message": f"{_get_tool_display_name(tool_name, action)}: {action}",
-                    "status": "active",
-                    "timestamp": datetime.now().isoformat(),
-                })
+                _post_event(
+                    {
+                        "type": "tool",
+                        "agent": agent_name,
+                        "tool": _get_tool_display_name(tool_name, action),
+                        "action": action,
+                        "file": str(file) if file else "",
+                        "message": f"{_get_tool_display_name(tool_name, action)}: {action}",
+                        "status": "active",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
 
             # 调用原始方法
             result = original_route(self, task)
@@ -263,22 +270,25 @@ def _patch_tool_router(verbose: bool = True) -> None:
             # 发送 tool_done 事件（工具完成）
             if _enabled:
                 success = result.get("success", False)
-                _post_event({
-                    "type": "tool_done" if success else "error",
-                    "agent": agent_name,
-                    "tool": _get_tool_display_name(tool_name, action),
-                    "action": action,
-                    "file": str(file) if file else "",
-                    "message": f"{_get_tool_display_name(tool_name, action)}: {action} "
-                               + ("✅" if success else "❌"),
-                    "status": "idle" if success else "error",
-                    "timestamp": datetime.now().isoformat(),
-                })
+                _post_event(
+                    {
+                        "type": "tool_done" if success else "error",
+                        "agent": agent_name,
+                        "tool": _get_tool_display_name(tool_name, action),
+                        "action": action,
+                        "file": str(file) if file else "",
+                        "message": f"{_get_tool_display_name(tool_name, action)}: {action} "
+                        + ("✅" if success else "❌"),
+                        "status": "idle" if success else "error",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                )
 
             return result
 
         # 如果有 route_batch 也一并注入
         if original_route_batch:
+
             @functools.wraps(original_route_batch)
             def patched_route_batch(self, tasks):
                 for task in tasks:

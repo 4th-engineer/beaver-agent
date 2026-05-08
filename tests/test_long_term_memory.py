@@ -245,9 +245,7 @@ class TestMemorySearch:
 
     def test_search_by_tags(self, populated_memory):
         """Test search filters by tags."""
-        results = populated_memory.search(
-            MemoryQuery(query="pytest", tags=["testing"])
-        )
+        results = populated_memory.search(MemoryQuery(query="pytest", tags=["testing"]))
         assert len(results) >= 1
 
 

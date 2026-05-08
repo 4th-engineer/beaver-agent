@@ -96,7 +96,9 @@ class TestRunRepl:
                         # Exception should have been logged
                         mock_logger.error.assert_called_once()
                         call_args = mock_logger.error.call_args
-                        assert "repl_error" in call_args[0] or call_args[1].get("exc_info") is not None
+                        assert (
+                            "repl_error" in call_args[0] or call_args[1].get("exc_info") is not None
+                        )
 
     def test_repl_debug_mode_prints_traceback(self, mock_config):
         """Test REPL in debug mode prints full traceback for unhandled exceptions."""
@@ -168,8 +170,7 @@ class TestPrintResponse:
                 _print_response("Hello\n```python\nprint('hi')\n```")
                 mock_console.print.assert_called_once()
                 MockMarkdown.assert_called_once_with(
-                    "Hello\n```python\nprint('hi')\n```",
-                    code_theme="monokai"
+                    "Hello\n```python\nprint('hi')\n```", code_theme="monokai"
                 )
                 call_args = mock_console.print.call_args[0]
                 assert call_args[0] is mock_markdown_instance

@@ -58,9 +58,7 @@ class TestConversationLogger:
         logger.log_llm_request(messages, model="test-model", provider="test")
 
         logger.log_llm_response(
-            content="Hi there!",
-            model="test-model",
-            usage={"input_tokens": 10, "output_tokens": 5}
+            content="Hi there!", model="test-model", usage={"input_tokens": 10, "output_tokens": 5}
         )
 
         log_files = list(temp_log_dir.glob("conversation_*_test-llm.jsonl"))
@@ -84,7 +82,7 @@ class TestConversationLogger:
             action="read_file",
             params={"path": "/tmp/test.txt"},
             result={"success": True, "data": "file content"},
-            success=True
+            success=True,
         )
 
         log_files = list(temp_log_dir.glob("conversation_*_test-tool.jsonl"))
@@ -99,11 +97,7 @@ class TestConversationLogger:
     def test_log_skill_invocation(self, logger, temp_log_dir):
         """Test logging skill invocation"""
         logger.start_session("test-skill")
-        logger.log_skill_invocation(
-            skill_name="mcp-config",
-            trigger="配置",
-            matched=True
-        )
+        logger.log_skill_invocation(skill_name="mcp-config", trigger="配置", matched=True)
 
         log_files = list(temp_log_dir.glob("conversation_*_test-skill.jsonl"))
         with open(log_files[0]) as f:
@@ -167,6 +161,7 @@ class TestConversationLogger:
     def test_list_log_files_sorted_newest_first(self, temp_log_dir):
         """Test that list_log_files returns files sorted newest-first by timestamp"""
         import time
+
         # Create sessions with enough delay to ensure different timestamp filenames
         # (timestamp resolution is 1 second)
         logger1 = ConversationLogger(log_dir=str(temp_log_dir))

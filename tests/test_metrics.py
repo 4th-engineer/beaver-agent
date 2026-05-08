@@ -101,11 +101,13 @@ class TestCodeExecutionScorerEdgeCases:
 
     def test_multiple_test_cases_partial_pass(self):
         """Score reflects partial pass rate."""
-        scorer = CodeExecutionScorer([
-            {"input": "x = 2", "expected": "2"},
-            {"input": "x = 3", "expected": "3"},
-            {"input": "x = 5", "expected": "99"},  # intentionally wrong
-        ])
+        scorer = CodeExecutionScorer(
+            [
+                {"input": "x = 2", "expected": "2"},
+                {"input": "x = 3", "expected": "3"},
+                {"input": "x = 5", "expected": "99"},  # intentionally wrong
+            ]
+        )
         # code sets result=2, so only first test case passes
         code = "x = 2\nresult = x"
         score, details = scorer.score(code, "")

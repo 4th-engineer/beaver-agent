@@ -63,7 +63,7 @@ class SessionMemory:
 
         # Trim if exceeds max
         if len(self.messages) > self.max_history:
-            self.messages = self.messages[-self.max_history:]
+            self.messages = self.messages[-self.max_history :]
 
     def get_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """Get conversation history.

@@ -85,11 +85,13 @@ class LoggingConfig(BaseModel):
 
 class FileToolConfig(BaseModel):
     """Configuration for file tool security settings"""
+
     root_path: Path = Field(default_factory=Path.cwd)
 
 
 class MCPServerConfig(BaseModel):
     """Configuration for a single MCP server"""
+
     command: Optional[str] = None
     args: list = Field(default_factory=list)
     env: dict = Field(default_factory=dict)
@@ -101,6 +103,7 @@ class MCPServerConfig(BaseModel):
 
 class MCPConfig(BaseModel):
     """Configuration for MCP servers"""
+
     servers: dict[str, MCPServerConfig] = Field(default_factory=dict)
 
     # Support both "servers" (model) and "mcp_servers" (YAML key) names
@@ -178,8 +181,7 @@ def load_config(debug: bool = False) -> BeaverConfig:
     if os.environ.get("MINIMAX_MODEL_NAME"):
         config_data["model"]["name"] = os.environ["MINIMAX_MODEL_NAME"]
     config_data["github"]["token"] = os.environ.get(
-        "GITHUB_TOKEN",
-        config_data.get("github", {}).get("token")
+        "GITHUB_TOKEN", config_data.get("github", {}).get("token")
     )
 
     # Apply debug mode

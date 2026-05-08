@@ -165,11 +165,9 @@ class TestMCPConfig:
     def test_mcp_servers_alias_handling(self):
         """The handle_mcp_servers_key validator accepts raw dict regardless of YAML key name."""
         # Simulate YAML loaded with 'mcp_servers' key (the alias) instead of 'servers'
-        cfg = MCPConfig.model_validate({
-            "servers": {
-                "files": {"command": "npx", "args": ["-y", "server"]}
-            }
-        })
+        cfg = MCPConfig.model_validate(
+            {"servers": {"files": {"command": "npx", "args": ["-y", "server"]}}}
+        )
         assert "files" in cfg.servers
         assert cfg.servers["files"].command == "npx"
 
@@ -187,9 +185,7 @@ class TestBeaverConfig:
 
     def test_partial_override(self):
         """Partial config dict should fill in remaining defaults."""
-        cfg = BeaverConfig.model_validate({
-            "app": {"name": "Custom", "debug": True}
-        })
+        cfg = BeaverConfig.model_validate({"app": {"name": "Custom", "debug": True}})
         assert cfg.app.name == "Custom"
         assert cfg.app.debug is True
         assert cfg.app.version == "0.1.0"  # default

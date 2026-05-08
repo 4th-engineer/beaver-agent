@@ -19,8 +19,14 @@ __all__ = ["MCPTool", "MCPManager"]
 class MCPTool:
     """Represents a tool from an MCP server"""
 
-    def __init__(self, name: str, server_name: str, description: str,
-                 input_schema: dict, mcp_manager: "MCPManager"):
+    def __init__(
+        self,
+        name: str,
+        server_name: str,
+        description: str,
+        input_schema: dict,
+        mcp_manager: "MCPManager",
+    ):
         """Initialize an MCP tool wrapper.
 
         Args:
@@ -57,9 +63,7 @@ class MCPTool:
 
     async def call(self, **kwargs) -> dict:
         """Call this MCP tool with the given arguments"""
-        return await self.mcp_manager.call_tool(
-            self.server_name, self.name, kwargs
-        )
+        return await self.mcp_manager.call_tool(self.server_name, self.name, kwargs)
 
 
 class MCPManager:
@@ -81,7 +85,7 @@ class MCPManager:
             mcp_configs_dir: Optional directory containing MCP config YAML files.
         """
         self.config = config
-        self.config_root = config.model_fields['mcp'].default if hasattr(config, 'mcp') else None
+        self.config_root = config.model_fields["mcp"].default if hasattr(config, "mcp") else None
         self._mcp_configs_dir = mcp_configs_dir
         self._servers: dict[str, Any] = {}  # server_name -> process or connection
         self._tools: dict[str, MCPTool] = {}  # full_tool_name -> MCPTool
@@ -109,8 +113,9 @@ class MCPManager:
         project_root = Path(__file__).parent.parent.parent
         mcp_configs_path = project_root / "mcp_configs"
 
-        if not hasattr(self.config, 'mcp') or not self.config.mcp:
+        if not hasattr(self.config, "mcp") or not self.config.mcp:
             from beaver_agent.core.config import MCPConfig
+
             self.config.mcp = MCPConfig()
 
         if mcp_configs_path.exists() and mcp_configs_path.is_dir():
@@ -125,8 +130,7 @@ class MCPManager:
             try:
                 await self._connect_server(server_name, server_config)
             except Exception as e:
-                logger.warning("mcp_server_connect_failed",
-                               server=server_name, exc_info=e)
+                logger.warning("mcp_server_connect_failed", server=server_name, exc_info=e)
 
     def _load_configs_from_directory(self, configs_path: Path) -> None:
         """Load all MCP server configs from a directory of YAML files"""
@@ -142,11 +146,9 @@ class MCPManager:
                 self.config.mcp.servers[server_name] = server_config
                 logger.debug("mcp_config_loaded", server=server_name, file=str(config_file))
             except Exception as e:
-                logger.warning("mcp_config_load_failed",
-                             file=str(config_file), exc_info=e)
+                logger.warning("mcp_config_load_failed", file=str(config_file), exc_info=e)
 
-    async def _connect_server(self, server_name: str,
-                             server_config: MCPServerConfig) -> None:
+    async def _connect_server(self, server_name: str, server_config: MCPServerConfig) -> None:
         """Connect to a single MCP server and establish the transport.
 
         Routes to either HTTP or stdio transport based on server_config.
@@ -168,16 +170,13 @@ class MCPManager:
         else:
             raise ValueError(f"MCP server {server_name} must have either url or command")
 
-    async def _connect_http(self, server_name: str,
-                           server_config: MCPServerConfig) -> None:
+    async def _connect_http(self, server_name: str, server_config: MCPServerConfig) -> None:
         """Connect to an HTTP-based MCP server"""
         # HTTP transport implementation
         # For now, log that it's configured
-        logger.info("mcp_http_server_configured",
-                   server=server_name, url=server_config.url)
+        logger.info("mcp_http_server_configured", server=server_name, url=server_config.url)
 
-    async def _connect_stdio(self, server_name: str,
-                            server_config: MCPServerConfig) -> None:
+    async def _connect_stdio(self, server_name: str, server_config: MCPServerConfig) -> None:
         """Connect to a stdio-based MCP server"""
         try:
             # Build environment (filtered baseline + user-specified)
@@ -203,11 +202,8 @@ class MCPManager:
                 "params": {
                     "protocolVersion": "2024-11-05",
                     "capabilities": {},
-                    "clientInfo": {
-                        "name": "beaver-agent",
-                        "version": "0.1.0"
-                    }
-                }
+                    "clientInfo": {"name": "beaver-agent", "version": "0.1.0"},
+                },
             }
 
             await self._send_request(server_name, init_request)
@@ -222,8 +218,7 @@ class MCPManager:
             logger.info("mcp_stdio_server_connected", server=server_name)
 
         except Exception as e:
-            logger.error("mcp_stdio_connect_failed",
-                        server=server_name, exc_info=e)
+            logger.error("mcp_stdio_connect_failed", server=server_name, exc_info=e)
             raise
 
     def _build_env(self, user_env: dict) -> dict:
@@ -250,8 +245,8 @@ class MCPManager:
             "TERM": os.environ.get("TERM", "xterm-256color"),
             "SHELL": os.environ.get("SHELL", default_shell),
             "TMPDIR": os.environ.get("TMPDIR", default_tmpdir),
-            "TEMP": os.environ.get("TEMP", default_tmpdir),   # Windows
-            "TMP": os.environ.get("TMP", default_tmpdir),     # Windows
+            "TEMP": os.environ.get("TEMP", default_tmpdir),  # Windows
+            "TMP": os.environ.get("TMP", default_tmpdir),  # Windows
         }
         baseline.update(user_env)
         return baseline
@@ -279,8 +274,7 @@ class MCPManager:
         process.stdin.write(message.encode())
         await process.stdin.drain()
 
-    async def _send_notification(self, server_name: str,
-                                method: str, params: dict) -> None:
+    async def _send_notification(self, server_name: str, method: str, params: dict) -> None:
         """Send a JSON-RPC notification (no id) to the server.
 
         Notifications are one-way messages that do not expect a response.
@@ -298,11 +292,7 @@ class MCPManager:
         if not process:
             raise RuntimeError(f"Server {server_name} not connected")
 
-        notification = {
-            "jsonrpc": "2.0",
-            "method": method,
-            "params": params
-        }
+        notification = {"jsonrpc": "2.0", "method": method, "params": params}
         message = json.dumps(notification) + "\n"
         process.stdin.write(message.encode())
         await process.stdin.drain()
@@ -345,12 +335,7 @@ class MCPManager:
         Side effects:
             Populates self._tools with discovered MCPTool wrappers.
         """
-        request = {
-            "jsonrpc": "2.0",
-            "id": 2,
-            "method": "tools/list",
-            "params": {}
-        }
+        request = {"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {}}
 
         await self._send_request(server_name, request)
         response = await self._read_response(server_name)
@@ -371,17 +356,13 @@ class MCPManager:
             )
             self._tools[full_name] = mcp_tool
 
-            logger.debug("mcp_tool_discovered",
-                        server=server_name,
-                        tool=tool_name,
-                        full_name=full_name)
+            logger.debug(
+                "mcp_tool_discovered", server=server_name, tool=tool_name, full_name=full_name
+            )
 
-        logger.info("mcp_tools_discovered",
-                   server=server_name,
-                   count=len(tools))
+        logger.info("mcp_tools_discovered", server=server_name, count=len(tools))
 
-    async def call_tool(self, server_name: str,
-                        tool_name: str, arguments: dict) -> dict:
+    async def call_tool(self, server_name: str, tool_name: str, arguments: dict) -> dict:
         """Call a tool on an MCP server and return the result.
 
         Sends a JSON-RPC tools/call request to the specified MCP server,
@@ -410,10 +391,7 @@ class MCPManager:
             "jsonrpc": "2.0",
             "id": 3,
             "method": "tools/call",
-            "params": {
-                "name": tool_name,
-                "arguments": arguments
-            }
+            "params": {"name": tool_name, "arguments": arguments},
         }
 
         await self._send_request(server_name, request)
@@ -440,8 +418,7 @@ class MCPManager:
                 await process.wait()
                 logger.debug("mcp_server_stopped", server=server_name)
             except Exception as e:
-                logger.error("mcp_server_stop_failed",
-                           server=server_name, exc_info=e)
+                logger.error("mcp_server_stop_failed", server=server_name, exc_info=e)
 
         self._server_processes.clear()
         self._tools.clear()

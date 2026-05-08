@@ -194,9 +194,16 @@ class FileTool:
         try:
             path = Path(path).expanduser()
             important_files = [
-                "pyproject.toml", "setup.py", "requirements.txt",
-                "package.json", "Cargo.toml", "go.mod",
-                ".git", "README.md", "src/", "tests/"
+                "pyproject.toml",
+                "setup.py",
+                "requirements.txt",
+                "package.json",
+                "Cargo.toml",
+                "go.mod",
+                ".git",
+                "README.md",
+                "src/",
+                "tests/",
             ]
 
             found = []

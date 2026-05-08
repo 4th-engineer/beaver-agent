@@ -41,30 +41,60 @@ class IntentParser:
 
     INTENT_PATTERNS = {
         "code_generation": [
-            "写", "生成", "创建", "编写", "implement", "write", "generate", "create",
-            "帮我写", "帮我生成", "写一个", "写段代码", "写个函数", "写个类"
+            "写",
+            "生成",
+            "创建",
+            "编写",
+            "implement",
+            "write",
+            "generate",
+            "create",
+            "帮我写",
+            "帮我生成",
+            "写一个",
+            "写段代码",
+            "写个函数",
+            "写个类",
         ],
         "code_review": [
-            "review", "审查", "检查", "分析代码", "看看代码", "review一下",
-            "检查代码", "代码审查", "review 代码"
+            "review",
+            "审查",
+            "检查",
+            "分析代码",
+            "看看代码",
+            "review一下",
+            "检查代码",
+            "代码审查",
+            "review 代码",
         ],
         "debug": [
-            "debug", "调试", "报错", "错误", "exception", "traceback", "修复",
-            "问题", "bug", "出错", "崩溃", "segmentation fault"
+            "debug",
+            "调试",
+            "报错",
+            "错误",
+            "exception",
+            "traceback",
+            "修复",
+            "问题",
+            "bug",
+            "出错",
+            "崩溃",
+            "segmentation fault",
         ],
         "github_operation": [
-            "github", "仓库", "repo", "issue", "pr", "pull request", "创建仓库",
-            "创建issue", "查看pr"
+            "github",
+            "仓库",
+            "repo",
+            "issue",
+            "pr",
+            "pull request",
+            "创建仓库",
+            "创建issue",
+            "查看pr",
         ],
-        "file_operation": [
-            "读取文件", "读取代码", "打开文件", "查看文件", "cat", "read file"
-        ],
-        "terminal_operation": [
-            "运行", "执行", "命令", "跑", "terminal", "run command", "执行命令"
-        ],
-        "skill_invocation": [
-            "/skill"
-        ],
+        "file_operation": ["读取文件", "读取代码", "打开文件", "查看文件", "cat", "read file"],
+        "terminal_operation": ["运行", "执行", "命令", "跑", "terminal", "run command", "执行命令"],
+        "skill_invocation": ["/skill"],
     }
 
     def __init__(self, skill_manager: Optional[SkillManager] = None):
