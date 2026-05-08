@@ -91,7 +91,7 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
     if test_result:
         if _has_structlog:
             _logger.info("connected", url=_viewer_url)
-        elif verbose:
+        elif _verbose:
             print("[PixelPilot] ✅ Connected! Events will be streamed automatically.")
 
         _enabled = True
@@ -100,7 +100,7 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
     else:
         if _has_structlog:
             _logger.warning("server_not_reachable", url=_viewer_url)
-        elif verbose:
+        elif _verbose:
             print("[PixelPilot] ⚠️  Server not reachable, events will be queued locally.")
 
 
