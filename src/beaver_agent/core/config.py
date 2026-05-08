@@ -23,6 +23,8 @@ class AppConfig(BaseModel):
     name: str = "Beaver Agent"
     version: str = "0.1.0"
     debug: bool = False
+    think_mode: bool = False  # Enable chain-of-thought: outputs reasoning before executing
+    self_critique: bool = False  # Enable self-critique: reviews its own output for quality
 
 
 class ModelConfig(BaseModel):

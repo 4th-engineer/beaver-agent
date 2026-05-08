@@ -1,6 +1,7 @@
 """Tests for CLI command functions in commands.py"""
 
 import pytest
+from pathlib import Path
 from unittest.mock import MagicMock, patch
 from typer.testing import CliRunner
 
@@ -12,6 +13,8 @@ from beaver_agent.cli.commands import (
     show_status,
     chat_command,
     model_command,
+    handle_stats_command,
+    handle_self_check_command,
 )
 from rich.markdown import Markdown
 from beaver_agent.cli.interactive import print_welcome, _print_response
@@ -460,3 +463,84 @@ class TestPrintResponse:
                 MockMarkdown.assert_called_once()
                 call_args = mock_console.print.call_args[0]
                 assert call_args[0] is mock_markdown_instance
+
+
+class TestHandleStatsCommand:
+    """Tests for handle_stats_command function."""
+
+    def test_handle_stats_command_success(self, mock_config, capsys):
+        """Test /stats displays project statistics."""
+        from beaver_agent.cli.commands import _print_stats, console
+
+        stats_data = {
+            "total_files": 42,
+            "python_files": 20,
+            "src_files": 15,
+            "test_files": 5,
+            "test_count": 736,
+            "total_loc": 15000,
+            "languages": {"Python": 20, "YAML": 5, "Markdown": 10},
+            "branch": "main",
+            "last_commit": "abc1234 Add new feature",
+        }
+        with patch("beaver_agent.cli.commands._get_project_stats") as mock_stats:
+            mock_stats.return_value = stats_data
+            handle_stats_command(Path("/fake/project"))
+            captured = capsys.readouterr()
+            assert "项目统计" in captured.out
+            assert "42" in captured.out
+            assert "736" in captured.out
+            assert "15,000" in captured.out
+            assert "main" in captured.out
+
+    def test_handle_stats_command_error_handling(self, mock_config, capsys):
+        """Test /stats handles _print_stats exceptions gracefully."""
+        with patch("beaver_agent.cli.commands._print_stats") as mock_stats:
+            mock_stats.side_effect = RuntimeError("stats unavailable")
+            handle_stats_command(Path("/fake/project"))
+            captured = capsys.readouterr()
+            assert "统计失败" in captured.out
+            assert "RuntimeError" in captured.out or "stats unavailable" in captured.out
+
+
+class TestHandleSelfCheckCommand:
+    """Tests for handle_self_check_command function."""
+
+    def test_handle_self_check_command_success(self, mock_config, capsys):
+        """Test /self-check runs health checks successfully."""
+        from beaver_agent.cli.commands import _run_self_check
+
+        with patch("beaver_agent.cli.commands._run_self_check") as mock_check:
+            handle_self_check_command(Path("/fake/project"))
+            mock_check.assert_called_once_with(Path("/fake/project"))
+
+    def test_handle_self_check_command_error_handling(self, mock_config, capsys):
+        """Test /self-check handles _run_self_check exceptions gracefully."""
+        with patch("beaver_agent.cli.commands._run_self_check") as mock_check:
+            mock_check.side_effect = RuntimeError("check failed")
+            handle_self_check_command(Path("/fake/project"))
+            captured = capsys.readouterr()
+            assert "自检失败" in captured.out
+            assert "RuntimeError" in captured.out or "check failed" in captured.out
+
+
+class TestHandleCommandStatsAndSelfCheck:
+    """Tests for /stats and /self-check via handle_command dispatcher."""
+
+    def test_stats_command_dispatcher(self, mock_config, mock_agent, capsys):
+        """Test handle_command routes /stats to handle_stats_command."""
+        with patch("beaver_agent.cli.commands.handle_stats_command") as mock_stats:
+            with patch("beaver_agent.cli.commands.Path") as MockPath:
+                MockPath.return_value.cwd.return_value = Path("/fake/project")
+                result = handle_command("/stats", mock_config, mock_agent)
+                assert result is True
+                mock_stats.assert_called_once()
+
+    def test_self_check_command_dispatcher(self, mock_config, mock_agent, capsys):
+        """Test handle_command routes /self-check to handle_self_check_command."""
+        with patch("beaver_agent.cli.commands.handle_self_check_command") as mock_check:
+            with patch("beaver_agent.cli.commands.Path") as MockPath:
+                MockPath.return_value.cwd.return_value = Path("/fake/project")
+                result = handle_command("/self-check", mock_config, mock_agent)
+                assert result is True
+                mock_check.assert_called_once()
