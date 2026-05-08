@@ -1,7 +1,11 @@
 """Browser Tool - Web scraping, screenshots, and browser automation using agent-browser CLI"""
 
+import os
+import platform
+import shutil
 import subprocess
 import tempfile
+from functools import lru_cache
 from pathlib import Path
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
@@ -52,21 +56,16 @@ class BrowserResult:
     message: str = ""
 
 
-AGENT_BROWSER_BIN = None  # Resolved on first use via _resolve_browser_binary()
-
-
+@lru_cache(maxsize=1)
 def _resolve_browser_binary() -> Optional[str]:
-    """Locate agent-browser binary, platform-aware.
+    """Locate agent-browser binary, cached after first call.
 
     Searches in order:
     1. AGENT_BROWSER_BIN env var (user override)
     2. npm global bin dir (platform-specific)
     3. Common install locations per platform
+    4. `which` fallback
     """
-    import platform
-    import os
-    import shutil
-
     # 1. User override via environment
     env_path = os.environ.get("AGENT_BROWSER_BIN")
     if env_path and Path(env_path).exists():
@@ -82,24 +81,20 @@ def _resolve_browser_binary() -> Optional[str]:
         )
         if result.returncode == 0:
             global_npm_root = Path(result.stdout.strip())
-            candidate = global_npm_root / "bin" / "agent-browser"
-            if candidate.exists():
-                return str(candidate)
-            # Also check .bin directly (some npm setups)
-            dot_bin = global_npm_root.parent / ".bin" / "agent-browser"
-            if dot_bin.exists():
-                return str(dot_bin)
+            for bin_name in ("agent-browser", "agent-browser.cmd"):
+                for base in (global_npm_root / "bin", global_npm_root.parent / ".bin"):
+                    candidate = base / bin_name
+                    if candidate.exists():
+                        return str(candidate)
     except (subprocess.TimeoutExpired, FileNotFoundError):
         pass
 
     # 3. Platform-specific search paths
     system = platform.system().lower()
-
     if system == "darwin":
-        # macOS: Homebrew node, nvm, or standard install
         search_paths = [
-            Path("/opt/homebrew/bin/agent-browser"),  # Apple Silicon Homebrew
-            Path("/usr/local/bin/agent-browser"),  # Intel Homebrew / standard
+            Path("/opt/homebrew/bin/agent-browser"),
+            Path("/usr/local/bin/agent-browser"),
             Path.home() / ".nvm/versions/node/*/bin/agent-browser",
             Path.home() / ".local/bin/agent-browser",
             Path.home() / ".npm-global/bin/agent-browser",
@@ -113,16 +108,13 @@ def _resolve_browser_binary() -> Optional[str]:
         ]
     elif system == "windows":
         search_paths = [
-            Path(os.environ.get("PROGRAMFILES", "C:/Program Files"))
-            / "nodejs"
-            / "agent-browser.cmd",
+            Path(os.environ.get("PROGRAMFILES", "C:/Program Files")) / "nodejs" / "agent-browser.cmd",
             Path(os.environ.get("APPDATA", "")) / "npm" / "agent-browser.cmd",
         ]
     else:
         search_paths = [Path.home() / ".local/bin" / "agent-browser"]
 
     for path in search_paths:
-        # Handle glob patterns (for nvm versioned paths)
         if "*" in str(path):
             matches = list(path.parent.glob(path.name))
             if matches:
@@ -130,7 +122,7 @@ def _resolve_browser_binary() -> Optional[str]:
         elif path.exists():
             return str(path)
 
-    # 4. Fall back to whatever `which` finds
+    # 4. Fall back to `which`
     try:
         result = subprocess.run(
             ["which", "agent-browser"],
@@ -148,36 +140,22 @@ def _resolve_browser_binary() -> Optional[str]:
 
 def _validate_browser_binary() -> Optional[str]:
     """Check if agent-browser binary exists. Returns error message if not."""
-    global AGENT_BROWSER_BIN
-    if AGENT_BROWSER_BIN is None:
-        AGENT_BROWSER_BIN = _resolve_browser_binary()
+    bin_path = _resolve_browser_binary()
 
-    if not AGENT_BROWSER_BIN:
+    if not bin_path:
         return "agent-browser not found. Install with: npm install -g @agent-browser/cli"
-    if not Path(AGENT_BROWSER_BIN).exists():
-        return (
-            f"agent-browser not found at {AGENT_BROWSER_BIN}. "
-            "Install with: npm install -g @agent-browser/cli"
-        )
+    if not Path(bin_path).exists():
+        return f"agent-browser not found at {bin_path}. Install with: npm install -g @agent-browser/cli"
     return None
 
 
 def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
-    """Run agent-browser command and return result.
-
-    Args:
-        cmd: The command string to execute via agent-browser CLI.
-        timeout: Maximum seconds to wait for command completion (default: 30).
-
-    Returns:
-        BrowserResult with success=True and content=stdout on success,
-        or success=False with error message on failure.
-    """
-    if error := _validate_browser_binary():
-        return BrowserResult(success=False, message=error)
+    """Run agent-browser command and return result."""
+    if err := _validate_browser_binary():
+        return BrowserResult(success=False, message=err)
     try:
         result = subprocess.run(
-            f"{AGENT_BROWSER_BIN} {cmd}",
+            f"{_resolve_browser_binary()} {cmd}",
             shell=True,
             capture_output=True,
             text=True,
@@ -185,10 +163,9 @@ def _run_browser_cmd(cmd: str, timeout: int = 30) -> BrowserResult:
         )
         if result.returncode == 0:
             return BrowserResult(success=True, content=result.stdout, message=result.stdout.strip())
-        else:
-            return BrowserResult(
-                success=False, message=result.stderr.strip() or result.stdout.strip()
-            )
+        return BrowserResult(
+            success=False, message=result.stderr.strip() or result.stdout.strip()
+        )
     except subprocess.TimeoutExpired:
         return BrowserResult(success=False, message=f"Command timed out after {timeout}s")
     except Exception as e:
@@ -267,7 +244,8 @@ def screenshot(
         >>> result = screenshot("/tmp/page.png", full_page=True)
     """
     if path is None:
-        path = tempfile.mktemp(suffix=".png")
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+            path = f.name
 
     cmd = f"screenshot {path}"
     if full_page:
@@ -365,6 +343,11 @@ def click(selector: str) -> BrowserResult:
     return _run_browser_cmd(f"click {selector}")
 
 
+def _escape_shell_arg(text: str) -> str:
+    """Escape a string for safe embedding in a shell command argument."""
+    return text.replace("\\", "\\\\").replace('"', '\\"')
+
+
 def fill(selector: str, text: str) -> BrowserResult:
     """Fill an input field with text.
 
@@ -379,8 +362,7 @@ def fill(selector: str, text: str) -> BrowserResult:
     Example:
         >>> result = fill("input[name='email']", "user@example.com")
     """
-    escaped_text = text.replace('"', '\\"')
-    return _run_browser_cmd(f'fill {selector} "{escaped_text}"')
+    return _run_browser_cmd(f'fill {selector} "{_escape_shell_arg(text)}"')
 
 
 def type_text(selector: str, text: str) -> BrowserResult:
@@ -397,8 +379,7 @@ def type_text(selector: str, text: str) -> BrowserResult:
     Example:
         >>> result = type_text("input[type='text']", "Hello world")
     """
-    escaped_text = text.replace('"', '\\"')
-    return _run_browser_cmd(f'type {selector} "{escaped_text}"')
+    return _run_browser_cmd(f'type {selector} "{_escape_shell_arg(text)}"')
 
 
 def press(key: str) -> BrowserResult:
@@ -567,7 +548,7 @@ def fetch_content(url: str, timeout: int = 30) -> Dict[str, Any]:
     # Navigate to URL
     nav_result = navigate(url, timeout=timeout)
     if not nav_result.success:
-        return {"success": False, "error": nav_result.error, "url": url}
+        return {"success": False, "error": nav_result.message, "url": url}
 
     # Wait for page to load
     wait("networkidle")
@@ -608,12 +589,13 @@ def take_screenshot(
         ...     print(f"Saved to {result['path']}")
     """
     if output_path is None:
-        output_path = tempfile.mktemp(suffix=".png")
+        with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+            output_path = f.name
 
     # Navigate
     nav_result = navigate(url, timeout=timeout)
     if not nav_result.success:
-        return {"success": False, "error": nav_result.error}
+        return {"success": False, "error": nav_result.message}
 
     # Wait for load
     wait("networkidle")
@@ -624,7 +606,7 @@ def take_screenshot(
     return {
         "success": ss_result.success,
         "path": ss_result.content if ss_result.success else None,
-        "error": ss_result.error if not ss_result.success else None,
+        "error": ss_result.message if not ss_result.success else None,
         "url": url,
     }
 
@@ -678,7 +660,7 @@ class BrowserTool:
             snapshot_result = snapshot()
             self.last_snapshot = snapshot_result.content
             return snapshot_result.content or f"Opened {url}"
-        return f"Error: {result.error}"
+        return f"Error: {result.message}"
 
     def browse(self, url: str, action: str = "snapshot") -> str:
         """Open URL and perform a browser action.
@@ -747,7 +729,7 @@ class BrowserTool:
             snap = snapshot()
             self.last_snapshot = snap.content
             return snap.content or "Clicked"
-        return f"Error: {result.error}"
+        return f"Error: {result.message}"
 
     def fill(self, selector: str, text: str) -> str:
         """Fill an input field with text.
@@ -760,7 +742,7 @@ class BrowserTool:
             Status message indicating success or an error description.
         """
         result = fill(selector, text)
-        return result.message if result.success else f"Error: {result.error}"
+        return result.message if result.success else f"Error: {result.message}"
 
     def scroll(self, direction: str = "down", pixels: int = 300) -> str:
         """Scroll the page in a direction.
@@ -778,7 +760,7 @@ class BrowserTool:
             snap = snapshot()
             self.last_snapshot = snap.content
             return snap.content or "Scrolled"
-        return f"Error: {result.error}"
+        return f"Error: {result.message}"
 
     def get_page_info(self) -> Dict[str, str]:
         """Get the current page title and URL.

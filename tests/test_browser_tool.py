@@ -5,7 +5,6 @@ from unittest.mock import Mock, patch, MagicMock
 from beaver_agent.tools.browser_tool import (
     BrowserTool,
     BrowserResult,
-    AGENT_BROWSER_BIN,
     _resolve_browser_binary,
     _validate_browser_binary,
     _run_browser_cmd,
@@ -144,6 +143,7 @@ class TestResolveBrowserBinary:
     @patch("beaver_agent.tools.browser_tool.subprocess.run")
     def test_resolve_not_found(self, mock_run):
         """Test binary not found - subprocess returns FileNotFoundError"""
+        _resolve_browser_binary.cache_clear()
         mock_run.side_effect = FileNotFoundError()
         result = _resolve_browser_binary()
         assert result is None
@@ -183,7 +183,6 @@ class TestRunBrowserCmd:
 
     @patch("beaver_agent.tools.browser_tool._validate_browser_binary")
     @patch("beaver_agent.tools.browser_tool.subprocess.run")
-    @patch("beaver_agent.tools.browser_tool.AGENT_BROWSER_BIN", "/usr/bin/agent-browser")
     def test_successful_command(self, mock_run, mock_validate):
         """Test successful command execution"""
         mock_validate.return_value = None
@@ -199,7 +198,6 @@ class TestRunBrowserCmd:
 
     @patch("beaver_agent.tools.browser_tool._validate_browser_binary")
     @patch("beaver_agent.tools.browser_tool.subprocess.run")
-    @patch("beaver_agent.tools.browser_tool.AGENT_BROWSER_BIN", "/usr/bin/agent-browser")
     def test_failed_command(self, mock_run, mock_validate):
         """Test failed command execution"""
         mock_validate.return_value = None
@@ -215,7 +213,6 @@ class TestRunBrowserCmd:
 
     @patch("beaver_agent.tools.browser_tool._validate_browser_binary")
     @patch("beaver_agent.tools.browser_tool.subprocess.run")
-    @patch("beaver_agent.tools.browser_tool.AGENT_BROWSER_BIN", "/usr/bin/agent-browser")
     def test_timeout(self, mock_run, mock_validate):
         """Test command timeout"""
         import subprocess
@@ -229,7 +226,6 @@ class TestRunBrowserCmd:
 
     @patch("beaver_agent.tools.browser_tool._validate_browser_binary")
     @patch("beaver_agent.tools.browser_tool.subprocess.run")
-    @patch("beaver_agent.tools.browser_tool.AGENT_BROWSER_BIN", "/usr/bin/agent-browser")
     def test_exception_handled(self, mock_run, mock_validate):
         """Test exception in subprocess is handled"""
         mock_validate.return_value = None
