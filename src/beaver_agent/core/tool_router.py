@@ -62,19 +62,17 @@ class ToolRouter:
         from beaver_agent.tools.code_review import CodeReviewTool
         from beaver_agent.tools.debugger import DebuggerTool
 
-        tool_entries = [
-            ("file_tool", lambda: FileTool(self.config)),
-            ("terminal_tool", lambda: TerminalTool(self.config)),
-            ("github_tool", lambda: GitHubTool(self.config)),
-            ("code_gen", lambda: CodeGenTool(self.config, self._llm_client)),
-            ("code_review", lambda: CodeReviewTool(self.config, self._llm_client)),
-            ("debugger", lambda: DebuggerTool(self.config, self._llm_client)),
-        ]
-
         self._tool_registry = {}
-        for name, factory in tool_entries:
+        for name, tool_cls, args in [
+            ("file_tool", FileTool, [self.config]),
+            ("terminal_tool", TerminalTool, [self.config]),
+            ("github_tool", GitHubTool, [self.config]),
+            ("code_gen", CodeGenTool, [self.config, self._llm_client]),
+            ("code_review", CodeReviewTool, [self.config, self._llm_client]),
+            ("debugger", DebuggerTool, [self.config, self._llm_client]),
+        ]:
             try:
-                self._tool_registry[name] = factory()
+                self._tool_registry[name] = tool_cls(*args)
             except Exception as e:
                 logger.warning("tool_registration_failed", tool=name, exc_info=e)
 

@@ -3,6 +3,7 @@
 import os
 from typing import Optional, List, Dict
 
+import httpx
 import structlog
 
 from beaver_agent.core.config import ModelConfig
@@ -165,9 +166,7 @@ class LLMClient:
 
     def _call_minimax(self, messages: List[Dict], **kwargs) -> LLMResponse:
         """Call MiniMax API (Anthropic-compatible /messages endpoint)"""
-        base_url = self.api_base or "https://api.minimaxi.com/anthropic/v1"
-
-        import httpx
+        base_url = (self.api_base or "https://api.minimaxi.com/anthropic/v1").rstrip("/")
 
         # MiniMax doesn't support "system" role - fold system prompt into first user message
         system_parts = []
@@ -192,9 +191,7 @@ class LLMClient:
                 )
 
         try:
-            with httpx.Client(
-                base_url=base_url.rstrip("/"), timeout=60.0, follow_redirects=True
-            ) as client:
+            with httpx.Client(base_url=base_url, timeout=60.0, follow_redirects=True) as client:
                 response = client.post(
                     "messages",
                     json={
@@ -247,7 +244,7 @@ class LLMClient:
     def _call_fallback(self, messages: List[Dict], **kwargs) -> LLMResponse:
         """Fallback when no API key is available"""
         return LLMResponse(
-            content="LLM API key not configured. Please set OPENROUTER_API_KEY or ANTHROPIC_API_KEY",
+            content="LLM API key not configured. Please set MINIMAX_API_KEY, OPENROUTER_API_KEY, or ANTHROPIC_API_KEY",
             model="none",
         )
 
