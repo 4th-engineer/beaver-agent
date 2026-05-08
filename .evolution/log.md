@@ -200,6 +200,7 @@
 | 2026-05-23 08:00 | beaver-agent | Added 4 tests for MCPManager._load_configs_from_directory — covers YAML loading, empty dir, malformed YAML, nonexistent dir; completes untested internal method coverage | 724 tests passing |
 
 | 2026-05-23 20:00 | beaver-agent | Added 6 tests for /stats and /self-check CLI commands — covers stats display, error handling, self-check routing, and handle_command dispatcher for both new commands | 741 tests passing |
+| 2026-05-24 00:00 | beaver-agent | Added structlog logging to mapper.py — code_map_started and code_map_completed events with full stats (total/parsed/cached files, entry points, incremental flag); added comment to bare except explaining silent skip rationale; completes logging coverage for tools/mapper.py | 741 tests passing |
 
 ## Current Stage
 - 741 tests passing
