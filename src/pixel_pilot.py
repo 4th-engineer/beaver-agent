@@ -241,6 +241,19 @@ def _patch_tool_router(verbose: bool = True) -> None:
 
         @functools.wraps(original_route)
         def patched_route(self, task: Dict[str, Any]) -> Dict[str, Any]:
+            """Monkey-patched ToolRouter.route() that emits tool events to PixelPilot.
+
+            Wraps the original route() call to send tool_start and tool_done
+            events for every tool invocation, enabling real-time visualization
+            in the PixelPilot dashboard.
+
+            Args:
+                self: ToolRouter instance (passed by descriptor protocol).
+                task: Task dict with 'tool', 'action', and 'params' keys.
+
+            Returns:
+                The original route() result dict (unchanged behavior).
+            """
             tool_name = task.get("tool", "unknown")
             action = task.get("action", "")
             params = task.get("params", {})
@@ -291,9 +304,23 @@ def _patch_tool_router(verbose: bool = True) -> None:
 
             @functools.wraps(original_route_batch)
             def patched_route_batch(self, tasks):
+                """Monkey-patched ToolRouter.route_batch() for batch tool routing.
+
+                Routes each task through patched_route() individually so every
+                tool call emits its own tool_start/tool_done events, then
+                collects and returns all results.
+
+                Args:
+                    self: ToolRouter instance.
+                    tasks: List of task dicts.
+
+                Returns:
+                    List of result dicts from each patched_route() call.
+                """
+                results = []
                 for task in tasks:
-                    patched_route(self, task)
-                return [patched_route(self, t) for t in tasks]
+                    results.append(patched_route(self, task))
+                return results
 
             ToolRouter.route_batch = patched_route_batch
 
