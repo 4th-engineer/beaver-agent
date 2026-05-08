@@ -204,6 +204,7 @@
 
 | 2026-05-08 22:00 | beaver-agent | Added debug log for parse worker failures in mapper.py — bare except Exception was completely silent on worker timeout/crash; now logs at debug level with file path for troubleshooting | 741 tests passing |
 | 2026-05-23 22:00 | beaver-agent | Added structlog logger.info() to mapper.py if __name__ block — structured logging for programmatic/library use alongside existing user-facing CLI print output | 741 tests passing |
+| 2026-05-24 01:00 | beaver-agent | Added comprehensive docstrings to /stats and /self-check command handlers — handle_stats_command, handle_self_check_command, _get_project_stats, and _run_self_check all now have Args/Returns/Behavior sections | 741 tests passing |
 
 ## Current Stage
 - 741 tests passing
