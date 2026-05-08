@@ -1,11 +1,12 @@
 """Beaver Agent Interactive REPL"""
 
+import traceback
+
 import structlog
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.prompt import Prompt
-
 
 from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.core.config import BeaverConfig
@@ -93,8 +94,6 @@ def run_repl(config: BeaverConfig) -> None:
             logger.error("repl_error", exc_info=e)
             console.print(f"[red]✗ 错误:[/red] {e}")
             if config.app.debug:
-                import traceback
-
                 traceback.print_exc()
 
     console.print("[blue]下次见! 👋[/blue]")
