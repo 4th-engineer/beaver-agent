@@ -90,7 +90,7 @@ beaver-agent/
 ├── skills/                        # 用户可扩展 Skills
 ├── mcp_configs/                   # MCP 服务器配置
 ├── tests/                         # 723 tests
-└── doc/architecture.md            # 架构文档
+
 ```
 
 ---
