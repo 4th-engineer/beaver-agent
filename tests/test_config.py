@@ -263,6 +263,7 @@ class TestLoadConfig:
 
     def test_load_config_env_api_key_override(self, monkeypatch):
         """Environment variables override config file values."""
+        monkeypatch.delenv("MINIMAX_API_KEY", raising=False)
         monkeypatch.setenv("OPENROUTER_API_KEY", "env-api-key-value")
         monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
         monkeypatch.delenv("GITHUB_TOKEN", raising=False)
@@ -274,8 +275,12 @@ class TestLoadConfig:
 
         monkeypatch.setattr(Path, "exists", fake_exists)
 
+        # Prevent load_dotenv from re-loading .env file which contains real MINIMAX_API_KEY
+        import beaver_agent.core.config as config_module
+        monkeypatch.setattr(config_module, "load_dotenv", lambda *args, **kwargs: None)
+
         def fake_safe_load(f, Loader=None):
-            return {"model": {"api_key": "file-key-value"}, "github": {"token": "file-token-value"}}
+            return {"model": {"api_key": ""}, "github": {"token": "***"}}
 
         monkeypatch.setattr(yaml, "safe_load", fake_safe_load)
 
