@@ -314,10 +314,10 @@ def _patch_tool_router(verbose: bool = True) -> None:
     except ImportError as e:
         if _has_structlog:
             _logger.warning("could_not_patch_toolrouter", exc_info=e)
-        else:
+        elif _verbose:
             print(f"[PixelPilot] Warning: Could not patch ToolRouter: {e}")
     except Exception as e:
         if _has_structlog:
             _logger.warning("patching_failed", exc_info=e)
-        else:
+        elif _verbose:
             print(f"[PixelPilot] Warning: Patching failed: {e}")
