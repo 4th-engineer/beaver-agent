@@ -203,6 +203,7 @@
 | 2026-05-24 00:00 | beaver-agent | Added structlog logging to mapper.py — code_map_started and code_map_completed events with full stats (total/parsed/cached files, entry points, incremental flag); added comment to bare except explaining silent skip rationale; completes logging coverage for tools/mapper.py | 741 tests passing |
 
 | 2026-05-08 22:00 | beaver-agent | Added debug log for parse worker failures in mapper.py — bare except Exception was completely silent on worker timeout/crash; now logs at debug level with file path for troubleshooting | 741 tests passing |
+| 2026-05-23 22:00 | beaver-agent | Added structlog logger.info() to mapper.py if __name__ block — structured logging for programmatic/library use alongside existing user-facing CLI print output | 741 tests passing |
 
 ## Current Stage
 - 741 tests passing
