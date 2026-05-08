@@ -185,7 +185,7 @@ from typing import List
 from . import module
 from .utils import helper
 """
-    imports, from_imports = analyzer._parse_imports(content)
+    imports, from_imports = analyzer._parse_imports(content.split("\n"))
 
     assert "os" in imports
     assert "json" in imports
@@ -205,7 +205,7 @@ class Standalone():
     """Standalone class"""
     pass
 '''
-    classes = analyzer._parse_classes(content)
+    classes = analyzer._parse_classes(content.split("\n"))
     assert len(classes) == 2
 
     child_class = next((c for c in classes if c.name == "Child"), None)
@@ -229,7 +229,7 @@ def _private():
     """Private function"""
     pass
 '''
-    functions = analyzer._parse_functions(content)
+    functions = analyzer._parse_functions(content.split("\n"))
     assert len(functions) >= 3
 
     func_names = [f.name for f in functions]
@@ -376,7 +376,7 @@ def other():
 """
     lines = content.split("\n")
     # Find the "def example():" line (index 1)
-    body = analyzer._get_function_body(content, 1)
+    body = analyzer._get_function_body(lines, 1)
     assert "x = 1" in body
     assert "y = 2" in body
     assert "return x + y" in body
@@ -399,7 +399,7 @@ class MyClass:
         """Second method"""
         return x
 '''
-    methods = analyzer._find_class_methods(content, 1)  # line with "class MyClass:" (index 1)
+    methods = analyzer._find_class_methods(content.split("\n"), 1)  # line with "class MyClass:" (index 1)
     assert "method_one" in methods
     assert "method_two" in methods
 

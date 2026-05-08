@@ -128,13 +128,13 @@ class CodeAnalyzer:
         lines = content.split("\n")
 
         # Parse imports
-        module.imports, module.from_imports = self._parse_imports(content)
+        module.imports, module.from_imports = self._parse_imports(lines)
 
         # Parse classes
-        module.classes = self._parse_classes(content)
+        module.classes = self._parse_classes(lines)
 
         # Parse functions
-        module.functions = self._parse_functions(content)
+        module.functions = self._parse_functions(lines)
 
         # Track all functions and classes globally
         for cls in module.classes:
@@ -161,12 +161,12 @@ class CodeAnalyzer:
             parts[-1] = parts[-1][:-3]  # Remove .py
         return ".".join(parts) if parts else "root"
 
-    def _parse_imports(self, content: str) -> Tuple[List[str], Dict[str, List[str]]]:
+    def _parse_imports(self, lines: List[str]) -> Tuple[List[str], Dict[str, List[str]]]:
         """Parse import statements"""
         imports = []
         from_imports = {}
 
-        for line in content.split("\n"):
+        for line in lines:
             line = line.strip()
             if line.startswith("import "):
                 name = line.replace("import ", "").split(" as ")[0].strip()
@@ -180,10 +180,9 @@ class CodeAnalyzer:
 
         return imports, from_imports
 
-    def _parse_classes(self, content: str) -> List[ClassInfo]:
+    def _parse_classes(self, lines: List[str]) -> List[ClassInfo]:
         """Parse class definitions"""
         classes = []
-        lines = content.split("\n")
 
         for i, line in enumerate(lines):
             # Class definition
@@ -197,7 +196,7 @@ class CodeAnalyzer:
                 docstring = self._get_docstring(lines, i)
 
                 # Find methods in this class
-                methods = self._find_class_methods(content, i)
+                methods = self._find_class_methods(lines, i)
 
                 classes.append(
                     ClassInfo(
@@ -207,10 +206,9 @@ class CodeAnalyzer:
 
         return classes
 
-    def _parse_functions(self, content: str) -> List[FunctionInfo]:
+    def _parse_functions(self, lines: List[str]) -> List[FunctionInfo]:
         """Parse function definitions"""
         functions = []
-        lines = content.split("\n")
 
         i = 0
         while i < len(lines):
@@ -226,7 +224,7 @@ class CodeAnalyzer:
                     docstring = self._get_docstring(lines, i)
 
                     # Find what this function calls
-                    func_body = self._get_function_body(content, i)
+                    func_body = self._get_function_body(lines, i)
                     calls = self._find_calls(func_body)
 
                     functions.append(
@@ -276,9 +274,8 @@ class CodeAnalyzer:
                 break
         return decorators
 
-    def _get_function_body(self, content: str, start: int) -> str:
+    def _get_function_body(self, lines: List[str], start: int) -> str:
         """Get the body of a function"""
-        lines = content.split("\n")
         indent = len(lines[start]) - len(lines[start].lstrip())
 
         body_lines = []
@@ -289,9 +286,8 @@ class CodeAnalyzer:
             body_lines.append(line)
         return "\n".join(body_lines)
 
-    def _find_class_methods(self, content: str, class_start: int) -> List[str]:
+    def _find_class_methods(self, lines: List[str], class_start: int) -> List[str]:
         """Find method names in a class"""
-        lines = content.split("\n")
         methods = []
 
         # Find end of class
