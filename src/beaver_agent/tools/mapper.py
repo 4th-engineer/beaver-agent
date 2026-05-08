@@ -398,8 +398,10 @@ def generate(root: Path | None = None) -> dict:
                 try:
                     result = future.result(timeout=30)
                 except Exception:
-                    # Silent — worker timed out or crashed; skip this file
+                    # Worker timed out or crashed; skip this file.
                     # (parse failures are handled inside _parse_file_worker)
+                    # Debug log since this is an abnormal event, not a user-visible error.
+                    logger.debug("parse_file_worker_failed", file=args[0])
                     result = None
                 if result is not None:
                     parsed_new.append(result)
