@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from beaver_agent.tools.mapper import generate
+from beaver_agent.tools.mapper import generate, _should_reparse, _chunked
 
 
 @pytest.fixture(autouse=True)
@@ -177,3 +177,78 @@ class TestGenerate:
         assert "total_files" in result
         assert "entry_points" in result
         assert "output_dir" in result
+
+
+class TestShouldReparse:
+    """Tests for _should_reparse helper."""
+
+    def test_missing_cached_returns_true(self):
+        """Empty cached fingerprint forces re-parse."""
+        current = {"mtime": 1000, "size": 200}
+        assert _should_reparse({}, current) is True
+
+    def test_missing_current_returns_true(self):
+        """Missing current fingerprint forces re-parse."""
+        cached = {"mtime": 1000, "size": 200}
+        assert _should_reparse(cached, {}) is True
+
+    def test_both_missing_returns_true(self):
+        """Both empty returns True (full re-parse)."""
+        assert _should_reparse({}, {}) is True
+
+    def test_same_fingerprint_returns_false(self):
+        """Identical mtime and size means no re-parse needed."""
+        fp = {"mtime": 1000, "size": 200}
+        assert _should_reparse(fp, fp) is False
+
+    def test_different_mtime_returns_true(self):
+        """Changed modification time forces re-parse."""
+        cached = {"mtime": 1000, "size": 200}
+        current = {"mtime": 2000, "size": 200}
+        assert _should_reparse(cached, current) is True
+
+    def test_different_size_returns_true(self):
+        """Changed file size forces re-parse."""
+        cached = {"mtime": 1000, "size": 200}
+        current = {"mtime": 1000, "size": 300}
+        assert _should_reparse(cached, current) is True
+
+    def test_both_changed_returns_true(self):
+        """Both mtime and size changed forces re-parse."""
+        cached = {"mtime": 1000, "size": 200}
+        current = {"mtime": 2000, "size": 300}
+        assert _should_reparse(cached, current) is True
+
+
+class TestChunked:
+    """Tests for _chunked helper."""
+
+    def test_empty_list_returns_empty(self):
+        """Empty input yields no chunks."""
+        assert list(_chunked([], 2)) == []
+
+    def test_single_chunk(self):
+        """List shorter than chunk size yields one chunk."""
+        result = list(_chunked([1, 2], 5))
+        assert result == [[1, 2]]
+
+    def test_exact_fit(self):
+        """List exactly divisible by chunk size yields equal chunks."""
+        result = list(_chunked([1, 2, 3, 4], 2))
+        assert result == [[1, 2], [3, 4]]
+
+    def test_remainder_chunk(self):
+        """Final chunk is smaller when list is not evenly divisible."""
+        result = list(_chunked([1, 2, 3, 4, 5], 2))
+        assert result == [[1, 2], [3, 4], [5]]
+
+    def test_size_one(self):
+        """Size-1 chunks yields individual elements."""
+        result = list(_chunked([1, 2, 3], 1))
+        assert result == [[1], [2], [3]]
+
+    def test_size_larger_than_list(self):
+        """Chunk size larger than list yields single chunk."""
+        result = list(_chunked([1, 2, 3], 10))
+        assert result == [[1, 2, 3]]
+

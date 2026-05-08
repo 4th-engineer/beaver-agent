@@ -313,16 +313,45 @@ def _file_fingerprint(path: Path) -> dict:
 
 
 def _should_reparse(cached: dict, current: dict) -> bool:
+    """Determine whether a file needs re-parsing based on modification time and size.
+
+    Compares a file's cached fingerprint against its current fingerprint. A file
+    must be re-parsed if either timestamp or size differs, or if either fingerprint
+    is missing/corrupt (empty dict).
+
+    Args:
+        cached: Fingerprint dict from the previous run index (keys: mtime, size).
+        current: Fingerprint dict from the current stat call (keys: mtime, size).
+
+    Returns:
+        True if the file should be re-parsed, False if the cached result is valid.
+    """
     if not cached or not current:
         return True
     return cached.get("mtime") != current.get("mtime") or cached.get("size") != current.get("size")
 
 
-# ---------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 # Chunk-based parallel dispatch
-# ---------------------------------------------------------------------------
+# --------------------------------------------------------------------------
 
 def _chunked(lst: list, size: int):
+    """Split a list into chunks of at most `size` elements each.
+
+    Yields consecutive slices of lst, each with at most `size` items.
+    The last chunk may be smaller than size.
+
+    Args:
+        lst: Input list to chunk.
+        size: Maximum number of elements per chunk.
+
+    Yields:
+        Lists of up to size elements from lst, in order.
+
+    Example:
+        >>> list(_chunked([1, 2, 3, 4, 5], 2))
+        [[1, 2], [3, 4], [5]]
+    """
     for i in range(0, len(lst), size):
         yield lst[i : i + size]
 
