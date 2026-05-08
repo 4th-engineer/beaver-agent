@@ -196,7 +196,7 @@ class TestBasicErrorAnalysis:
     def test_unknown_error_shows_llm_prompt(self, debugger_tool):
         """Test that unknown errors prompt LLM configuration"""
         result = debugger_tool._basic_error_analysis("SomeUnknownError: something happened")
-        assert "LLM" in result or "OPENROUTER_API_KEY" in result
+        assert "MINIMAX_API_KEY" in result
 
     def test_basic_error_analysis_with_stack_trace(self, debugger_tool):
         """Test that stack trace is included in output"""
