@@ -18,6 +18,8 @@ Performance on million-line codebases:
 
 from __future__ import annotations
 
+__all__ = ["generate", "MapperTool"]
+
 import ast
 import json
 import os
