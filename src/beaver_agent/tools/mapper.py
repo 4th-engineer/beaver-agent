@@ -18,14 +18,16 @@ Performance on million-line codebases:
 
 from __future__ import annotations
 
-__all__ = ["generate", "MapperTool"]
-
 import ast
 import json
 import os
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
+
+import structlog
+
+logger = structlog.get_logger()
 
 MAX_FILE_SIZE_BYTES = 1_000_000  # 1 MB — skip files larger than this
 MAX_AST_NODES = 100_000
@@ -340,6 +342,7 @@ def generate(root: Path | None = None) -> dict:
         Summary dict with total_files, parsed_files, cached_files,
         entry_points, output_dir, incremental.
     """
+    logger.info("code_map_started", root=str(root) if root else "cwd")
     if root is None:
         root = Path.cwd()
 
@@ -395,6 +398,8 @@ def generate(root: Path | None = None) -> dict:
                 try:
                     result = future.result(timeout=30)
                 except Exception:
+                    # Silent — worker timed out or crashed; skip this file
+                    # (parse failures are handled inside _parse_file_worker)
                     result = None
                 if result is not None:
                     parsed_new.append(result)
@@ -438,6 +443,14 @@ def generate(root: Path | None = None) -> dict:
     _write_json_streaming(beaver_dir / "entry_points.json", {"entry_points": unique_entry_points})
     _save_manifest(beaver_dir, final_manifest)
 
+    logger.info(
+        "code_map_completed",
+        total_files=total,
+        parsed_files=len(parsed_new),
+        cached_files=cached_count,
+        entry_points=len(unique_entry_points),
+        incremental=cached_count > 0 or len(parsed_new) < total,
+    )
     return {
         "total_files": total,
         "parsed_files": len(parsed_new),
