@@ -18,6 +18,8 @@ Performance on million-line codebases:
 
 from __future__ import annotations
 
+__all__ = ["generate", "MapperTool"]
+
 import ast
 import json
 import os
@@ -455,6 +457,23 @@ def _write_json_streaming(path: Path, data: dict) -> None:
         encoding="utf-8",
     )
     tmp.replace(path)
+
+
+class MapperTool:
+    """Code map generator tool — incremental AST index for any size codebase.
+
+    Wraps :func:`generate` with a per-instance root path.
+    """
+
+    def __init__(self, root: Path | None = None):
+        self.root = root or Path.cwd()
+
+    def run(self) -> dict:
+        """Run the mapper and return the summary dict."""
+        return generate(self.root)
+
+    def __repr__(self) -> str:
+        return f"MapperTool(root={self.root!r})"
 
 
 if __name__ == "__main__":
