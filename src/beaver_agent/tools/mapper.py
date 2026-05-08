@@ -495,6 +495,17 @@ if __name__ == "__main__":
     result = generate()
     cached_msg = f" ({result['cached_files']} cached)" if result.get("cached_files") else ""
     incr_msg = " [incremental]" if result.get("incremental") else " [full]"
+    # Structured logging for programmatic use (library mode)
+    logger.info(
+        "code_map_completed",
+        parsed_files=result["parsed_files"],
+        total_files=result["total_files"],
+        entry_points=result["entry_points"],
+        output_dir=result["output_dir"],
+        cached_files=result.get("cached_files"),
+        incremental=result.get("incremental"),
+    )
+    # User-facing CLI output
     print(f"✓ Parsed {result['parsed_files']}/{result['total_files']} files{cached_msg}{incr_msg}")
     print(f"✓ Found {result['entry_points']} entry points")
     print(f"✓ Output: {result['output_dir']}")
