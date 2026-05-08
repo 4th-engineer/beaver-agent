@@ -65,7 +65,7 @@ class TestGenerateSkeleton:
 
     def test_skeleton_unknown_language(self, code_gen_tool):
         """Test skeleton for unknown language falls back to generic template"""
-        skeleton = code_gen_tool._generate_skeleton("something", "rust")
+        skeleton = code_gen_tool._generate_skeleton("something", "cobol")
         assert "// Code for: something" in skeleton
         assert "Configure MINIMAX_API_KEY in .env" in skeleton
 
@@ -113,7 +113,7 @@ class TestGenerate:
 
         mock_file_tool = Mock()
         mock_file_tool.write_file.return_value = "✓ Saved to /tmp/hello.py"
-        with patch("beaver_agent.tools.file_tool.FileTool", return_value=mock_file_tool):
+        with patch.object(code_gen_tool, "_file_tool", mock_file_tool):
             result = code_gen_tool.generate(
                 "hello function", language="python", file_path="/tmp/hello.py"
             )
@@ -134,7 +134,7 @@ class TestGenerate:
 
         mock_file_tool = Mock()
         mock_file_tool.write_file.side_effect = RuntimeError("Disk full")
-        with patch("beaver_agent.tools.file_tool.FileTool", return_value=mock_file_tool):
+        with patch.object(code_gen_tool, "_file_tool", mock_file_tool):
             result = code_gen_tool.generate(
                 "hello function", language="python", file_path="/tmp/hello.py"
             )
