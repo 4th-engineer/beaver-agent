@@ -199,8 +199,10 @@
 | 2026-05-23 07:00 | beaver-agent | Added 5 tests for _summarize_content untested paths — file/search/terminal truncation, non-string coercion — extends TestSummarizeContent class | 720 tests passing |
 | 2026-05-23 08:00 | beaver-agent | Added 4 tests for MCPManager._load_configs_from_directory — covers YAML loading, empty dir, malformed YAML, nonexistent dir; completes untested internal method coverage | 724 tests passing |
 
+| 2026-05-23 20:00 | beaver-agent | Added 6 tests for /stats and /self-check CLI commands — covers stats display, error handling, self-check routing, and handle_command dispatcher for both new commands | 741 tests passing |
+
 ## Current Stage
-- 724 tests passing
+- 741 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All modules have __all__ declarations — public API sweep complete across tools/, core/, cli/, eval/, memory/
