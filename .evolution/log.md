@@ -207,9 +207,10 @@
 | 2026-05-24 01:00 | beaver-agent | Added comprehensive docstrings to /stats and /self-check command handlers — handle_stats_command, handle_self_check_command, _get_project_stats, and _run_self_check all now have Args/Returns/Behavior sections | 741 tests passing |
 | 2026-05-24 02:00 | beaver-agent | Added verbose guards to pixel_pilot.py ImportError/Exception handlers — both exception handlers in _patch_tool_router() printed regardless of verbose param, now consistent with all other pixel_pilot print() calls | 741 tests passing |
 | 2026-05-24 03:00 | beaver-agent | Added __all__ to mapper.py (generate, MapperTool) — completes __all__ sweep across all tools/ modules (was the only remaining module without explicit public API declaration) | 741 tests passing |
+| 2026-05-25 03:00 | beaver-agent | Added comprehensive docstrings to _should_reparse (change detection logic) and _chunked (list splitting) internal helpers in mapper.py — plus 13 new tests covering all edge cases | 754 tests passing |
 
 ## Current Stage
-- 741 tests passing
+- 754 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
 - All modules have __all__ declarations — public API sweep complete across tools/, core/, cli/, eval/, memory/
