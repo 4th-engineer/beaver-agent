@@ -176,7 +176,18 @@ def handle_command(cmd: str, config: BeaverConfig, agent: BeaverAgent) -> bool:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _get_project_stats(root: Path) -> dict:
-    """Gather project statistics: files, tests, LOC, language breakdown."""
+    """Gather project statistics: files, tests, LOC, language breakdown.
+
+    Args:
+        root: The project root directory to gather statistics from.
+
+    Returns:
+        A dict with keys: total_files, python_files, test_files, src_files,
+        total_loc, languages (ext->count), test_count, last_commit, branch.
+
+    Walks the project tree excluding common non-source directories (.git, .venv,
+    __pycache__, etc.) and runs git commands to get branch and last commit info.
+    """
     import subprocess
 
     stats = {
@@ -266,7 +277,20 @@ def _print_stats(root: Path) -> None:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def _run_self_check(root: Path) -> None:
-    """Run self-check: pytest + git status + config integrity."""
+    """Run self-check: pytest + git status + config integrity.
+
+    Args:
+        root: The project root directory to run self-checks against.
+
+    Runs three health checks in sequence:
+    1. Git status - shows dirty working tree
+    2. Config integrity - loads config and checks API key presence
+    3. Pytest - runs the test suite with a 120s timeout
+
+    All output is printed to console. Exceptions from subprocess calls
+    (git, pytest) are caught and displayed as console errors rather than
+    propagating.
+    """
     import subprocess
     import os
 
@@ -326,7 +350,14 @@ def _run_self_check(root: Path) -> None:
 
 
 def handle_stats_command(root: Path) -> None:
-    """Handle /stats command - display project statistics."""
+    """Handle /stats command - display project statistics.
+
+    Args:
+        root: The project root directory to gather statistics from.
+
+    Retrieves project stats via _get_project_stats and displays them
+    using _print_stats. Any exceptions are caught and displayed to the user.
+    """
     try:
         _print_stats(root)
     except Exception as e:
@@ -335,7 +366,14 @@ def handle_stats_command(root: Path) -> None:
 
 
 def handle_self_check_command(root: Path) -> None:
-    """Handle /self-check command - run health checks."""
+    """Handle /self-check command - run health checks.
+
+    Args:
+        root: The project root directory to run self-checks against.
+
+    Runs three health checks: git status, config integrity, and pytest.
+    Any exceptions from _run_self_check are caught and displayed to the user.
+    """
     try:
         _run_self_check(root)
     except Exception as e:
