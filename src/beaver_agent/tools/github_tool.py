@@ -2,6 +2,7 @@
 
 __all__ = ["GitHubTool"]
 
+import requests
 from typing import Optional
 
 import structlog
@@ -108,8 +109,6 @@ class GitHubTool:
             return "❌ GitHub token not configured. Set github.token in config."
 
         try:
-            import requests
-
             url = f"https://api.github.com/repos/{owner}/{repo}"
             headers = {
                 "Authorization": f"token {self.token}",
@@ -159,8 +158,6 @@ class GitHubTool:
             return "❌ GitHub token not configured. Set github.token in config."
 
         try:
-            import requests
-
             url = f"https://api.github.com/repos/{owner}/{repo}/issues"
             headers = {
                 "Authorization": f"token {self.token}",
@@ -203,8 +200,6 @@ class GitHubTool:
             return "❌ GitHub token not configured. Set github.token in config."
 
         try:
-            import requests
-
             url = f"https://api.github.com/repos/{owner}/{repo}/issues"
             headers = {
                 "Authorization": f"token {self.token}",
@@ -249,8 +244,6 @@ class GitHubTool:
             return "❌ GitHub token not configured. Set github.token in config."
 
         try:
-            import requests
-
             url = f"https://api.github.com/repos/{owner}/{repo}/issues/{number}"
             headers = {
                 "Authorization": f"token {self.token}",
@@ -305,8 +298,6 @@ class GitHubTool:
             return "❌ GitHub token not configured. Set github.token in config."
 
         try:
-            import requests
-
             url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
             headers = {
                 "Authorization": f"token {self.token}",

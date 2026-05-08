@@ -2,6 +2,8 @@
 
 __all__ = ["TerminalTool"]
 
+import os
+import platform
 import subprocess
 from typing import Optional
 
@@ -126,9 +128,6 @@ class TerminalTool:
             A string containing recent error log entries, or a message
             indicating no errors were found or no log files exist.
         """
-        import platform
-        import os
-
         system = platform.system().lower()
 
         # Platform-specific log locations
@@ -224,8 +223,6 @@ class TerminalTool:
             A formatted string of matching error lines prefixed with the file path,
             or an empty string if no errors are found or on PermissionError.
         """
-        import os
-
         try:
             with open(path, "r", encoding="utf-8", errors="replace") as f:
                 all_lines = f.readlines()
@@ -256,8 +253,6 @@ class TerminalTool:
             A string containing the test execution output, or an error
             message if no test framework is detected.
         """
-        import os
-
         # Auto-detect test framework
         if test_command:
             return self.execute(test_command)
