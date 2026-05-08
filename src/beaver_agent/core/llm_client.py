@@ -153,14 +153,14 @@ class LLMClient:
 
     def _call_minimax(self, messages: List[Dict], **kwargs) -> LLMResponse:
         """Call MiniMax API (Anthropic-compatible /messages endpoint)"""
-        base_url = self.api_base or "https://api.minimaxi.com/anthropic/v1/messages"
+        base_url = self.api_base or "https://api.minimaxi.com/anthropic/v1"
 
         import httpx
 
         try:
             with httpx.Client(base_url=base_url.rstrip("/"), timeout=60.0, follow_redirects=True) as client:
                 response = client.post(
-                    "",
+                    "messages",
                     json={
                         "model": self.model,
                         "messages": messages,

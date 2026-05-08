@@ -166,8 +166,11 @@ def load_config(debug: bool = False) -> BeaverConfig:
 
     # Override with environment variables
     config_data["model"]["api_key"] = os.environ.get(
-        "OPENROUTER_API_KEY",
-        os.environ.get("ANTHROPIC_API_KEY", config_data.get("model", {}).get("api_key"))
+        "MINIMAX_API_KEY",
+        os.environ.get(
+            "OPENROUTER_API_KEY",
+            os.environ.get("ANTHROPIC_API_KEY", config_data.get("model", {}).get("api_key")),
+        ),
     )
     config_data["github"]["token"] = os.environ.get(
         "GITHUB_TOKEN",

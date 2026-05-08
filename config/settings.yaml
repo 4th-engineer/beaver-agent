@@ -9,7 +9,7 @@ model:
   provider: "minimax"  # openrouter, anthropic, openai, minimax
   model: "MiniMax-M2.7"
   api_key: "${MINIMAX_API_KEY}"
-  api_base: "https://api.minimaxi.com/anthropic/v1/messages"
+  api_base: "https://api.minimaxi.com/anthropic/v1"
   max_tokens: 4096
   temperature: 0.7
 
