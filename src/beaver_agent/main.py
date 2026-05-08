@@ -76,21 +76,53 @@ def chat(
 
 @app.command()
 def model(
-    show: bool = typer.Option(False, "--show", help="显示当前模型"),
+    show: bool = typer.Option(False, "--show", help="显示当前模型配置"),
+    url: Optional[str] = typer.Option(None, "--url", help="设置 API Base URL"),
+    token: Optional[str] = typer.Option(None, "--token", help="设置 API Token"),
+    name: Optional[str] = typer.Option(None, "--name", help="设置模型名称"),
 ):
-    """Display or switch the current LLM model.
+    """显示或配置 LLM 模型设置。
 
-    When called with --show, prints the currently configured model name
-    and provider. Without --show, also displays model information.
+    支持显示当前配置，或通过选项设置 API URL、Token、模型名称。
+    配置会自动写入 .env 文件。
 
-    Args:
-        show: If True, displays the current model name and provider.
-              Defaults to False.
-
-    Example:
-        beaver model --show    # Show current model
+    Examples:
+        beaver model --show              # 显示当前配置
+        beaver model --url <url>        # 设置 API Base URL
+        beaver model --token <token>    # 设置 API Token
+        beaver model --name MiniMax-M2.7 # 设置模型名称
     """
-    model_command(show)
+    from dotenv import load_dotenv, set_key
+    from pathlib import Path
+
+    project_root = Path(__file__).parent.parent.parent
+    env_path = project_root / ".env"
+    load_dotenv(env_path)
+
+    if url is not None:
+        set_key(env_path, "MINIMAX_API_BASE", url)
+        console.print(f"[green]API URL 已设置:[/green] {url}")
+
+    if token is not None:
+        set_key(env_path, "MINIMAX_API_KEY", token)
+        console.print(f"[green]API Token 已设置[/green]（已脱敏）")
+
+    if name is not None:
+        set_key(env_path, "MINIMAX_MODEL_NAME", name)
+        console.print(f"[green]模型名称已设置:[/green] {name}")
+
+    if show or (url is None and token is None and name is None):
+        config = load_config()
+        console.print(f"[green]模型:[/green] {config.model.name}")
+        console.print(f"[green]Provider:[/green] {config.model.provider}")
+        console.print(f"[green]API Base:[/green] {config.model.api_base}")
+        # Mask token in output
+        key = config.model.api_key
+        if key and len(key) > 8:
+            masked = key[:6] + "..." + key[-4:]
+        else:
+            masked = "***" if key else "[未设置]"
+        console.print(f"[green]API Key:[/green] {masked}")
 
 
 @app.command()

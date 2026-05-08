@@ -157,13 +157,30 @@ class LLMClient:
 
         import httpx
 
+        # MiniMax doesn't support "system" role - fold system prompt into first user message
+        system_parts = []
+        non_system = []
+        for msg in messages:
+            if msg.get("role") == "system":
+                system_parts.append(msg["content"])
+            else:
+                non_system.append(msg)
+
+        if system_parts:
+            system_text = "\n".join(system_parts)
+            if non_system:
+                # Prepend system instruction to first user message
+                non_system[0] = {"role": non_system[0]["role"], "content": f"[|System|]\n{system_text}\n[/|System|]\n\n{non_system[0]['content']}"}
+            else:
+                non_system.append({"role": "user", "content": f"[|System|]\n{system_text}\n[/|System|]\n\n"})
+
         try:
             with httpx.Client(base_url=base_url.rstrip("/"), timeout=60.0, follow_redirects=True) as client:
                 response = client.post(
                     "messages",
                     json={
                         "model": self.model,
-                        "messages": messages,
+                        "messages": non_system if system_parts else messages,
                         "max_tokens": kwargs.get("max_tokens", 4096),
                         "temperature": kwargs.get("temperature", 0.7),
                     },

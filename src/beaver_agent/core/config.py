@@ -172,6 +172,11 @@ def load_config(debug: bool = False) -> BeaverConfig:
             os.environ.get("ANTHROPIC_API_KEY", config_data.get("model", {}).get("api_key")),
         ),
     )
+    # Override api_base and model name if provided via environment
+    if os.environ.get("MINIMAX_API_BASE"):
+        config_data["model"]["api_base"] = os.environ["MINIMAX_API_BASE"]
+    if os.environ.get("MINIMAX_MODEL_NAME"):
+        config_data["model"]["name"] = os.environ["MINIMAX_MODEL_NAME"]
     config_data["github"]["token"] = os.environ.get(
         "GITHUB_TOKEN",
         config_data.get("github", {}).get("token")
