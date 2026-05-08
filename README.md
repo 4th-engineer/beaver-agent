@@ -2,7 +2,7 @@
 
 > Self-evolving AI coding assistant — 让代码自己变好。
 
-[![Tests](https://img.shields.io/badge/tests-723%20passed-blue)](https://github.com/4th-engineer/beaver-agent)
+[![Tests](https://img.shields.io/badge/tests-741%20passed-blue)](https://github.com/4th-engineer/beaver-agent)
 [![Python](https://img.shields.io/badge/python-3.11+-blue)](https://python.org)
 [![License](https://img.shields.io/badge/license-MIT-yellow)](LICENSE)
 
@@ -89,7 +89,7 @@ beaver-agent/
 │       └── commands.py           # 内置命令
 ├── skills/                        # 用户可扩展 Skills
 ├── mcp_configs/                   # MCP 服务器配置
-├── tests/                         # 723 tests
+├── tests/                         # 741 tests
 
 ```
 
