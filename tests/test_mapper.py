@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from beaver_agent.tools.mapper import generate, _should_reparse, _chunked
+from beaver_agent.tools.mapper import generate, _should_reparse, _chunked, _file_fingerprint
 
 
 @pytest.fixture(autouse=True)
@@ -251,4 +251,30 @@ class TestChunked:
         """Chunk size larger than list yields single chunk."""
         result = list(_chunked([1, 2, 3], 10))
         assert result == [[1, 2, 3]]
+
+
+class TestFileFingerprint:
+    """Tests for _file_fingerprint internal helper."""
+
+    def test_returns_mtime_and_size(self, tmp_path):
+        """Returns dict with mtime and size keys on success."""
+        test_file = tmp_path / "mod.py"
+        test_file.write_text("x = 1\n")
+
+        fp = _file_fingerprint(test_file)
+
+        assert "mtime" in fp
+        assert "size" in fp
+        assert fp["size"] == 6  # "x = 1\n" == 6 bytes
+
+    def test_oserror_returns_empty_dict(self, tmp_path):
+        """OSError (e.g., file deleted between stat check) returns empty dict."""
+        test_file = tmp_path / "deleted.py"
+        test_file.write_text("x = 1\n")
+        # Delete the file before calling _file_fingerprint
+        test_file.unlink()
+
+        fp = _file_fingerprint(test_file)
+
+        assert fp == {}
 
