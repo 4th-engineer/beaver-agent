@@ -330,12 +330,12 @@ def _patch_tool_router(verbose: bool = True) -> None:
         if _enabled:
             if _has_structlog:
                 _logger.info("toolrouter_patched")
-            elif verbose:
+            elif _verbose:
                 print("[PixelPilot] 🔌 ToolRouter patched - all tool calls will be tracked")
 
         if _has_structlog:
             _logger.info("pixel_pilot_ready")
-        elif verbose:
+        elif _verbose:
             print("[PixelPilot] Ready.")
 
     except ImportError as e:
