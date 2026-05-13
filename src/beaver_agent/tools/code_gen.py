@@ -101,8 +101,15 @@ class CodeGenTool:
 # This is a placeholder - configure LLM API key for full generation
 # Set MINIMAX_API_KEY in .env for full generation
 
-def main():
-    """Main entry point"""
+def main() -> None:
+    """CLI entry point for code generation tool.
+
+    When run directly, loads configuration and provides a simple REPL
+    for generating code from natural language descriptions.
+
+    Returns:
+        None. Exits with status 0 on normal completion.
+    """
     pass
 
 if __name__ == "__main__":

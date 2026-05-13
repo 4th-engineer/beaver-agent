@@ -46,7 +46,7 @@ class TestGenerateSkeleton:
         """Test Python skeleton generation"""
         skeleton = code_gen_tool._generate_skeleton("Create a web server", "python")
         assert "# Python Code for: Create a web server" in skeleton
-        assert "def main():" in skeleton
+        assert "def main() -> None:" in skeleton
         assert '__name__ == "__main__"' in skeleton
 
     def test_skeleton_javascript(self, code_gen_tool):
