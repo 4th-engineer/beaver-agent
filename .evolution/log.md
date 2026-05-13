@@ -225,7 +225,7 @@
 | 2026-05-14 01:00 | beaver-agent | Simplify nested getattr chain in _get_agent_name() — flat config→app→name lookup instead of double-nested getattr | 756 tests passing |
 | 2026-05-14 04:00 | beaver-agent | Add return type annotation `-> None` to `setup()` command in main.py — typer commands now have consistent type hints | 756 tests passing |
 
-| 2026-05-14 05:00 | beaver-agent | Added docstring and return type `-> str | None` to _get_return() in mapper.py — undocumented private helper now documented | 756 tests passing |
+| 2026-05-28 | beaver-agent | Added Attributes section to MemoryEntry dataclass docstring — documents all 9 fields (id, content, category, tags, timestamps, access_count, session_id, source) | 756 tests passing |
 
 ## Current Stage
 - 756 tests passing
