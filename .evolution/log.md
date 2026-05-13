@@ -226,6 +226,7 @@
 | 2026-05-14 04:00 | beaver-agent | Add return type annotation `-> None` to `setup()` command in main.py — typer commands now have consistent type hints | 756 tests passing |
 
 | 2026-05-28 | beaver-agent | Added Attributes section to MemoryEntry dataclass docstring — documents all 9 fields (id, content, category, tags, timestamps, access_count, session_id, source) | 756 tests passing |
+| 2026-05-14 07:00 | beaver-agent | Fix SkillManager.__init__ type annotation — skills_dirs param was annotated `Dict[str, Path]` but default is `None`, correct to `Optional[Dict[str, Path]]` | 756 tests passing |
 
 ## Current Stage
 - 756 tests passing
