@@ -224,7 +224,17 @@ def _is_typer_app(val: ast.AST) -> bool:
     )
 
 
-def _get_return(node):
+def _get_return(node) -> str | None:
+    """Extract the return value from an ast.FunctionDef return annotation.
+
+    Args:
+        node: An AST FunctionDef or AsyncFunctionDef node with an optional
+            return annotation (the ``-> T`` type hint).
+
+    Returns:
+        The literal string value of the return annotation if it is a constant
+        (e.g. ``"str"``, ``"int"``), otherwise None.
+    """
     if node.returns and isinstance(node.returns, ast.Constant):
         return node.returns.value
     return None
