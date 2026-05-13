@@ -320,7 +320,26 @@ class SkillManager:
         return phases
 
     def _extract_frontmatter(self, content: str) -> Dict[str, Any]:
-        """Extract YAML frontmatter from skill content"""
+        """Extract YAML frontmatter from a SKILL.md file body.
+
+        Parses ``---`` delimited YAML frontmatter from the top of a skill
+        file using a DOTALL regex. Only the first ``---`` block is parsed.
+
+        Args:
+            content: The full raw text content of a SKILL.md file.
+
+        Returns:
+            A dict of the parsed YAML key-value pairs, or an empty dict if
+            no frontmatter block is found or YAML parsing fails.
+            ``yaml.YAMLError`` during parsing is logged and returns ``{}``.
+
+        Example:
+            >>> fm = obj._extract_frontmatter(
+            ...     \"---\\nname: test\\n---\\n# Body\\n\"
+            ... )
+            >>> fm.get("name")
+            'test'
+        """
         match = re.match(r"^---\n(.*?)\n---\n", content, re.DOTALL)
         if match:
             try:
