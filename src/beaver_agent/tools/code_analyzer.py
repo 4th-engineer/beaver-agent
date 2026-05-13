@@ -451,7 +451,6 @@ class CodeAnalyzer:
 
                 # Add submodule indicator
                 if "." in item:
-                    sub_parts = item.split(".")
                     current_prefix = prefix + ("    " if is_last_item else "│   ")
                     lines.append(f"{current_prefix}📄 {self.modules[item].path}")
 

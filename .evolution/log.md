@@ -221,6 +221,7 @@
 | 2026-05-28 | beaver-agent | Added docstrings to _file_key() and _manifest_path() in mapper.py — undocumented private helpers now documented | 756 tests passing |
 | 2026-05-13 | beaver-agent | Remove unused shutil import from browser_tool.py — dead code cleanup | 756 tests passing |
 | 2026-05-14 | beaver-agent | Replace print() with structlog in mapper.py CLI output (if __name__ == "__main__" block) — consistent logging across all beaver-agent modules | 756 tests passing |
+| 2026-05-14 01:00 | beaver-agent | Simplify nested getattr chain in _get_agent_name() — flat config→app→name lookup instead of double-nested getattr | 756 tests passing |
 
 ## Current Stage
 - 756 tests passing
