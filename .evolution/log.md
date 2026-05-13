@@ -217,6 +217,8 @@
 | 2026-05-26 10:00 | beaver-agent | Added docstring and return type (-> None) to code_gen.main() — replaced one-line placeholder with Args/Returns documenting REPL behavior; updated test assertion | 756 tests passing |
 | 2026-05-27 | beaver-agent | Removed unused `import os` from conversation_logger.py — clean imports, no functional change | 756 tests passing |
 
+| 2026-05-28 | beaver-agent | Added docstrings to _file_key() and _manifest_path() in mapper.py — undocumented private helpers now documented | 756 tests passing |
+
 ## Current Stage
 - 756 tests passing
 - All public functions documented (100% docstring coverage)
