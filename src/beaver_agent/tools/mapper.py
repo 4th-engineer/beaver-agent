@@ -539,6 +539,6 @@ if __name__ == "__main__":
         incremental=result.get("incremental"),
     )
     # User-facing CLI output
-    print(f"✓ Parsed {result['parsed_files']}/{result['total_files']} files{cached_msg}{incr_msg}")
-    print(f"✓ Found {result['entry_points']} entry points")
-    print(f"✓ Output: {result['output_dir']}")
+    logger.info(f"Parsed {result['parsed_files']}/{result['total_files']} files{cached_msg}{incr_msg}")
+    logger.info(f"Found {result['entry_points']} entry points")
+    logger.info(f"Output: {result['output_dir']}")
