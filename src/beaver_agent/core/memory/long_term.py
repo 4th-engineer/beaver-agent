@@ -30,7 +30,20 @@ class MemoryCategory(Enum):
 
 @dataclass
 class MemoryEntry:
-    """A single memory entry with metadata."""
+    """A single memory entry with metadata.
+
+    Attributes:
+        id: Unique identifier for this memory entry.
+        content: The memory text content.
+        category: Category classification from MemoryCategory enum.
+        tags: List of tag strings for filtering and retrieval.
+        created_at: Unix timestamp when this entry was first created.
+        last_accessed: Unix timestamp of the most recent access.
+        access_count: Number of times this entry has been retrieved.
+        session_id: Optional session ID that created this entry.
+        source: Source of the entry — "auto" for extracted, "manual" for
+            user-explicit saves.
+    """
 
     id: str
     content: str
@@ -40,7 +53,7 @@ class MemoryEntry:
     last_accessed: float
     access_count: int
     session_id: Optional[str] = None
-    source: str = "auto"  # "auto" extracted, "manual" user explicitly saved
+    source: str = "auto"
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize the memory entry to a dictionary.
