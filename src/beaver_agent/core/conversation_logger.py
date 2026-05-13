@@ -1,7 +1,6 @@
 """Beaver Agent Conversation Logger - Records user input and LLM interactions"""
 
 import json
-import os
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Any
