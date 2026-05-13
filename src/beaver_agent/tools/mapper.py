@@ -279,10 +279,12 @@ def _collect_py_files(root: Path) -> list[Path]:
 # ---------------------------------------------------------------------------
 
 def _file_key(path: Path) -> str:
+    """Return canonical string key for a file path (used as manifest dict key)."""
     return str(path)
 
 
 def _manifest_path(beaver_dir: Path) -> Path:
+    """Return the path to the manifest.json cache file inside .beaver."""
     return beaver_dir / "manifest.json"
 
 
