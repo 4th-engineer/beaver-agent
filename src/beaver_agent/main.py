@@ -164,7 +164,7 @@ def version():
 @app.command()
 def setup(
     force: bool = typer.Option(False, "--force", "-f", help="强制重新配置，覆盖已有 .env"),
-):
+) -> None:
     """First-time setup — create .env from template and guide user through API Key configuration.
 
     Copies .env.example to .env, optionally opens the file in the user's preferred editor,
