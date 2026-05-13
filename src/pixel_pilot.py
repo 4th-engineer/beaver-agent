@@ -196,9 +196,10 @@ def _post_event(event: Dict[str, Any]) -> bool:
 
 
 def _get_agent_name(self) -> str:
-    """从 ToolRouter 的 config 中获取 agent 名称"""
+    """从 ToolRouter 的 config 中获取 agent 名称。"""
     try:
-        app = getattr(getattr(self, "config", None), "app", None)
+        config = getattr(self, "config", None)
+        app = getattr(config, "app", None) if config else None
         return getattr(app, "name", "beaver") if app else "beaver"
     except Exception as e:
         if _has_structlog:
