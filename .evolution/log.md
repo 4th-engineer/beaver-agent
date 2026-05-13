@@ -48,6 +48,7 @@
 | 2026-05-04 09:00 | beaver-agent | Added docstring to CodeGenTool.__init__ (Args/config, llm_client) — last undocumented __init__ among tools with (config, llm_client) pattern | 87 tests passing |
 | 2026-05-05 | beaver-agent | Added explicit import of CodeReviewIssue in debugger.py — ensures proper type annotation support and IDE auto-complete for the shared issue class | 87 tests passing |
 | 2026-05-05 | beaver-agent | Removed dead code in model_command — else branch was identical to if branch (both called show_model_info); simplified to single call | 87 tests passing |
+| 2026-05-14 | beaver-agent | Added numpy-style docstring to _print_stats in commands.py (Args + description) — consistent with sibling functions _get_project_stats and _run_self_check | 756 tests passing |
 | 2026-05-05 | beaver-agent | Removed dead duplicate __init__ in IntentParser (lines 15-23 were shadowed by lines 53-54); added docstring to remaining __init__ | 87 tests passing |
 | 2026-05-05 01:00 | beaver-agent | Removed dead code in browser_tool.py — redundant AGENT_BROWSER_BIN hardcoded path on line 15 was immediately overwritten by line 23 (None init); both still present but now line 15 is unreachable dead code | 87 tests passing |
 | 2026-05-05 02:00 | beaver-agent | Moved StringIO import from inside _build_context to module level in agent.py — follows Python import conventions, avoids repeated import overhead | 87 tests passing |
