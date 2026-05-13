@@ -260,7 +260,15 @@ def _get_project_stats(root: Path) -> dict:
 
 
 def _print_stats(root: Path) -> None:
-    """Print formatted project statistics."""
+    """Print formatted project statistics to the console.
+
+    Args:
+        root: The project root directory to display statistics for.
+
+    Fetches statistics via _get_project_stats() and prints a formatted
+    table including file counts, test count, LOC, language breakdown,
+    current branch, and recent commit info.
+    """
     stats = _get_project_stats(root)
     console.print("\n[bold cyan]📊 项目统计[/bold cyan]")
     console.print(f"  总文件数   : {stats['total_files']}")
