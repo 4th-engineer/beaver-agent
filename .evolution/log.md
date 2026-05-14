@@ -229,6 +229,7 @@
 | 2026-05-28 | beaver-agent | Added Attributes section to MemoryEntry dataclass docstring — documents all 9 fields (id, content, category, tags, timestamps, access_count, session_id, source) | 756 tests passing |
 | 2026-05-14 07:00 | beaver-agent | Fix SkillManager.__init__ type annotation — skills_dirs param was annotated `Dict[str, Path]` but default is `None`, correct to `Optional[Dict[str, Path]]` | 756 tests passing |
 | 2026-05-28 | beaver-agent | Added `-> None` return type annotations to 4 Typer CLI commands in main.py (run, chat, model, map) — all now have consistent type signatures with setup() which already had the annotation | 756 tests passing |
+| 2026-05-14 | beaver-agent | Added docstring args/returns to _build_context() in BeaverAgent — documents tool_results structure and return value | 756 tests passing |
 
 ## Current Stage
 - 756 tests passing
