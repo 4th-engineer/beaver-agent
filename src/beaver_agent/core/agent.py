@@ -299,7 +299,16 @@ Always provide actionable suggestions."""
             return self._generate_fallback_response(intent, context)
 
     def _build_context(self, tool_results: List[Dict[str, Any]]) -> str:
-        """Build context string from tool results — tool-specific summarization."""
+        """Build context string from tool results — tool-specific summarization.
+
+        Args:
+            tool_results: List of tool execution result dicts, each containing
+                'tool', 'success', 'data', and 'error' keys.
+
+        Returns:
+            A formatted string table of tool results, with each tool's output
+            summarized based on its type. Returns empty string if no results.
+        """
         if not tool_results:
             return ""
 
