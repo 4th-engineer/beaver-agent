@@ -25,7 +25,7 @@ import json
 import functools
 from datetime import datetime
 from urllib import request, error
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 __all__ = [
     "connect",
@@ -275,7 +275,7 @@ def _patch_tool_router(verbose: bool = True) -> None:
         if original_route_batch:
 
             @functools.wraps(original_route_batch)
-            def patched_route_batch(self, tasks):
+            def patched_route_batch(self, tasks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
                 """Monkey-patched ToolRouter.route_batch() for batch tool routing.
 
                 Routes each task through patched_route() individually so every
