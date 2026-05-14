@@ -168,6 +168,43 @@ class TestCodeReviewScorerEdgeCases:
         assert score == 0.0
         assert details["keywords_found"] == 0
 
+    def test_duplicate_keywords_count_once(self):
+        """A keyword appearing multiple times is counted only once."""
+        scorer = CodeReviewScorer()
+        # "bug" appears 3 times, but should count as 1 keyword
+        # Note: "recommend" vs "recommends" — regex word-boundary requires exact match
+        review = "bug bug bug — this has a bug and a security issue and a performance problem and readability issue"
+        score, details = scorer.score(review, "")
+        # bug, security, issue, performance, readability = 5 (not "bug" 3x)
+        assert details["keywords_found"] == 5
+
+    def test_context_parameter_ignored(self):
+        """The optional context parameter does not affect scoring."""
+        scorer = CodeReviewScorer()
+        review = "this has a bug and a security issue"
+        score1, details1 = scorer.score(review, "", context=None)
+        score2, details2 = scorer.score(review, "", context={"some": "data"})
+        assert score1 == score2
+        assert details1 == details2
+
+    def test_substring_not_counted(self):
+        """Keyword as substring of another word is not counted."""
+        scorer = CodeReviewScorer()
+        # "bug" appears in "debugging" and "buggy" but not as standalone word
+        review = "debugging is important when code is buggy"
+        score, details = scorer.score(review, "")
+        # Neither "bug" nor "issue" appears as standalone word
+        assert details["keywords_found"] == 0
+        assert score == 0.0
+
+    def test_reference_parameter_ignored(self):
+        """The reference parameter does not affect keyword-based scoring."""
+        scorer = CodeReviewScorer()
+        review = "this has a bug and a security issue"
+        score1, _ = scorer.score(review, "")
+        score2, _ = scorer.score(review, "totally different reference text")
+        assert score1 == score2
+
 
 class TestStrategyMap:
     """Tests for STRATEGY_MAP dictionary and built-in strategy constants."""

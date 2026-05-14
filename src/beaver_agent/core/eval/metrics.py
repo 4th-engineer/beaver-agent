@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 import difflib
+import re
 
 import structlog
 
@@ -125,7 +126,10 @@ class CodeReviewScorer(Scorer):
             details contains {"keyword_coverage": float, "keywords_found": int}.
         """
         keywords = ["bug", "security", "performance", "readability", "issue", "recommend"]
-        found = sum(1 for kw in keywords if kw.lower() in prediction.lower())
+        found = sum(
+            1 for kw in keywords
+            if re.search(r"\b" + re.escape(kw) + r"\b", prediction, re.IGNORECASE)
+        )
         coverage = found / len(keywords)
         return coverage, {"keyword_coverage": coverage, "keywords_found": found}
 
