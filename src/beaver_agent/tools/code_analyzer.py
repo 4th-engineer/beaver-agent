@@ -482,11 +482,6 @@ class CodeAnalyzer:
                     for j, cls in enumerate(module.classes):
                         cls_connector = "└── " if j == len(module.classes) - 1 else "├── "
                         cls_prefix = prefix + ("    " if is_last_item else "│   ")
-                        methods_str = (
-                            f"({', '.join(cls.methods[:3])}{'...' if len(cls.methods) > 3 else ''})"
-                            if cls.methods
-                            else ""
-                        )
                         bases_str = f" ← {', '.join(cls.bases)}" if cls.bases else ""
                         lines.append(f"{cls_prefix}{cls_connector}📦 {cls.name}{bases_str}")
                         lines.append(
