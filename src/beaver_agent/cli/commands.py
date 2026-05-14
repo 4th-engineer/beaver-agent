@@ -327,6 +327,7 @@ def _run_self_check(root: Path) -> None:
         console.print(f"  [green]✓[/green] API Key: {'已配置' if has_key else '[red]未配置[/red]'}")
     except Exception as e:
         console.print(f"  [red]✗ 配置加载失败: {e}[/red]")
+        logger.error("self_check_config_load_failed", exc_info=e)
 
     # 3. Run tests
     console.print("\n[yellow]测试:[/yellow]")
@@ -353,6 +354,7 @@ def _run_self_check(root: Path) -> None:
         console.print("  [red]✗ 测试超时 (>120s)[/red]")
     except Exception as e:
         console.print(f"  [red]✗ 测试运行失败: {e}[/red]")
+        logger.error("self_check_pytest_failed", exc_info=e)
 
     console.print()
 
