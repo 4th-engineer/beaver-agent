@@ -64,6 +64,7 @@ class Benchmark:
     name: str
     description: str = ""
     tasks: list[Task] = field(default_factory=list)
+    _task_index: dict[str, Task] = field(default_factory=dict)
 
     def add_task(self, task: Task) -> "Benchmark":
         """Add a task to the benchmark.
@@ -75,6 +76,7 @@ class Benchmark:
             self for method chaining.
         """
         self.tasks.append(task)
+        self._task_index[task.id] = task
         return self
 
     def __len__(self) -> int:
@@ -94,7 +96,4 @@ class Benchmark:
         Returns:
             The Task if found, otherwise None.
         """
-        for t in self.tasks:
-            if t.id == task_id:
-                return t
-        return None
+        return self._task_index.get(task_id)
