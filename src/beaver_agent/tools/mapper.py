@@ -347,7 +347,7 @@ def _should_reparse(cached: dict, current: dict) -> bool:
 # Chunk-based parallel dispatch
 # --------------------------------------------------------------------------
 
-def _chunked(lst: list, size: int):
+def _chunked(lst: list, size: int) -> Iterator[List[Any]]:
     """Split a list into chunks of at most `size` elements each.
 
     Yields consecutive slices of lst, each with at most `size` items.
