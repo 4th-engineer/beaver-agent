@@ -223,7 +223,21 @@ class MCPManager:
             raise
 
     def _build_env(self, user_env: dict) -> dict:
-        """Build environment for subprocess - safe baseline + user vars"""
+        """Build environment dict for subprocess spawning with safe baseline + user overrides.
+
+        Constructs a baseline environment with platform-aware defaults for PATH,
+        HOME, USER, LANG, LC_ALL, TERM, SHELL, and temp directories. User-provided
+        environment variables (user_env) override the baseline, allowing callers
+        to inject custom values like MINIMAX_API_KEY.
+
+        Args:
+            user_env: Dict of environment variable names → values to layer on top
+                of the baseline. Keys present here override baseline defaults.
+
+        Returns:
+            Complete environment dict for subprocess env= parameter, combining
+            safe platform-specific defaults with user overrides.
+        """
 
         # Platform-aware PATH fallback
         system = platform.system().lower()
