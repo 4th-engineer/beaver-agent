@@ -34,22 +34,14 @@ __all__ = [
     "is_enabled",
 ]
 
-try:
-    import structlog
-
-    _has_structlog = True
-except ImportError:
-    _has_structlog = False
+import structlog
 
 # 全局状态
 _enabled = False
 _viewer_url = "http://localhost:7777"
 _initialized = False
-_verbose = True
 
-# PixelPilot logger — only active if structlog is available
-if _has_structlog:
-    _logger = structlog.get_logger("pixel_pilot")
+_logger = structlog.get_logger("pixel_pilot")
 
 # 工具名映射（tool_name + action -> 人类可读名称）
 TOOL_ACTION_MAP = {
@@ -80,36 +72,26 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
         url: PixelPilot 服务器地址
         verbose: 是否打印连接状态
     """
-    global _enabled, _viewer_url, _initialized, _verbose
-
+    global _enabled, _viewer_url, _initialized
     _viewer_url = url.rstrip("/")
-    _verbose = verbose
 
     # 测试连接（只调用一次）
     test_result = _test_connection()
 
     if test_result:
-        if _has_structlog:
-            _logger.info("connected", url=_viewer_url)
-        elif _verbose:
-            print("[PixelPilot] ✅ Connected! Events will be streamed automatically.")
-
+        _logger.info("connected", url=_viewer_url)
         _enabled = True
         _initialized = True
         _patch_tool_router(verbose)
     else:
-        if _has_structlog:
-            _logger.warning("server_not_reachable", url=_viewer_url)
-        elif _verbose:
-            print("[PixelPilot] ⚠️  Server not reachable, events will be queued locally.")
+        _logger.warning("server_not_reachable", url=_viewer_url)
 
 
 def disconnect() -> None:
     """断开连接，停止事件追踪"""
     global _enabled
     _enabled = False
-    if _has_structlog:
-        _logger.info("disconnected")
+    _logger.info("disconnected")
 
 
 def send(
@@ -162,10 +144,7 @@ def _test_connection() -> bool:
         with request.urlopen(req, timeout=2) as resp:
             return resp.status == 200
     except Exception as e:
-        if _has_structlog:
-            _logger.warning("connection_test_failed", url=_viewer_url, exc_info=e)
-        elif _verbose:
-            print(f"[PixelPilot] ⚠️  Connection test failed for {_viewer_url}: {e}")
+        _logger.warning("connection_test_failed", url=_viewer_url, exc_info=e)
         return False
 
 
@@ -184,14 +163,9 @@ def _post_event(event: Dict[str, Any]) -> bool:
         with request.urlopen(req, timeout=2) as resp:
             return resp.status == 200
     except Exception as e:
-        if _has_structlog:
-            _logger.warning(
-                "post_event_failed", url=_viewer_url, event_type=event.get("type"), exc_info=e
-            )
-        elif _verbose:
-            print(
-                f"[PixelPilot] ⚠️  Failed to post event ({event.get('type')}) to {_viewer_url}: {e}"
-            )
+        _logger.warning(
+            "post_event_failed", url=_viewer_url, event_type=event.get("type"), exc_info=e
+        )
         return False
 
 
@@ -202,10 +176,7 @@ def _get_agent_name(self) -> str:
         app = getattr(config, "app", None) if config else None
         return getattr(app, "name", "beaver") if app else "beaver"
     except Exception as e:
-        if _has_structlog:
-            _logger.warning("get_agent_name_failed", exc_info=e)
-        elif _verbose:
-            print(f"[PixelPilot] Warning: Could not get agent name: {e}")
+        _logger.warning("get_agent_name_failed", exc_info=e)
         return "beaver"
 
 
@@ -328,24 +299,10 @@ def _patch_tool_router(verbose: bool = True) -> None:
         ToolRouter.route = patched_route
         ToolRouter._pixel_patched = True
 
-        if _enabled:
-            if _has_structlog:
-                _logger.info("toolrouter_patched")
-            elif _verbose:
-                print("[PixelPilot] 🔌 ToolRouter patched - all tool calls will be tracked")
-
-        if _has_structlog:
-            _logger.info("pixel_pilot_ready")
-        elif _verbose:
-            print("[PixelPilot] Ready.")
+        _logger.info("toolrouter_patched")
+        _logger.info("pixel_pilot_ready")
 
     except ImportError as e:
-        if _has_structlog:
-            _logger.warning("could_not_patch_toolrouter", exc_info=e)
-        elif _verbose:
-            print(f"[PixelPilot] Warning: Could not patch ToolRouter: {e}")
+        _logger.warning("could_not_patch_toolrouter", exc_info=e)
     except Exception as e:
-        if _has_structlog:
-            _logger.warning("patching_failed", exc_info=e)
-        elif _verbose:
-            print(f"[PixelPilot] Warning: Patching failed: {e}")
+        _logger.warning("patching_failed", exc_info=e)
