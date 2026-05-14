@@ -141,7 +141,6 @@ class LongTermMemory:
         # Index: category -> list of entries (loaded lazily)
         self._index: dict[MemoryCategory, list[MemoryEntry]] = {}
         self._index_loaded: set[MemoryCategory] = set()
-        self._lock = None  # Will use thread lock if needed
 
         logger.info("long_term_memory_initialized", memory_dir=str(self.memory_dir))
 
