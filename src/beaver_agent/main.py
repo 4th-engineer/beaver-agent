@@ -25,7 +25,7 @@ console = Console()
 def run(
     model: Optional[str] = typer.Option(None, "--model", "-m", help="指定模型"),
     debug: bool = typer.Option(False, "--debug", "-d", help="调试模式"),
-):
+) -> None:
     """Start the interactive REPL loop.
 
     Initializes a BeaverAgent with the specified configuration and enters
@@ -53,7 +53,7 @@ def run(
 def chat(
     query: str = typer.Option(..., "--query", "-q", help="查询内容"),
     model: Optional[str] = typer.Option(None, "--model", "-m", help="指定模型"),
-):
+) -> None:
     """Execute a single query and exit.
 
     Initializes a BeaverAgent, sends the query for processing, prints the
@@ -81,7 +81,7 @@ def model(
     url: Optional[str] = typer.Option(None, "--url", help="设置 API Base URL"),
     token: Optional[str] = typer.Option(None, "--token", help="设置 API Token"),
     name: Optional[str] = typer.Option(None, "--name", help="设置模型名称"),
-):
+) -> None:
     """显示或配置 LLM 模型设置。
 
     支持显示当前配置，或通过选项设置 API URL、Token、模型名称。
@@ -129,7 +129,7 @@ def model(
 @app.command()
 def map(
     path: str = typer.Option(".", "--path", help="要扫描的目录路径"),
-):
+) -> None:
     """生成代码地图索引 (.beaver/)
 
     对指定目录进行 AST 静态分析，生成机器可读的代码索引：
