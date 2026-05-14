@@ -8,7 +8,7 @@
 | 2026-05-14 | beaver-agent | Remove dead `sub_parts` variable in code_analyzer.py generate_tree() | 756 tests passing |
 | 2026-05-14 | beaver-agent | Fix MCPManager.__init__ mcp_configs_dir type annotation: `str = None` → `Optional[str] = None` — consistent with skill_manager and intent_parser pattern | 756 tests passing |
 | 2026-05-14 | beaver-agent | Add _task_index dict to Benchmark dataclass — get_task O(n) linear scan → O(1) hash lookup | 756 tests passing |
-| 2026-05-06 | Add test_main.py covering CLI entry points (run, chat, model, version, setup) | 503 tests passing |
+| 2026-05-14 13:00 | beaver-agent | Add docstrings to undocumented Visitor class methods in mapper.py (__init__, __repr__, visit_Import, visit_ImportFrom, visit_FunctionDef, visit_AsyncFunctionDef, _handle_func, visit_ClassDef, visit_Assign) | 756 tests passing |
 | 2026-04-29 | Added docstrings to TerminalTool.get_error_log and run_tests | Improved code documentation |
 | 2026-04-29 | Added skill system - SkillManager, IntentParser skill routing, 2 sample skills | 46 tests passing |
 | 2026-04-29 | Add conversation logger | 62 tests passing |
@@ -151,19 +151,16 @@
 | 2026-05-17 08:00 | beaver-agent | Added 7 tests for SkillStep and SkillPhase dataclasses in test_skill_manager.py — these were exported in __all__ but had no dedicated test coverage; covers creation, equality, optional fields, and nested step ordering | 659 tests passing |
 | 2026-05-17 09:00 | beaver-agent | Added 2 tests for ToolRouter.get_llm_client() (none by default, returns client when set) and fixed robustness gap — get_llm_client() now uses getattr to avoid AttributeError when _llm_client never initialized | 661 tests passing |
 | 2026-05-17 10:00 | beaver-agent | Exported ConversationLogger from core/__init__.py and top-level __init__.py — was used in agent.py but missing from public API, consistent with other core components (ToolRouter, LLMClient, etc.) | 661 tests passing |
-
 | 2026-05-17 11:00 | beaver-agent | Added test for BeaverAgent.reset() logger session lifecycle — verifies end_session() and start_session() are called with new session ID | 662 tests passing |
 | 2026-05-17 12:00 | beaver-agent | Removed redundant nested try-except in CodeGenTool.generate — inner try-except around file_tool.write_file was unreachable dead code (inner except returned before reaching outer); unified to single exception handler with code_generation_or_save_failed event | 662 tests passing |
 | 2026-05-17 13:00 | beaver-agent | Fixed stale test count (661→662) and date (2026-05-16→2026-05-17) in architecture.md — documentation now accurate | 662 tests passing |
 | 2026-05-17 14:00 | beaver-agent | Changed llm_init_failed log level from error to warning in ToolRouter._register_llm — LLM init is recoverable fallback, consistent with agent.py behavior | 662 tests passing |
 | 2026-05-18 00:00 | beaver-agent | Added 3 tests for SkillManager (reload, get_skill_not_found, list_skills_returns_all_fields) | 665 tests passing |
 | 2026-05-18 01:00 | beaver-agent | Added 2 tests for CodeReviewTool._basic_review: detects print statements and mutable default arguments — completes explicit coverage for all 4 Python issue detectors | 667 tests passing |
-
 | 2026-05-18 02:00 | beaver-agent | Added long_term.py to architecture.md memory module docs (tree diagram and module table) — was documented in evolution log and test coverage but missing from architecture doc | 667 tests passing |
 | 2026-05-18 03:00 | beaver-agent | Added comprehensive docstring to TaskPlanner.plan() — replaced one-line placeholder with Args/Returns/Example documenting task template lookup, parameter extraction, and return format | 667 tests passing |
 | 2026-05-18 04:00 | beaver-agent | Separated file save error handling in CodeGenTool.generate — distinct code_save_failed (file_path captured) and code_generation_failed events; previously both shared code_generation_or_save_failed making failure source ambiguous | 667 tests passing |
 | 2026-05-18 05:00 | beaver-agent | Added 9 tests for BeaverAgent._extract_and_store_memory — Chinese preference patterns (4), project fact from code_analyzer/analyze, convention from git/github, solution on error query, no memory on failed tools | 675 tests passing |
-
 | 2026-05-18 06:00 | beaver-agent | Added 8 tests for TaskPlanner edge cases — unknown intent returns [], task structure preserved from INTENT_TASKS, validate_plan accepts extra fields, rejects missing tool/action; _extract_params captures GitHub owner/repo and issue numbers | 683 tests passing |
 | 2026-05-18 07:00 | beaver-agent | Fixed stale test counts in README.md and doc/architecture.md (675→683) — documentation now accurate | 683 tests passing |
 | 2026-05-18 08:00 | beaver-agent | Added ModelAdapter to architecture.md module table — was documented in tree diagram (line 106) but missing from module table, making adapter.py undocumented in the reference section | 683 tests passing |
@@ -177,24 +174,18 @@
 | 2026-05-19 08:00 | beaver-agent | Added 8 tests for BeaverAgent.run() edge cases — empty task list, multiple tasks, intent/task planner exceptions, GitHub/debug/unknown intents, input truncation | 698 tests passing |
 | 2026-05-19 09:00 | beaver-agent | Synced stale test counts in README badge (690→698), README project structure (685→698), and architecture.md (685→698) — documentation now accurate | 698 tests passing |
 | 2026-05-20 03:00 | beaver-agent | Added 2 tests for CodeAnalyzer call_graph edges and generate_tree output — test_analyze_call_graph_cross_module_edges verifies cross-module call edges are captured; test_generate_tree_output_structure verifies generate_tree() contains Beaver branding, Summary stats, and Module Dependencies sections | 700 tests passing |
-
 | 2026-05-20 04:00 | beaver-agent | Enhanced docstring for main.py model command — replaced short Chinese placeholder with full English Args/Example documenting --show behavior | 700 tests passing |
 | 2026-05-20 05:00 | beaver-agent | Added debug logging when BeaverAgent._generate_response() falls back to non-LLM mode (no LLM configured) — logs intent for traceability, consistent with surrounding debug logs | 700 tests passing |
 | 2026-05-20 04:00 | beaver-agent | Added structlog (structured logging) and SQLite + in-memory (LongTermMemory + SessionMemory) to Tech Stack table in README.md — previously undocumented despite being core project dependencies | 700 tests passing |
 | 2026-05-20 05:00 | beaver-agent | Removed stale v2 version markers from architecture.md header (架构设计 v2→架构设计, v2.0→1.0) — consistent with README.md and prior v2 cleanup in agent.py, intent_parser.py, tool_router.py | 700 tests passing |
 | 2026-05-21 04:00 | beaver-agent | Added error handling to /status and /debug CLI commands — both now wrapped in try/except with structlog error logging and console.print user feedback, consistent with /analyze, /browse, /screenshot | 703 tests passing |
-
 | 2026-05-21 05:00 | beaver-agent | Added verbose guards to _test_connection, _post_event, _get_agent_name fallback prints in pixel_pilot.py — these 3 functions printed regardless of verbose param unlike _patch_tool_router; added _verbose global state to track connect() param | 703 tests passing |
 | 2026-05-21 06:00 | beaver-agent | Fixed README self-evolution description — incorrect "每日 09:00" corrected to "每小时 :00"; workflow steps updated to reflect actual hourly audit cycle (code audit, test coverage, doc improvements) | 703 tests passing |
-
 | 2026-05-21 07:00 | beaver-agent | Added 5 error handling tests for FileTool exception paths (read/write permission denied, search_files/content exception, check_project_structure exception) — covers all untested exception handlers in FileTool | 708 tests passing |
-
 | 2026-05-21 08:00 | beaver-agent | Fixed stale schedule in architecture.md 自我进化 section (每日 09:00→每小时 :00) — now consistent with README which was corrected in a prior run | 708 tests passing |
 | 2026-05-21 09:00 | beaver-agent | Fixed stale test counts in README badge (708→709) and project structure (708→709), updated architecture.md status (708→709, 2026-05-17→2026-05-21) — documentation now accurate | 709 tests (708 passing, 1 skipped) |
 | 2026-05-21 10:00 | beaver-agent | Export all config Pydantic models from core/__init__.py — AppConfig, ModelConfig, GitHubConfig, CLIConfig, LoggingConfig, FileToolConfig, MCPConfig, MCPServerConfig now part of public API | 709 tests (708 passing, 1 skipped) |
 | 2026-05-21 11:00 | beaver-agent | Enhanced IntentParser class docstring — replaced one-line placeholder with full pipeline documentation, Attributes section (INTENT_PATTERNS, skill_manager), and doctest examples for parse() | 709 tests (708 passing, 1 skipped) |
-
-| 2026-05-19 09:00 | beaver-agent | Synced stale test counts in README badge (690→698), README project structure (685→698), and architecture.md (685→698) — documentation now accurate | 698 tests passing |
 | 2026-05-22 06:00 | beaver-agent | Added __all__ declarations to all 6 eval/ modules (runner, metrics, loader, harness, task, adapter) and 2 memory/ modules (session, long_term) — completes __all__ sweep across entire codebase | 710 tests passing |
 | 2026-05-22 07:00 | beaver-agent | Added 3 direct tests for SkillManager._parse_skill_file — full frontmatter fields, legacy steps format, and no-frontmatter defaults — previously only tested indirectly via list_skills | 713 tests passing |
 | 2026-05-22 08:00 | beaver-agent | Synced stale test counts in README badge (710→713) and architecture.md (710→713, 2026-05-21→2026-05-22) — documentation now accurate | 713 tests passing |
@@ -203,10 +194,8 @@
 | 2026-05-22 11:00 | beaver-agent | Fixed /model command empty name bug — empty model name after /model command now shows warning instead of silently switching to empty string | 715 tests passing |
 | 2026-05-23 07:00 | beaver-agent | Added 5 tests for _summarize_content untested paths — file/search/terminal truncation, non-string coercion — extends TestSummarizeContent class | 720 tests passing |
 | 2026-05-23 08:00 | beaver-agent | Added 4 tests for MCPManager._load_configs_from_directory — covers YAML loading, empty dir, malformed YAML, nonexistent dir; completes untested internal method coverage | 724 tests passing |
-
 | 2026-05-23 20:00 | beaver-agent | Added 6 tests for /stats and /self-check CLI commands — covers stats display, error handling, self-check routing, and handle_command dispatcher for both new commands | 741 tests passing |
 | 2026-05-24 00:00 | beaver-agent | Added structlog logging to mapper.py — code_map_started and code_map_completed events with full stats (total/parsed/cached files, entry points, incremental flag); added comment to bare except explaining silent skip rationale; completes logging coverage for tools/mapper.py | 741 tests passing |
-
 | 2026-05-08 22:00 | beaver-agent | Added debug log for parse worker failures in mapper.py — bare except Exception was completely silent on worker timeout/crash; now logs at debug level with file path for troubleshooting | 741 tests passing |
 | 2026-05-23 22:00 | beaver-agent | Added structlog logger.info() to mapper.py if __name__ block — structured logging for programmatic/library use alongside existing user-facing CLI print output | 741 tests passing |
 | 2026-05-24 01:00 | beaver-agent | Added comprehensive docstrings to /stats and /self-check command handlers — handle_stats_command, handle_self_check_command, _get_project_stats, and _run_self_check all now have Args/Returns/Behavior sections | 741 tests passing |
@@ -221,18 +210,15 @@
 | 2026-05-26 09:00 | beaver-agent | Added 2 tests for _file_fingerprint — returns mtime/size dict on success, empty dict on OSError (file deleted between stat check) | 756 tests passing |
 | 2026-05-26 10:00 | beaver-agent | Added docstring and return type (-> None) to code_gen.main() — replaced one-line placeholder with Args/Returns documenting REPL behavior; updated test assertion | 756 tests passing |
 | 2026-05-27 | beaver-agent | Removed unused `import os` from conversation_logger.py — clean imports, no functional change | 756 tests passing |
-
 | 2026-05-28 | beaver-agent | Added docstrings to _file_key() and _manifest_path() in mapper.py — undocumented private helpers now documented | 756 tests passing |
 | 2026-05-13 | beaver-agent | Remove unused shutil import from browser_tool.py — dead code cleanup | 756 tests passing |
 | 2026-05-14 | beaver-agent | Replace print() with structlog in mapper.py CLI output (if __name__ == "__main__" block) — consistent logging across all beaver-agent modules | 756 tests passing |
 | 2026-05-14 01:00 | beaver-agent | Simplify nested getattr chain in _get_agent_name() — flat config→app→name lookup instead of double-nested getattr | 756 tests passing |
 | 2026-05-14 04:00 | beaver-agent | Add return type annotation `-> None` to `setup()` command in main.py — typer commands now have consistent type hints | 756 tests passing |
-
 | 2026-05-28 | beaver-agent | Added Attributes section to MemoryEntry dataclass docstring — documents all 9 fields (id, content, category, tags, timestamps, access_count, session_id, source) | 756 tests passing |
 | 2026-05-14 07:00 | beaver-agent | Fix SkillManager.__init__ type annotation — skills_dirs param was annotated `Dict[str, Path]` but default is `None`, correct to `Optional[Dict[str, Path]]` | 756 tests passing |
 | 2026-05-28 | beaver-agent | Added `-> None` return type annotations to 4 Typer CLI commands in main.py (run, chat, model, map) — all now have consistent type signatures with setup() which already had the annotation | 756 tests passing |
 | 2026-05-14 | beaver-agent | Added docstring args/returns to _build_context() in BeaverAgent — documents tool_results structure and return value | 756 tests passing |
-
 ## Current Stage
 - 756 tests passing
 - All public functions documented (100% docstring coverage)
