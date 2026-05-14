@@ -209,14 +209,21 @@ class CodeReviewTool:
         if "console.log" in line:
             issues.append(CodeReviewIssue(
                 severity="minor", line=lineno,
-                message="发现 console.log",
-                suggestion="移除生产代码中的调试语句",
+                message="console.log found in code",
+                suggestion="Remove debug statements from production code",
             ))
         if line.startswith("var "):
             issues.append(CodeReviewIssue(
-                severity="minor", line=lineno,
-                message="使用 var 声明变量",
-                suggestion="使用 let 或 const 替代",
+                severity="major", line=lineno,
+                message="var declaration used",
+                suggestion="Use let or const instead — var hoists and has function scope",
+            ))
+        if " == " in line or line.endswith("==") or ("==" in line and "===" not in line and "!=" not in line and "!(" not in line):
+            # Avoid flagging !==  or ==  in comments/strings
+            issues.append(CodeReviewIssue(
+                severity="major", line=lineno,
+                message="Loose equality (==) used",
+                suggestion="Use === or !== for type-safe comparison",
             ))
 
     def _format_review_response(
