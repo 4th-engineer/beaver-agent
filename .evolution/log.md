@@ -3,6 +3,8 @@
 ## History
 | Date | Changes Made | Impact |
 |------|--------------|--------|
+| 2026-05-15 | beaver-agent | Replace all `print()` fallbacks with `_logger` in pixel_pilot.py — removed 6 print calls, eliminated `_has_structlog` guard, removed dead `_verbose` global; all logging now consistently uses structlog | 760 tests passing |
+
 | 2026-05-14 17:00 | beaver-agent | Add comprehensive docstrings to _call_minimax (Args/Returns/system folding behavior) and _call_fallback (Args/Returns/no-API-key behavior) in llm_client.py — last two undocumented private API-call methods now documented | 756 tests passing |
 
 | 2026-05-14 18:00 | beaver-agent | Add comprehensive docstring to DataStore.get_stats() with Args/Returns description, replacing one-line placeholder | 756 tests passing |
