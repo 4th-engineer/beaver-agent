@@ -227,7 +227,7 @@
 | 2026-05-14 | beaver-agent | Added docstring args/returns to _build_context() in BeaverAgent — documents tool_results structure and return value | 756 tests passing |
 | 2026-05-14 15:00 | beaver-agent | Add return type annotation `-> dict` to MCPConfig.handle_mcp_servers_key Pydantic field validator — consistent type annotation for all public methods |
 | 2026-05-28 | beaver-agent | Fix SkillManager.reload() — was only clearing cache without re-loading skills; now calls _load_skills() so hot-reload actually works | 760 tests passing |
-| 2026-05-29 | beaver-agent | Improve docstrings in CodeAnalyzer private methods — added Args sections documenting List[str] parameter for _parse_imports, _parse_classes, _parse_functions, _get_decorators, _get_function_body | 760 tests passing |
+| 2026-05-29 | beaver-agent | Add structlog error logging to _run_self_check exception handlers (config load + pytest failures) in commands.py — completes full exc_info consistency sweep for _run_self_check | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
