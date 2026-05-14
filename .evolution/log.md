@@ -5,6 +5,8 @@
 |------|--------------|--------|
 | 2026-05-15 | beaver-agent | Replace all `print()` fallbacks with `_logger` in pixel_pilot.py — removed 6 print calls, eliminated `_has_structlog` guard, removed dead `_verbose` global; all logging now consistently uses structlog | 760 tests passing |
 
+| 2026-05-15 04:00 | beaver-agent | Remove dead code (unused `self._lock = None` field) in LongTermMemory.__init__ — field was initialized but never used anywhere in the class | 760 tests passing |
+
 | 2026-05-15 02:00 | beaver-agent | Remove dead `methods_str` variable in code_analyzer.py generate_tree() — was computed but never used, dead code from prior refactor | 760 tests passing |
 
 | 2026-05-14 17:00 | beaver-agent | Add comprehensive docstrings to _call_minimax (Args/Returns/system folding behavior) and _call_fallback (Args/Returns/no-API-key behavior) in llm_client.py — last two undocumented private API-call methods now documented | 756 tests passing |
