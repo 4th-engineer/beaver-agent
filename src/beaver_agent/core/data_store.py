@@ -452,7 +452,17 @@ class DataStore:
         )
 
     def get_stats(self) -> Dict[str, Any]:
-        """Get data store statistics"""
+        """Get data store statistics.
+
+        Scans log files to count total conversation entries, then counts
+        built-in and user skills by looking for SKILL.md files.
+
+        Returns:
+            Dict with keys: ``total_entries`` (int), ``builtin_skills`` (int),
+            ``user_skills`` (int), ``data_version`` (str), and ``logs_dir``
+            (Path). File read errors for individual log files are logged
+            and skipped without aborting the count.
+        """
         log_files = self.get_log_files()
         total_entries = 0
         for f in log_files:
