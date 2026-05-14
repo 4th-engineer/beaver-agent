@@ -113,7 +113,7 @@ class MCPConfig(BaseModel):
 
     @field_validator("servers", mode="before")
     @classmethod
-    def handle_mcp_servers_key(cls, v, info):
+    def handle_mcp_servers_key(cls, v, info) -> dict:
         """Handle both 'servers' (model) and 'mcp_servers' (YAML alias) field names.
 
         Pydantic's populate_by_name allows both names, but the validator still
