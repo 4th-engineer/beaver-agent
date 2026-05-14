@@ -9,6 +9,7 @@
 | 2026-05-14 | beaver-agent | Fix MCPManager.__init__ mcp_configs_dir type annotation: `str = None` → `Optional[str] = None` — consistent with skill_manager and intent_parser pattern | 756 tests passing |
 | 2026-05-14 | beaver-agent | Add _task_index dict to Benchmark dataclass — get_task O(n) linear scan → O(1) hash lookup | 756 tests passing |
 | 2026-05-14 13:00 | beaver-agent | Add docstrings to undocumented Visitor class methods in mapper.py (__init__, __repr__, visit_Import, visit_ImportFrom, visit_FunctionDef, visit_AsyncFunctionDef, _handle_func, visit_ClassDef, visit_Assign) | 756 tests passing |
+| 2026-05-14 | beaver-agent | Move local 'import os' to module-level in mcp_manager.py — _build_env had redundant nested import | 756 tests passing |
 | 2026-04-29 | Added docstrings to TerminalTool.get_error_log and run_tests | Improved code documentation |
 | 2026-04-29 | Added skill system - SkillManager, IntentParser skill routing, 2 sample skills | 46 tests passing |
 | 2026-04-29 | Add conversation logger | 62 tests passing |
