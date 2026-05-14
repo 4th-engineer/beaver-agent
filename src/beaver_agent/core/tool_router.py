@@ -142,7 +142,7 @@ class ToolRouter:
                 "action": action,
             }
 
-    def list_tools(self) -> list:
+    def list_tools(self) -> list[str]:
         """List all registered tool names.
 
         Returns:
