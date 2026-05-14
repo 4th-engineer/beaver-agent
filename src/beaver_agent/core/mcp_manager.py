@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import os
 import platform
 import re
 from pathlib import Path
@@ -223,7 +224,6 @@ class MCPManager:
 
     def _build_env(self, user_env: dict) -> dict:
         """Build environment for subprocess - safe baseline + user vars"""
-        import os
 
         # Platform-aware PATH fallback
         system = platform.system().lower()
