@@ -226,7 +226,7 @@
 | 2026-05-14 07:00 | beaver-agent | Fix SkillManager.__init__ type annotation — skills_dirs param was annotated `Dict[str, Path]` but default is `None`, correct to `Optional[Dict[str, Path]]` | 756 tests passing |
 | 2026-05-14 | beaver-agent | Added docstring args/returns to _build_context() in BeaverAgent — documents tool_results structure and return value | 756 tests passing |
 | 2026-05-14 15:00 | beaver-agent | Add return type annotation `-> dict` to MCPConfig.handle_mcp_servers_key Pydantic field validator — consistent type annotation for all public methods |
-| 2026-05-28 | beaver-agent | Add 4 CodeReviewScorer edge-case tests (duplicate keyword counting, context/reference ignored, substring-not-counted word-boundary) and fix keyword matching: substring `in` → `re.search(r'\b...\b')` word-boundary regex — prevents false positives like "bug" matching "debugging"/"buggy" | 760 tests passing |
+| 2026-05-28 | beaver-agent | Fix SkillManager.reload() — was only clearing cache without re-loading skills; now calls _load_skills() so hot-reload actually works | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
