@@ -190,7 +190,22 @@ class FileTool:
             return f"Error searching content: {e}"
 
     def check_project_structure(self, path: str = ".") -> str:
-        """Check project structure"""
+        """Check and report the structure of a project directory.
+
+        Scans the target directory for common project files and directories
+        (pyproject.toml, setup.py, requirements.txt, package.json, Cargo.toml,
+        go.mod, .git, src/, tests/, README.md) and reports which are present
+        and which are missing.
+
+        Args:
+            path: Root directory to check (supports ~ expansion).
+                  Defaults to the current directory (".").
+
+        Returns:
+            A formatted string showing which important project files/directories
+            were found (✅) and which are missing (❌), or an error message if
+            the directory cannot be accessed.
+        """
         try:
             path = Path(path).expanduser()
             important_files = [
