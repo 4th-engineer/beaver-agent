@@ -162,7 +162,11 @@ class CodeAnalyzer:
         return ".".join(parts) if parts else "root"
 
     def _parse_imports(self, lines: List[str]) -> Tuple[List[str], Dict[str, List[str]]]:
-        """Parse import statements"""
+        """Parse import statements from pre-split source lines.
+
+        Args:
+            lines: Source file lines (already split by newline).
+        """
         imports = []
         from_imports = {}
 
@@ -181,7 +185,11 @@ class CodeAnalyzer:
         return imports, from_imports
 
     def _parse_classes(self, lines: List[str]) -> List[ClassInfo]:
-        """Parse class definitions"""
+        """Parse class definitions from pre-split source lines.
+
+        Args:
+            lines: Source file lines (already split by newline).
+        """
         classes = []
 
         for i, line in enumerate(lines):
@@ -207,7 +215,11 @@ class CodeAnalyzer:
         return classes
 
     def _parse_functions(self, lines: List[str]) -> List[FunctionInfo]:
-        """Parse function definitions"""
+        """Parse function definitions from pre-split source lines.
+
+        Args:
+            lines: Source file lines (already split by newline).
+        """
         functions = []
 
         i = 0
@@ -264,7 +276,12 @@ class CodeAnalyzer:
         return None
 
     def _get_decorators(self, lines: List[str], start: int) -> List[str]:
-        """Get decorators for a function"""
+        """Get decorators for a function from pre-split source lines.
+
+        Args:
+            lines: Source file lines (already split by newline).
+            start: Index of the decorated function definition line.
+        """
         decorators = []
         for i in range(start - 1, -1, -1):
             line = lines[i].strip()
@@ -275,7 +292,12 @@ class CodeAnalyzer:
         return decorators
 
     def _get_function_body(self, lines: List[str], start: int) -> str:
-        """Get the body of a function"""
+        """Get the body of a function from pre-split source lines.
+
+        Args:
+            lines: Source file lines (already split by newline).
+            start: Index of the function definition line.
+        """
         indent = len(lines[start]) - len(lines[start].lstrip())
 
         body_lines = []
