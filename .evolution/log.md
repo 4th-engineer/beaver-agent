@@ -230,6 +230,7 @@
 | 2026-05-14 15:00 | beaver-agent | Add return type annotation `-> dict` to MCPConfig.handle_mcp_servers_key Pydantic field validator — consistent type annotation for all public methods |
 | 2026-05-28 | beaver-agent | Fix SkillManager.reload() — was only clearing cache without re-loading skills; now calls _load_skills() so hot-reload actually works | 760 tests passing |
 | 2026-05-29 | beaver-agent | Add structlog error logging to _run_self_check exception handlers (config load + pytest failures) in commands.py — completes full exc_info consistency sweep for _run_self_check | 760 tests passing |
+| 2026-05-29 | beaver-agent | Add return type annotation `List[Dict[str, Any]]` to patched_route_batch in pixel_pilot.py — consistent with sibling patched_route which already had full type hints | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
