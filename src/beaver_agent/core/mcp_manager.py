@@ -77,7 +77,7 @@ class MCPManager:
         mcp_configs_dir: Optional directory path to load additional MCP configs.
     """
 
-    def __init__(self, config: BeaverConfig, mcp_configs_dir: str = None):
+    def __init__(self, config: BeaverConfig, mcp_configs_dir: Optional[str] = None):
         """Initialize MCP manager and load server configurations.
 
         Args:
