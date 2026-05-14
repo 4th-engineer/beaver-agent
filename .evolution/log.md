@@ -3,6 +3,8 @@
 ## History
 | Date | Changes Made | Impact |
 |------|--------------|--------|
+| 2026-05-14 17:00 | beaver-agent | Add comprehensive docstrings to _call_minimax (Args/Returns/system folding behavior) and _call_fallback (Args/Returns/no-API-key behavior) in llm_client.py — last two undocumented private API-call methods now documented | 756 tests passing |
+
 | 2026-05-06 07:30 | beaver-agent | Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06) — documentation now accurate | 503 tests passing |
 | 2026-05-14 | beaver-agent | Add return type annotations to _chunked and _file_fingerprint in mapper.py — _chunked: `-> Iterator[List[Any]]`, _file_fingerprint: `-> dict` | 756 tests passing |
 | 2026-05-14 | beaver-agent | Remove dead `sub_parts` variable in code_analyzer.py generate_tree() | 756 tests passing |
