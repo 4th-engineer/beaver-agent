@@ -7,6 +7,8 @@
 
 | 2026-05-14 18:00 | beaver-agent | Add comprehensive docstring to DataStore.get_stats() with Args/Returns description, replacing one-line placeholder | 756 tests passing |
 
+| 2026-05-14 20:00 | beaver-agent | Add docstring to FileTool.check_project_structure with Args/Returns describing scanned files and output format | 760 tests passing |
+
 | 2026-05-06 07:30 | beaver-agent | Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06) — documentation now accurate | 503 tests passing |
 | 2026-05-14 | beaver-agent | Add return type annotations to _chunked and _file_fingerprint in mapper.py — _chunked: `-> Iterator[List[Any]]`, _file_fingerprint: `-> dict` | 756 tests passing |
 | 2026-05-14 | beaver-agent | Remove dead `sub_parts` variable in code_analyzer.py generate_tree() | 756 tests passing |
