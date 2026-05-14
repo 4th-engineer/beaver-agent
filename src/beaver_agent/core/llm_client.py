@@ -165,7 +165,22 @@ class LLMClient:
         )
 
     def _call_minimax(self, messages: List[Dict], **kwargs) -> LLMResponse:
-        """Call MiniMax API (Anthropic-compatible /messages endpoint)"""
+        """Call MiniMax API (Anthropic-compatible /messages endpoint).
+
+        Args:
+            messages: List of message dicts with 'role' and 'content' keys.
+                System messages are folded into the first user message since
+                MiniMax does not support a separate "system" role.
+            **kwargs: Additional arguments:
+                - max_tokens (int): Maximum tokens to generate (default: 4096)
+                - temperature (float): Sampling temperature (default: 0.7)
+
+        Returns:
+            LLMResponse with model's reply text, model name, and token usage.
+            On HTTP error (except 401), returns an LLMResponse with the error
+            message as content. On network error, returns an LLMResponse with
+            the request error as content.
+        """
         base_url = (self.api_base or "https://api.minimaxi.com/anthropic/v1").rstrip("/")
 
         # MiniMax doesn't support "system" role - fold system prompt into first user message
@@ -242,7 +257,20 @@ class LLMClient:
             return LLMResponse(content=f"Unexpected error: {e}", model=self.model)
 
     def _call_fallback(self, messages: List[Dict], **kwargs) -> LLMResponse:
-        """Fallback when no API key is available"""
+        """Fallback when no API key is available.
+
+        Returns an LLMResponse indicating that no LLM provider is configured.
+        Callers should treat a "not configured" content string as a signal
+        to disable LLM-dependent features gracefully.
+
+        Args:
+            messages: Unused in fallback path; accepted for interface compatibility.
+            **kwargs: Unused in fallback path; accepted for interface compatibility.
+
+        Returns:
+            LLMResponse with content indicating no API key is configured,
+            and model set to "none".
+        """
         return LLMResponse(
             content="LLM API key not configured. Please set MINIMAX_API_KEY, OPENROUTER_API_KEY, or ANTHROPIC_API_KEY",
             model="none",
