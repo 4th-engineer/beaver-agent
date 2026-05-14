@@ -91,10 +91,12 @@ def _parse_file_worker(args: tuple[str, str]) -> dict[str, Any] | None:
 
     class Visitor(ast.NodeVisitor):
         def visit_Import(self, node: ast.Import) -> None:
+            """Collect all ``import <module>`` statements."""
             for alias in node.names:
                 imports.append({"module": alias.name, "as": alias.asname or alias.name})
 
         def visit_ImportFrom(self, node: ast.ImportFrom) -> None:
+            """Collect all ``from <module> import <names>`` statements."""
             for alias in node.names:
                 imports.append({
                     "module": node.module or "",
@@ -103,6 +105,12 @@ def _parse_file_worker(args: tuple[str, str]) -> dict[str, Any] | None:
                 })
 
         def visit_FunctionDef(self, node: ast.FunctionDef) -> None:
+            """Visit a synchronous function definition node.
+
+            Walks the function body once to collect call targets, then records
+            the function signature (name, args, return annotation) as an export.
+            Guards against double-walking to support the class-level explicit walk.
+            """
             if id(node) in _walked_funcs:
                 self.generic_visit(node)
                 return
@@ -110,6 +118,11 @@ def _parse_file_worker(args: tuple[str, str]) -> dict[str, Any] | None:
             self._handle_func(node, is_async=False)
 
         def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:
+            """Visit an async function definition node.
+
+            Same logic as visit_FunctionDef but for async defs; marks the
+            exported type as "async".
+            """
             if id(node) in _walked_funcs:
                 self.generic_visit(node)
                 return
@@ -117,6 +130,13 @@ def _parse_file_worker(args: tuple[str, str]) -> dict[str, Any] | None:
             self._handle_func(node, is_async=True)
 
         def _handle_func(self, node, is_async: bool) -> None:
+            """Collect calls and record function signature as an export.
+
+            Walks the function body to find all Call nodes (both Name and
+            Attribute form) and appends them to the file-level ``calls`` list.
+            Records the function/class method as an export with its signature.
+            Sets ``entry_points`` if the function is named ``main``.
+            """
             name = node.name
             # Walk function body once, collecting all calls
             for child in ast.walk(node):
@@ -141,6 +161,13 @@ def _parse_file_worker(args: tuple[str, str]) -> dict[str, Any] | None:
             # for nested functions / class methods.
 
         def visit_ClassDef(self, node: ast.ClassDef) -> None:
+            """Visit a class definition node.
+
+            Records the class as an export (with its dunder methods) and walks
+            the class body explicitly to collect calls and Typer app assignments.
+            Guards against double-walking via the ``_walked_funcs`` set — methods
+            that have already been walked by visit_FunctionDef are skipped here.
+            """
             dunder = [
                 n.name for n in node.body
                 if isinstance(n, ast.FunctionDef) and n.name.startswith("__")
@@ -185,6 +212,7 @@ def _parse_file_worker(args: tuple[str, str]) -> dict[str, Any] | None:
             self.generic_visit(node)
 
         def visit_Assign(self, node: ast.Assign) -> None:
+            """Visit an assignment node, detecting Typer app instantiations."""
             for target in node.targets:
                 name_attr = getattr(target, "id", None)
                 if not name_attr:
@@ -524,6 +552,11 @@ class MapperTool:
     """
 
     def __init__(self, root: Path | None = None):
+        """Initialize the MapperTool.
+
+        Args:
+            root: Root directory to scan. Defaults to the current working directory.
+        """
         self.root = root or Path.cwd()
 
     def run(self) -> dict:
@@ -531,6 +564,7 @@ class MapperTool:
         return generate(self.root)
 
     def __repr__(self) -> str:
+        """Return a developer-friendly string representation."""
         return f"MapperTool(root={self.root!r})"
 
 
