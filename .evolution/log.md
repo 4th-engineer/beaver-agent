@@ -5,6 +5,8 @@
 |------|--------------|--------|
 | 2026-05-15 | beaver-agent | Replace all `print()` fallbacks with `_logger` in pixel_pilot.py — removed 6 print calls, eliminated `_has_structlog` guard, removed dead `_verbose` global; all logging now consistently uses structlog | 760 tests passing |
 
+| 2026-05-15 | beaver-agent | Add `list[str]` return type annotation to `ToolRouter.list_tools()` for type consistency with sibling method `get_tool()` | 760 tests passing |
+
 | 2026-05-15 | beaver-agent | Enhance JS static analysis: add loose equality (==) check as major severity issue, upgrade var from minor→major with explanatory suggestion, and unify messages to English | 760 tests passing |
 
 | 2026-05-15 04:00 | beaver-agent | Remove dead code (unused `self._lock = None` field) in LongTermMemory.__init__ — field was initialized but never used anywhere in the class | 760 tests passing |

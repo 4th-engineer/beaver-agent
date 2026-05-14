@@ -33,7 +33,7 @@ _LANG_ALIASES = {
 class CodeGenTool:
     """Tool for generating code using LLM"""
 
-    def __init__(self, config, llm_client):
+    def __init__(self, config, llm_client) -> None:
         """Initialize the CodeGenTool.
 
         Args:
