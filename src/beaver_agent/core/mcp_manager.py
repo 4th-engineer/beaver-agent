@@ -417,11 +417,28 @@ class MCPManager:
         return {"success": True, "result": response.get("result", {})}
 
     def get_tools(self) -> list[dict]:
-        """Return all available MCP tools as dicts"""
+        """Return all available MCP tools as dicts.
+
+        Returns:
+            List of dictionaries, each representing a tool via
+            ``MCPTool.to_dict()`` with keys: name, description,
+            input_schema, server, and original_name.
+
+        Example:
+            >>> manager.get_tools()
+            [{'name': 'mcp_server_fetch', 'description': '...', ...}]
+        """
         return [tool.to_dict() for tool in self._tools.values()]
 
     def get_tool(self, full_name: str) -> Optional[MCPTool]:
-        """Get a specific MCP tool by full name"""
+        """Get a specific MCP tool by full name.
+
+        Args:
+            full_name: The fully-qualified tool name, e.g. ``mcp_server_fetch``.
+
+        Returns:
+            The ``MCPTool`` instance if found, otherwise ``None``.
+        """
         return self._tools.get(full_name)
 
     async def shutdown(self) -> None:
