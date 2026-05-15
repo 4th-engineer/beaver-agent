@@ -132,6 +132,7 @@ class GitHubTool:
 - 🔗 URL: {data.get("html_url", "N/A")}
 """
             else:
+                logger.warning("github_get_repo_info_failed", status=response.status_code, owner=owner, repo=repo)
                 return f"❌ Failed to get repo info: {response.status_code} - {response.text}"
 
         except Exception as e:
@@ -315,6 +316,7 @@ class GitHubTool:
 🔗 {pr.get("html_url")}
 """
             else:
+                logger.warning("github_create_pr_failed", status=response.status_code, owner=owner, repo=repo)
                 return f"❌ Failed to create PR: {response.status_code} - {response.text}"
 
         except Exception as e:
