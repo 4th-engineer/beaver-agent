@@ -10,6 +10,7 @@
 | 2026-05-15 | beaver-agent | Replace all `print()` fallbacks with `_logger` in pixel_pilot.py — removed 6 print calls, eliminated `_has_structlog` guard, removed dead `_verbose` global; all logging now consistently uses structlog | 760 tests passing |
 | 2026-05-15 | beaver-agent | Fix `_ensure_category_loaded` IOError handler: on file read failure, explicitly set `entries = []` instead of using the pre-try empty list — prevents undefined-variable bug where stale data could be cached silently | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add `-> None` return type annotation to BeaverAgent.__init__() — type-hinted `config: BeaverConfig` param but missing return annotation, inconsistent with all other core `__init__` methods | 760 tests passing |
+| 2026-05-15 | beaver-agent | Fix `parse_with_confidence` to assign 0.95 confidence to `skill_invocation` intent — was falling through to keyword-matching (0.6) despite docstring stating 0.95 for skill invocations; fixed test that documented the buggy behavior | 760 tests passing |
 | 2026-04-29 | Add conversation logger | 62 tests passing |
 | 2026-04-29 | Clean up TODO placeholders in code_gen.py | 66 tests passing |
 | 2026-04-30 | Added docstring to MCPTool.to_dict() | 70 tests passing |
