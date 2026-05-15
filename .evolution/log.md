@@ -230,6 +230,8 @@
 
 | 2026-05-15 15:00 | beaver-agent | Add -> None return type annotation to CodeAnalyzer.__init__ — consistent with all other __init__ methods across tools/core packages | 760 tests passing |
 
+| 2026-05-15 18:00 | beaver-agent | Add -> None return type annotation to MapperTool.__init__ — consistent with CodeAnalyzer.__init__ pattern, completes __init__ return type sweep across tools/ package | 760 tests passing |
+
 ## Current Stage
 - 760 tests passing
 - All public functions documented (100% docstring coverage)
