@@ -218,9 +218,9 @@ class DataStore:
         Args:
             names: List of migration names that have been applied.
 
-        Raises:
-            OSError: If the directory cannot be created (logged and swallowed
-                     to avoid blocking migration progress).
+        Note:
+            OSError is caught and logged but not raised — migration state
+            loss is recoverable via re-run.
         """
         try:
             self.applied_file.write_text(json.dumps(names, indent=2))
