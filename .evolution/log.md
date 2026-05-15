@@ -4,6 +4,7 @@
 | Date | Changes Made | Impact |
 |------|--------------|--------|
 | 2026-05-15 | beaver-agent | Add precise return type `dict[str, float | int]` to `_file_fingerprint()` in mapper.py | 760 tests passing |
+| 2026-05-15 | beaver-agent | Fix `_get_agent_name(self)` to `_get_agent_name(obj)` in pixel_pilot.py — standalone function incorrectly declared as method, causing potential signature mismatch | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add docstring to `_relative()` in mapper.py | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add Args/Returns docstrings to `_get_docstring` and `_build_call_graph` in code_analyzer.py — `_get_docstring` had only a one-line placeholder; `_build_call_graph` had no docstring at all | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add `-> None` return type annotation to `version()` CLI command — adjacent `setup()` already annotated, `version()` was the only inconsistency in the public CLI interface | 760 tests passing |
