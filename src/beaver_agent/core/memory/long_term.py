@@ -560,7 +560,19 @@ class LongTermMemory:
     # ─────────────────────────────────────────────────────────────────
 
     def get_stats(self) -> dict[str, Any]:
-        """Get memory statistics."""
+        """Get memory statistics across all categories.
+
+        Loads all categories to compute entry counts per category and total.
+        Safe to call on an empty memory (returns zero counts).
+
+        Returns:
+            A dict with keys: ``categories`` (dict mapping category name to
+            entry count), ``total_entries`` (int total across all categories).
+
+        Example:
+            >>> mem.get_stats()
+            {'categories': {'user_preference': 2, 'fact': 5}, 'total_entries': 7}
+        """
         stats = {
             "categories": {},
             "total_entries": 0,
