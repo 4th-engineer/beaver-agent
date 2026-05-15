@@ -87,15 +87,15 @@ def test_parse_with_confidence_general_chat(parser):
 
 
 def test_parse_with_confidence_skill_invocation_direct(parser):
-    """Test parse_with_confidence returns 0.6 confidence for /skill direct command.
+    """Test parse_with_confidence returns 0.95 confidence for /skill direct command.
 
     /skill some-skill is a direct skill invocation command (not a skill trigger),
-    matching the 'skill_invocation' pattern (keyword: '/skill'). Skill triggers
-    (matched by skill manager) return 'skill:<name>' and get 0.95 confidence.
+    matching the 'skill_invocation' pattern (keyword: '/skill'). Direct /skill
+    commands get 0.95 confidence just like skill triggers (skill:<name>).
     """
     intent, conf = parser.parse_with_confidence("/skill some-skill")
     assert intent == "skill_invocation"
-    assert conf == 0.6  # 0.5 + 1 keyword match from INTENT_PATTERNS
+    assert conf == 0.95
 
 
 def test_parse_file_operation_intent(parser):

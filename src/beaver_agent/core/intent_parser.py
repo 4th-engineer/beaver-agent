@@ -172,7 +172,7 @@ class IntentParser:
         intent = self.parse(user_input)
 
         # Skill matches get high confidence
-        if intent.startswith("skill:"):
+        if intent.startswith("skill:") or intent == "skill_invocation":
             return intent, 0.95
 
         # Calculate confidence based on keyword match count
