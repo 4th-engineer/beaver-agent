@@ -3,6 +3,7 @@
 ## History
 | Date | Changes Made | Impact |
 |------|--------------|--------|
+| 2026-05-16 | beaver-agent | Add missing docstrings to generate_tree(), _file_to_module(), _get_decorators() and enhance existing docstrings in code_analyzer.py — all 6 private methods now have complete Args/Returns documentation | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add precise return type `dict[str, float | int]` to `_file_fingerprint()` in mapper.py | 760 tests passing |
 | 2026-05-15 | beaver-agent | Fix `_get_agent_name(self)` to `_get_agent_name(obj)` in pixel_pilot.py — standalone function incorrectly declared as method, causing potential signature mismatch | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add docstring to `_relative()` in mapper.py | 760 tests passing |
