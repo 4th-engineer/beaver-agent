@@ -253,7 +253,20 @@ class CodeAnalyzer:
         return functions
 
     def _get_docstring(self, lines: List[str], start: int) -> Optional[str]:
-        """Get docstring from a class or function"""
+        """Extract the docstring from a class or function definition.
+
+        Scans lines starting at ``start`` (the def/class line) for a triple-quoted
+        string on the immediately following line. Handles both single-line
+        docstrings and multi-line docstrings that span several lines.
+
+        Args:
+            lines: Source file lines (already split by newline).
+            start: Index of the line containing the ``def`` or ``class`` keyword.
+
+        Returns:
+            The docstring content with surrounding quotes stripped, truncated
+            to 100 characters, or ``None`` if no docstring is present.
+        """
         if start + 1 >= len(lines):
             return None
 
@@ -371,7 +384,13 @@ class CodeAnalyzer:
         return list(set(calls))
 
     def _build_call_graph(self) -> None:
-        """Build cross-module call graph"""
+        """Build cross-module call graph.
+
+        Iterates over all modules, functions, and classes collected during analysis
+        and populates ``self.call_graph`` with directed edges representing
+        cross-module call dependencies. Only records calls that cross module
+        boundaries (intra-module calls are excluded).
+        """
         for module_name, module in self.modules.items():
             self.call_graph[module_name] = set()
 
