@@ -55,7 +55,7 @@ class CodeReviewIssue:
 class CodeReviewTool:
     """Tool for code review using LLM"""
 
-    def __init__(self, config, llm_client):
+    def __init__(self, config, llm_client) -> None:
         """Initialize CodeReviewTool.
 
         Args:

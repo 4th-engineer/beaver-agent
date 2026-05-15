@@ -38,7 +38,7 @@ _COMMON_ERRORS = {
 class DebuggerTool:
     """Tool for debugging code and analyzing errors"""
 
-    def __init__(self, config, llm_client):
+    def __init__(self, config, llm_client) -> None:
         """Initialize the DebuggerTool.
 
         Args:

@@ -128,7 +128,7 @@ class LongTermMemory:
     MAX_ENTRIES_PER_CATEGORY = 500  # Soft limit for file size management
     DEFAULT_TAGS = ["important", "learned"]
 
-    def __init__(self, memory_dir: Path):
+    def __init__(self, memory_dir: Path) -> None:
         """Initialize long-term memory.
 
         Args:
