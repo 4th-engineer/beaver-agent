@@ -81,7 +81,7 @@ class CodeAnalyzer:
     _RE_FUNC_DEF_SIMPLE = re.compile(r"def\s+(\w+)\s*\(")
     _RE_FUNC_CALLS = re.compile(r"(?:(\w+)\.)?(\w+)\s*\(")
 
-    def __init__(self, root_path: str):
+    def __init__(self, root_path: str) -> None:
         """Initialize the CodeAnalyzer with a project root path.
 
         Args:
