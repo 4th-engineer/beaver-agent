@@ -154,7 +154,7 @@ def map(
 
 
 @app.command()
-def version():
+def version() -> None:
     """显示版本信息"""
     from beaver_agent import __version__
 
