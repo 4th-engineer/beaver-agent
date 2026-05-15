@@ -95,7 +95,7 @@ class CodeAnalyzer:
         self.call_graph: Dict[str, Set[str]] = {}  # module -> set of modules it calls
 
     def analyze(self) -> None:
-        """Scan and analyze all Python files"""
+        """Scan and analyze all Python files."""
         src_path = self.root_path / "src" / "beaver_agent"
         if not src_path.exists():
             logger.warning("code_analyzer_src_path_not_found", path=str(src_path))
@@ -153,7 +153,17 @@ class CodeAnalyzer:
         self.modules[module_name] = module
 
     def _file_to_module(self, path: Path) -> str:
-        """Convert file path to module name"""
+        """Convert a file path to a dotted module name.
+
+        Strips the ``src/beaver_agent/`` prefix, removes the ``.py`` extension,
+        and converts ``__init__.py`` to its parent module name.
+
+        Args:
+            path: Absolute path to the Python source file.
+
+        Returns:
+            A dotted module name (e.g. ``core.agent`` for ``core/agent.py``).
+        """
         parts = list(path.relative_to(self.root_path / "src" / "beaver_agent").parts)
         if parts[-1] == "__init__.py":
             parts = parts[:-1]
@@ -289,11 +299,17 @@ class CodeAnalyzer:
         return None
 
     def _get_decorators(self, lines: List[str], start: int) -> List[str]:
-        """Get decorators for a function from pre-split source lines.
+        """Extract decorator names for a function definition.
+
+        Scans backwards from the function ``def`` line, collecting any lines
+        that start with ``@`` until a non-comment, non-blank line is reached.
 
         Args:
             lines: Source file lines (already split by newline).
             start: Index of the decorated function definition line.
+
+        Returns:
+            List of decorator names in order (top-most first).
         """
         decorators = []
         for i in range(start - 1, -1, -1):
@@ -443,7 +459,8 @@ class CodeAnalyzer:
             >>> print(analyzer.generate_tree())
             🦫 Beaver Agent - Code Repository Map
             ============================================================
-            <...module tree...>
+            📊 Summary: 42 modules | 156 classes | 203 functions
+
         """
         lines = []
         lines.append("🦫 Beaver Agent - Code Repository Map")
