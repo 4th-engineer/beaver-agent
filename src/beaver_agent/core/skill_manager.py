@@ -147,7 +147,7 @@ class SkillManager:
 
     SKILL_FILE = "SKILL.md"
 
-    def __init__(self, project_root: Path, skills_dirs: Optional[Dict[str, Path]] = None):
+    def __init__(self, project_root: Path, skills_dirs: Optional[Dict[str, Path]] = None) -> None:
         """Initialize SkillManager and load all skills from disk.
 
         Args:
