@@ -353,7 +353,7 @@ def _save_manifest(beaver_dir: Path, manifest: dict[str, dict]) -> None:
     tmp.replace(mf)
 
 
-def _file_fingerprint(path: Path) -> dict:
+def _file_fingerprint(path: Path) -> dict[str, float | int]:
     """Return {mtime, size}. Sufficient for change detection; no hash I/O."""
     try:
         st = path.stat()
