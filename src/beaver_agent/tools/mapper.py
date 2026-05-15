@@ -269,6 +269,16 @@ def _get_return(node) -> str | None:
 
 
 def _relative(path: Path, root: Path) -> str:
+    """Return the relative path of `path` from `root`, or the absolute path as a string on error.
+
+    Args:
+        path: The file or directory path to relativize.
+        root: The root directory to compute the relative path from.
+
+    Returns:
+        The relative path as a posix string, or the absolute path string if
+        `path` is not under `root` (ValueError from `relative_to`).
+    """
     try:
         return path.relative_to(root).as_posix()
     except ValueError:
