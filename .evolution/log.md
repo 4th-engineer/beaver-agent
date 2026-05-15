@@ -4,30 +4,7 @@
 | Date | Changes Made | Impact |
 |------|--------------|--------|
 | 2026-05-15 | beaver-agent | Replace all `print()` fallbacks with `_logger` in pixel_pilot.py — removed 6 print calls, eliminated `_has_structlog` guard, removed dead `_verbose` global; all logging now consistently uses structlog | 760 tests passing |
-
-| 2026-05-15 | beaver-agent | Add `list[str]` return type annotation to `ToolRouter.list_tools()` for type consistency with sibling method `get_tool()` | 760 tests passing |
-
-| 2026-05-15 | beaver-agent | Enhance JS static analysis: add loose equality (==) check as major severity issue, upgrade var from minor→major with explanatory suggestion, and unify messages to English | 760 tests passing |
-
-| 2026-05-15 04:00 | beaver-agent | Remove dead code (unused `self._lock = None` field) in LongTermMemory.__init__ — field was initialized but never used anywhere in the class | 760 tests passing |
-
-| 2026-05-15 02:00 | beaver-agent | Remove dead `methods_str` variable in code_analyzer.py generate_tree() — was computed but never used, dead code from prior refactor | 760 tests passing |
-
-| 2026-05-14 17:00 | beaver-agent | Add comprehensive docstrings to _call_minimax (Args/Returns/system folding behavior) and _call_fallback (Args/Returns/no-API-key behavior) in llm_client.py — last two undocumented private API-call methods now documented | 756 tests passing |
-
-| 2026-05-14 18:00 | beaver-agent | Add comprehensive docstring to DataStore.get_stats() with Args/Returns description, replacing one-line placeholder | 756 tests passing |
-
-| 2026-05-14 20:00 | beaver-agent | Add docstring to FileTool.check_project_structure with Args/Returns describing scanned files and output format | 760 tests passing |
-
-| 2026-05-06 07:30 | beaver-agent | Updated architecture.md test count (494→503) and date (2026-05-09→2026-05-06) — documentation now accurate | 503 tests passing |
-| 2026-05-14 | beaver-agent | Add return type annotations to _chunked and _file_fingerprint in mapper.py — _chunked: `-> Iterator[List[Any]]`, _file_fingerprint: `-> dict` | 756 tests passing |
-| 2026-05-14 | beaver-agent | Remove dead `sub_parts` variable in code_analyzer.py generate_tree() | 756 tests passing |
-| 2026-05-14 | beaver-agent | Fix MCPManager.__init__ mcp_configs_dir type annotation: `str = None` → `Optional[str] = None` — consistent with skill_manager and intent_parser pattern | 756 tests passing |
-| 2026-05-14 | beaver-agent | Add _task_index dict to Benchmark dataclass — get_task O(n) linear scan → O(1) hash lookup | 756 tests passing |
-| 2026-05-14 13:00 | beaver-agent | Add docstrings to undocumented Visitor class methods in mapper.py (__init__, __repr__, visit_Import, visit_ImportFrom, visit_FunctionDef, visit_AsyncFunctionDef, _handle_func, visit_ClassDef, visit_Assign) | 756 tests passing |
-| 2026-05-14 | beaver-agent | Move local 'import os' to module-level in mcp_manager.py — _build_env had redundant nested import | 756 tests passing |
-| 2026-04-29 | Added docstrings to TerminalTool.get_error_log and run_tests | Improved code documentation |
-| 2026-04-29 | Added skill system - SkillManager, IntentParser skill routing, 2 sample skills | 46 tests passing |
+| 2026-05-15 | beaver-agent | Fix `_ensure_category_loaded` IOError handler: on file read failure, explicitly set `entries = []` instead of using the pre-try empty list — prevents undefined-variable bug where stale data could be cached silently | 760 tests passing |
 | 2026-04-29 | Add conversation logger | 62 tests passing |
 | 2026-04-29 | Clean up TODO placeholders in code_gen.py | 66 tests passing |
 | 2026-04-30 | Added docstring to MCPTool.to_dict() | 70 tests passing |
