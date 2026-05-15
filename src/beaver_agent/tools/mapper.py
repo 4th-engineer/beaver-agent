@@ -347,10 +347,14 @@ def _load_manifest(beaver_dir: Path) -> dict[str, dict]:
 
 
 def _save_manifest(beaver_dir: Path, manifest: dict[str, dict]) -> None:
+    """Save the manifest fingerprint cache to .beaver/manifest.json atomically."""
     mf = _manifest_path(beaver_dir)
     tmp = mf.with_suffix(".tmp")
-    tmp.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(mf)
+    try:
+        tmp.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
+        tmp.replace(mf)
+    except OSError as e:
+        logger.warning("manifest_save_failed", path=str(mf), exc_info=e)
 
 
 def _file_fingerprint(path: Path) -> dict[str, float | int]:
@@ -548,11 +552,14 @@ def generate(root: Path | None = None) -> dict:
 def _write_json_streaming(path: Path, data: dict) -> None:
     """Write JSON directly to file (no large intermediary string)."""
     tmp = path.with_suffix(".tmp")
-    tmp.write_text(
-        json.dumps(data, indent=2, ensure_ascii=False),
-        encoding="utf-8",
-    )
-    tmp.replace(path)
+    try:
+        tmp.write_text(
+            json.dumps(data, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        tmp.replace(path)
+    except OSError as e:
+        logger.warning("json_stream_write_failed", path=str(path), exc_info=e)
 
 
 class MapperTool:
