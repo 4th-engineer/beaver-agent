@@ -561,7 +561,7 @@ class MapperTool:
     Wraps :func:`generate` with a per-instance root path.
     """
 
-    def __init__(self, root: Path | None = None):
+    def __init__(self, root: Path | None = None) -> None:
         """Initialize the MapperTool.
 
         Args:
