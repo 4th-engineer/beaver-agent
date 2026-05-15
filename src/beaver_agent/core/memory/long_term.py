@@ -336,7 +336,24 @@ class LongTermMemory:
         query_terms: set[str],
         recency_weight: float,
     ) -> float:
-        """Calculate relevance score for a memory entry."""
+        """Calculate relevance score for a memory entry.
+
+        Combines four signals into a weighted relevance score:
+        1. Keyword match ratio (proportion of query terms found in content)
+        2. Tag bonus (+0.1 per query term that matches an entry tag)
+        3. Recency score (exponential decay, half-life ~30 days)
+        4. Access frequency bonus (log scale, capped at 1.0)
+
+        Args:
+            entry: The memory entry to score.
+            query_terms: Set of lowercase terms from the search query.
+            recency_weight: Weight for recency vs. keyword matching (0.0–1.0).
+                Higher values favor recent entries; lower values favor keyword matches.
+
+        Returns:
+            Composite relevance score in range [0.0, ~2.4]. Higher scores indicate
+            stronger relevance. Unmatched entries return 0.0.
+        """
         content_lower = entry.content.lower()
 
         # Keyword matching score
