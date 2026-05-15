@@ -338,7 +338,19 @@ class CodeAnalyzer:
         return "\n".join(body_lines)
 
     def _find_class_methods(self, lines: List[str], class_start: int) -> List[str]:
-        """Find method names in a class"""
+        """Find method names defined inside a class body.
+
+        Scans forward from the class definition line, collecting all ``def`` lines
+        that are nested inside the class (identified by indentation depth). Stops
+        when a line with lower or equal indentation is encountered.
+
+        Args:
+            lines: Source file lines (already split by newline).
+            class_start: Index of the line containing ``class <name>:``.
+
+        Returns:
+            List of method names (just the function name, no parentheses or args).
+        """
         methods = []
 
         # Find end of class
