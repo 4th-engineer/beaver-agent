@@ -3,6 +3,7 @@
 ## History
 | Date | Changes Made | Impact |
 |------|--------------|--------|
+| 2026-05-15 | beaver-agent | Add docstring to `_relative()` in mapper.py — documents Args/Returns behavior for path relativization including ValueError fallback | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add `-> None` return type annotation to `version()` CLI command — adjacent `setup()` already annotated, `version()` was the only inconsistency in the public CLI interface | 760 tests passing |
 | 2026-05-15 | beaver-agent | Replace all `print()` fallbacks with `_logger` in pixel_pilot.py — removed 6 print calls, eliminated `_has_structlog` guard, removed dead `_verbose` global; all logging now consistently uses structlog | 760 tests passing |
 | 2026-05-15 | beaver-agent | Fix `_ensure_category_loaded` IOError handler: on file read failure, explicitly set `entries = []` instead of using the pre-try empty list — prevents undefined-variable bug where stale data could be cached silently | 760 tests passing |
