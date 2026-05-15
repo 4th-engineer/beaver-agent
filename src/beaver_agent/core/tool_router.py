@@ -15,7 +15,7 @@ __all__ = ["ToolRouter"]
 class ToolRouter:
     """Route tasks to appropriate tools"""
 
-    def __init__(self, config: BeaverConfig):
+    def __init__(self, config: BeaverConfig) -> None:
         """Initialize the ToolRouter with configuration and register all tools and LLM.
 
         Args:
