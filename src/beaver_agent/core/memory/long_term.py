@@ -181,6 +181,9 @@ class LongTermMemory:
                     category=category.value,
                     exc_info=e,
                 )
+                # Continue with empty entries so the category at least
+                # appears loadable; the caller sees an empty list, not a crash.
+                entries = []
 
         self._index[category] = entries
         self._index_loaded.add(category)

@@ -240,6 +240,7 @@
 | 2026-05-29 | beaver-agent | Add structlog error logging to _run_self_check exception handlers (config load + pytest failures) in commands.py — completes full exc_info consistency sweep for _run_self_check | 760 tests passing |
 | 2026-05-29 | beaver-agent | Add return type annotation `List[Dict[str, Any]]` to patched_route_batch in pixel_pilot.py — consistent with sibling patched_route which already had full type hints | 760 tests passing |
 | 2026-05-30 | beaver-agent | Add comprehensive docstring to MCPManager._build_env — Args/Returns documenting platform-aware env baseline (PATH, HOME, TERM, TMPDIR) + user override pattern | 760 tests passing |
+| 2026-05-31 | beaver-agent | Add None return type annotation to CodeGenTool.__init__ for type annotation consistency | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
