@@ -27,7 +27,7 @@ __all__ = ["BeaverAgent"]
 class BeaverAgent:
     """Beaver Agent - Main orchestration class with LLM"""
 
-    def __init__(self, config: BeaverConfig):
+    def __init__(self, config: BeaverConfig) -> None:
         """Initialize the BeaverAgent with configuration.
 
         Args:
