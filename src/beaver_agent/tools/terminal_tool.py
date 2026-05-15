@@ -25,7 +25,7 @@ class TerminalTool:
         "> /dev/sd",  # Disk operations
     ]
 
-    def __init__(self, config):
+    def __init__(self, config) -> None:
         """Initialize the TerminalTool with configuration.
 
         Args:

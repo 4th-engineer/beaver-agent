@@ -222,6 +222,8 @@
 | 2026-05-31 | beaver-agent | Add None return type annotation to CodeGenTool.__init__ for type annotation consistency | 760 tests passing |
 | 2026-05-15 12:00 | beaver-agent | Add comprehensive docstring to LongTermMemory._calculate_relevance — documents 4-signal scoring algorithm (keyword match, tag bonus, recency decay, access frequency) with Args/Returns sections | 760 tests passing |
 
+| 2026-05-15 13:00 | beaver-agent | Add None return type annotation to TerminalTool.__init__ — consistent with BeaverAgent.__init__ pattern | 760 tests passing |
+
 ## Current Stage
 - 760 tests passing
 - All public functions documented (100% docstring coverage)
