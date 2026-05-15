@@ -1,8 +1,3 @@
-# [Project Name] - Project Self-Evolution Log
-
-## History
-| Date | Changes Made | Impact |
-|------|--------------|--------|
 | 2026-05-16 | beaver-agent | Add missing docstrings to generate_tree(), _file_to_module(), _get_decorators() and enhance existing docstrings in code_analyzer.py — all 6 private methods now have complete Args/Returns documentation | 760 tests passing |
 | 2026-05-16 | beaver-agent | Enhance docstrings for get_tools() and get_tool() in mcp_manager.py — single-line placeholders replaced with Args/Returns/Example sections | 760 tests passing |
 | 2026-05-16 | beaver-agent | Add `-> None` return type annotation to `SkillManager.__init__()` — was the only `__init__` in core modules missing return type annotation, restoring internal consistency | 760 tests passing |
@@ -229,21 +224,16 @@
 | 2026-05-30 | beaver-agent | Add comprehensive docstring to MCPManager._build_env — Args/Returns documenting platform-aware env baseline (PATH, HOME, TERM, TMPDIR) + user override pattern | 760 tests passing |
 | 2026-05-31 | beaver-agent | Add None return type annotation to CodeGenTool.__init__ for type annotation consistency | 760 tests passing |
 | 2026-05-15 12:00 | beaver-agent | Add comprehensive docstring to LongTermMemory._calculate_relevance — documents 4-signal scoring algorithm (keyword match, tag bonus, recency decay, access frequency) with Args/Returns sections | 760 tests passing |
-
 | 2026-05-15 13:00 | beaver-agent | Add None return type annotation to TerminalTool.__init__ — consistent with BeaverAgent.__init__ pattern | 760 tests passing |
-
 | 2026-05-15 14:00 | beaver-agent | Add -> None return type annotation to ToolRouter.__init__ — consistent with BeaverAgent.__init__ pattern in core/ module group | 760 tests passing |
-
 | 2026-05-15 15:00 | beaver-agent | Add -> None return type annotation to CodeAnalyzer.__init__ — consistent with all other __init__ methods across tools/core packages | 760 tests passing |
-
 | 2026-05-15 18:00 | beaver-agent | Add -> None return type annotation to MapperTool.__init__ — consistent with CodeAnalyzer.__init__ pattern, completes __init__ return type sweep across tools/ package | 760 tests passing |
 | 2026-05-31 | beaver-agent | Add None return type annotation to CodeReviewTool.__init__, DebuggerTool.__init__, and LongTermMemory.__init__ — completes __init__ return type consistency across tools/core packages | 760 tests passing |
 | 2026-05-16 05:00 | beaver-agent | Enhance docstring for CodeAnalyzer._find_class_methods — documents indentation-based class boundary detection, Args, and Returns (was one-line stub) | 760 tests passing |
 | 2026-05-16 06:00 | beaver-agent | Add docstring to LongTermMemory.get_stats() — Args/Returns/Example documenting categories dict and total_entries, completing 100% docstring coverage for all long_term.py methods | 760 tests passing |
 | 2026-05-15 20:00 | beaver-agent | Add logger.warning for non-success HTTP responses in get_repo_info and create_pr (github_tool.py) — completes warning-level logging consistency for all GitHub API error paths | 760 tests passing |
-| 2026-05-16 03:00 | beaver-agent | Add OSError handling to _save_manifest and _write_json_streaming in mapper.py — all JSON I/O operations now have graceful error handling with logger.warning, consistent with other I/O in the module | 760 tests passing |
-
-| 2026-05-16 04:00 | beaver-agent | Fix misleading Raises: OSError docstring in _save_applied (data_store.py) — exception is caught and logged, never raised; replaced with Note: section documenting the actual non-raising behavior | 760 tests passing |
+| 2026-05-16 03:00 | beaver-agent | Add OSError handling to _save_manifest and _write_json_streaming in mapper.py — completes error handling consistency for all JSON I/O in the module | 760 tests passing |
+| 2026-05-16 07:00 | beaver-agent | Add exc_info=e to parse_file_worker_failed debug log in mapper.py — captures parse worker exception details for troubleshooting | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
@@ -258,3 +248,4 @@
 3. CLI documentation (mostly complete)
 4. Logging enhancement (complete)
 5. Public API __all__ declarations (complete)
+
