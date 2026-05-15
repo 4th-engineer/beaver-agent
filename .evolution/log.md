@@ -241,6 +241,8 @@
 | 2026-05-15 20:00 | beaver-agent | Add logger.warning for non-success HTTP responses in get_repo_info and create_pr (github_tool.py) — completes warning-level logging consistency for all GitHub API error paths | 760 tests passing |
 | 2026-05-16 03:00 | beaver-agent | Add OSError handling to _save_manifest and _write_json_streaming in mapper.py — all JSON I/O operations now have graceful error handling with logger.warning, consistent with other I/O in the module | 760 tests passing |
 
+| 2026-05-16 04:00 | beaver-agent | Fix misleading Raises: OSError docstring in _save_applied (data_store.py) — exception is caught and logged, never raised; replaced with Note: section documenting the actual non-raising behavior | 760 tests passing |
+
 ## Current Stage
 - 760 tests passing
 - All public functions documented (100% docstring coverage)
