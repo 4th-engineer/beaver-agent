@@ -232,6 +232,7 @@
 
 | 2026-05-15 18:00 | beaver-agent | Add -> None return type annotation to MapperTool.__init__ — consistent with CodeAnalyzer.__init__ pattern, completes __init__ return type sweep across tools/ package | 760 tests passing |
 | 2026-05-31 | beaver-agent | Add -> None return type annotation to CodeReviewTool.__init__, DebuggerTool.__init__, and LongTermMemory.__init__ — completes __init__ return type consistency across tools/core packages | 760 tests passing |
+| 2026-05-15 20:00 | beaver-agent | Add logger.warning for non-success HTTP responses in get_repo_info and create_pr (github_tool.py) — completes warning-level logging consistency for all GitHub API error paths | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
