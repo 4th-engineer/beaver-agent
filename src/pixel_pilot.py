@@ -169,10 +169,10 @@ def _post_event(event: Dict[str, Any]) -> bool:
         return False
 
 
-def _get_agent_name(self) -> str:
+def _get_agent_name(obj) -> str:
     """从 ToolRouter 的 config 中获取 agent 名称。"""
     try:
-        config = getattr(self, "config", None)
+        config = getattr(obj, "config", None)
         app = getattr(config, "app", None) if config else None
         return getattr(app, "name", "beaver") if app else "beaver"
     except Exception as e:
