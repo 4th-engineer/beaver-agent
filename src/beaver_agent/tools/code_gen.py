@@ -62,7 +62,7 @@ class CodeGenTool:
         Returns:
             Generated code string, or a skeleton template if LLM is not configured.
         """
-        language = self._normalize_language(language)
+        language = self.normalize_language(language)
         logger.info("generating_code", language=language, description=description[:50])
 
         try:
@@ -87,8 +87,20 @@ class CodeGenTool:
             logger.error("code_generation_failed", language=language, exc_info=e)
             return "❌ Code generation failed. Check logs for details."
 
-    def _normalize_language(self, language: str) -> str:
-        """Normalize language name (aliases, lowercasing)."""
+    def normalize_language(self, language: str) -> str:
+        """Normalize a programming language name to its canonical form.
+
+        Handles case normalization, whitespace stripping, and common aliases
+        (e.g. ``"js"`` → ``"javascript"``, ``"py"`` → ``"python"``).
+
+        Args:
+            language: A language name or alias (case-insensitive).
+
+        Returns:
+            The canonical lowercase language name (e.g. ``"python"``,
+            ``"javascript"``, ``"go"``). Returns the input as-is if no alias
+            matches.
+        """
         lang = language.lower().strip()
         return _LANG_ALIASES.get(lang, lang)
 
@@ -202,7 +214,7 @@ main "$@"
         Returns:
             Completed code with TODO sections filled in, or error message on failure.
         """
-        language = self._normalize_language(language)
+        language = self.normalize_language(language)
         logger.info("completing_code", language=language, description=description[:50])
 
         prompt_text = (
@@ -232,7 +244,7 @@ main "$@"
         Returns:
             Refactored code string, or error message on failure.
         """
-        language = self._normalize_language(language)
+        language = self.normalize_language(language)
         logger.info("refactoring_code", language=language, style=style)
 
         prompt_text = (
