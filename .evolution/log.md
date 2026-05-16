@@ -255,6 +255,7 @@
 | 2026-05-16 19:00 | beaver-agent | Translate code_review.py generic issue messages (line length, trailing whitespace) from Chinese to English — consistent with English convention across codebase | 760 tests passing |
 
 | 2026-05-16 23:00 | beaver-agent | Add -> None return type to 3 __init__ methods (ConversationLogger, IntentParser, SessionMemory) — completes __init__ return type consistency sweep across core/ | 760 tests passing |
+| 2026-05-17 03:00 | beaver-agent | Add OSError logging + enhanced docstring to DataStore._ensure_dirs — mkdir failures now logged at WARNING instead of silently propagating | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
