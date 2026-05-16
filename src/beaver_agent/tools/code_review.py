@@ -180,26 +180,26 @@ class CodeReviewTool:
         if "TODO" in line or "FIXME" in line:
             issues.append(CodeReviewIssue(
                 severity="minor", line=lineno,
-                message=f"发现未完成代码: {line[:50]}",
-                suggestion="完成后移除 TODO 注释",
+                message=f"Unfinished code: {line[:50]}",
+                suggestion="Remove TODO comment when done",
             ))
         if line.startswith("except:") or line == "except:":
             issues.append(CodeReviewIssue(
                 severity="major", line=lineno,
-                message="使用裸 except 子句",
-                suggestion="使用 `except Exception:` 并指定具体异常类型",
+                message="Bare except clause",
+                suggestion="Use `except Exception:` with a specific exception type",
             ))
         if line.startswith("print("):
             issues.append(CodeReviewIssue(
                 severity="minor", line=lineno,
-                message="发现 print 语句",
-                suggestion="考虑使用日志模块 (logging)",
+                message="print() statement found",
+                suggestion="Use the logging module instead",
             ))
         if "def " in line and "=[]" in line:
             issues.append(CodeReviewIssue(
                 severity="major", line=lineno,
-                message="使用可变默认参数",
-                suggestion="使用 None 作为默认值，在函数内检查",
+                message="Mutable default argument",
+                suggestion="Use None as the default and initialize inside the function",
             ))
 
     def _check_js_line(

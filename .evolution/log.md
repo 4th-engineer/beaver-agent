@@ -1,3 +1,5 @@
+| 2026-05-16 21:00 | beaver-agent | Fix double-slash URL bug in pixel_pilot — _viewer_url default was 'http://localhost:7777' which caused http://localhost:7777//event when concatenated; now uses .rstrip('/') | 760 tests passing |
+
 | 2026-05-16 20:05 | beaver-agent | Fix mapper.py parse_file_worker exception handler: swap futures dict key from Future→path to path→Future, then retrieve file_path in as_completed loop — original code used loop variable `args` after dict comprehension which points to last element, not the failed file | 760 tests passing |
 
 | 2026-05-16 | beaver-agent | Add AttributeError handling to MCP manager stdio ops (_send_request, _send_notification, _read_response) — catches lock-capture race where shutdown() could nullify process between capture and use | 760 tests passing |
