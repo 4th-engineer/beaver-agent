@@ -16,7 +16,7 @@ __all__ = ["ConversationLogger"]
 class ConversationLogger:
     """Thread-safe conversation logger for debugging and analysis"""
 
-    def __init__(self, log_dir: str = None):
+    def __init__(self, log_dir: str = None) -> None:
         """Initialize the conversation logger.
 
         Args:

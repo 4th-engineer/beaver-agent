@@ -22,7 +22,7 @@ class SessionMemory:
         metadata: Dict with created_at and last_updated timestamps.
     """
 
-    def __init__(self, max_history: int = 100):
+    def __init__(self, max_history: int = 100) -> None:
         """Initialize session memory.
 
         Args:

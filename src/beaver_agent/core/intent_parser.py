@@ -97,7 +97,7 @@ class IntentParser:
         "skill_invocation": ["/skill"],
     }
 
-    def __init__(self, skill_manager: Optional[SkillManager] = None):
+    def __init__(self, skill_manager: Optional[SkillManager] = None) -> None:
         """Initialize IntentParser with optional SkillManager.
 
         Args:
