@@ -1,4 +1,4 @@
-| 2026-05-16 | beaver-agent | Add missing `-> None` return type annotation to `MCPManager.__init__()` — was the only `__init__` in core modules without return type annotation, fixing internal type consistency | 760 tests passing |
+| 2026-05-16 | beaver-agent | Enhance `_find_calls()` docstring in code_analyzer.py — add Args/Returns sections documenting the regex scanning behavior and return value format | 760 tests passing |
 | 2026-05-16 | beaver-agent | Add missing docstrings to generate_tree(), _file_to_module(), _get_decorators() and enhance existing docstrings in code_analyzer.py — all 6 private methods now have complete Args/Returns documentation | 760 tests passing |
 | 2026-05-16 | beaver-agent | Enhance docstrings for get_tools() and get_tool() in mcp_manager.py — single-line placeholders replaced with Args/Returns/Example sections | 760 tests passing |
 | 2026-05-16 | beaver-agent | Add `-> None` return type annotation to `SkillManager.__init__()` — was the only `__init__` in core modules missing return type annotation, restoring internal consistency | 760 tests passing |
