@@ -352,6 +352,11 @@ class CodeAnalyzer:
         Args:
             lines: Source file lines (already split by newline).
             start: Index of the function definition line.
+
+        Returns:
+            The function body as a single newline-joined string, including
+            all lines at greater indentation than the function definition.
+            Returns an empty string if the function has no body.
         """
         indent = len(lines[start]) - len(lines[start].lstrip())
 
