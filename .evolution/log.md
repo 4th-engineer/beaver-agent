@@ -1,3 +1,5 @@
+| 2026-05-16 20:05 | beaver-agent | Fix mapper.py parse_file_worker exception handler: swap futures dict key from Future→path to path→Future, then retrieve file_path in as_completed loop — original code used loop variable `args` after dict comprehension which points to last element, not the failed file | 760 tests passing |
+
 | 2026-05-16 | beaver-agent | Add AttributeError handling to MCP manager stdio ops (_send_request, _send_notification, _read_response) — catches lock-capture race where shutdown() could nullify process between capture and use | 760 tests passing |
 
 | 2026-05-16 | beaver-agent | Add `-> None` return type annotation to `Runner.__init__()` in eval/runner.py — completes `__init__` return type consistency sweep across all core/eval packages (adapter, harness, loader, metrics, prompting, runner, task) | 760 tests passing |

@@ -38,7 +38,7 @@ import structlog
 
 # 全局状态
 _enabled = False
-_viewer_url = "http://localhost:7777"
+_viewer_url = "http://localhost:7777".rstrip("/")
 _initialized = False
 
 _logger = structlog.get_logger("pixel_pilot")
