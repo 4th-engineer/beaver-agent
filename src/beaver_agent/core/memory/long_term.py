@@ -240,22 +240,28 @@ class LongTermMemory:
         self._index[category].append(entry)
 
         # Trim if exceeds limit (remove oldest entries)
-        self._trim_category(category)
+        trim_ok = self._trim_category(category)
 
-        logger.info(
-            "memory_added",
-            memory_id=memory_id,
-            category=category.value,
-            content_preview=content[:50],
-        )
+        if trim_ok:
+            logger.info(
+                "memory_added",
+                memory_id=memory_id,
+                category=category.value,
+                content_preview=content[:50],
+            )
 
         return memory_id
 
-    def _trim_category(self, category: MemoryCategory) -> None:
-        """Remove oldest entries if category exceeds max size."""
+    def _trim_category(self, category: MemoryCategory) -> bool:
+        """Remove oldest entries if category exceeds max size.
+
+        Returns:
+            True if trim succeeded (file rewritten and index updated);
+            False if trim failed (IOError logged, index left unchanged).
+        """
         entries = self._index.get(category, [])
         if len(entries) <= self.MAX_ENTRIES_PER_CATEGORY:
-            return
+            return True
 
         # Sort by created_at, keep newest MAX_ENTRIES
         sorted_entries = sorted(entries, key=lambda e: e.created_at, reverse=True)
@@ -269,7 +275,7 @@ class LongTermMemory:
                     f.write(json.dumps(entry.to_dict(), ensure_ascii=False) + "\n")
         except IOError as e:
             logger.error("memory_trim_failed", category=category.value, exc_info=e)
-            return
+            return False
 
         self._index[category] = trimmed
         logger.info(
@@ -277,6 +283,7 @@ class LongTermMemory:
             category=category.value,
             removed=len(entries) - len(trimmed),
         )
+        return True
 
     # ─────────────────────────────────────────────────────────────────
     # Retrieval
