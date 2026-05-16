@@ -36,7 +36,7 @@ class ToolRouter:
         router = ToolRouter(config)
         result = router.route({"tool": "file_tool", "action": "read", "params": {"path": "README.md"}})
         if result["success"]:
-            print(result["data"])
+            logger.info("tool_result", tool=result.get("tool"), action=result.get("action"), data=result["data"])
     """
 
     def __init__(self, config: BeaverConfig) -> None:
