@@ -150,7 +150,16 @@ class DataStore:
         self._register_builtin_migrations()
 
     def _ensure_dirs(self) -> None:
-        """Ensure all data directories exist"""
+        """Ensure all data directories exist.
+
+        Attempts to create each required directory. Failures (permission denied,
+        disk full, etc.) are logged and swallowed so one bad directory does not
+        abort startup — the data store remains usable for directories that were
+        successfully created.
+
+        Returns:
+            None. Individual creation failures are logged at WARNING level.
+        """
         for d in [
             self.data_dir,
             self.logs_dir,
@@ -158,7 +167,10 @@ class DataStore:
             self.skills_builtin,
             self.skills_user,
         ]:
-            d.mkdir(parents=True, exist_ok=True)
+            try:
+                d.mkdir(parents=True, exist_ok=True)
+            except OSError as e:
+                logger.warning("data_dir_create_failed", path=str(d), exc_info=e)
 
     # ─────────────────────────────────────────────────────────
     # Version Management
