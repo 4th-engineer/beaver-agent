@@ -1,3 +1,5 @@
+| 2026-05-16 | beaver-agent | Add AttributeError handling to MCP manager stdio ops (_send_request, _send_notification, _read_response) — catches lock-capture race where shutdown() could nullify process between capture and use | 760 tests passing |
+
 | 2026-05-16 | beaver-agent | Add `-> None` return type annotation to `Runner.__init__()` in eval/runner.py — completes `__init__` return type consistency sweep across all core/eval packages (adapter, harness, loader, metrics, prompting, runner, task) | 760 tests passing |
 | 2026-05-16 | beaver-agent | Enhance `_get_function_body()` docstring in code_analyzer.py — add Returns section documenting newline-joined body string and empty-string edge case | 760 tests passing |
 | 2026-05-16 | beaver-agent | Enhance `_find_calls()` docstring in code_analyzer.py — add Args/Returns sections documenting the regex scanning behavior and return value format | 760 tests passing |
