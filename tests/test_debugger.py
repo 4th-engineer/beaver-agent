@@ -135,13 +135,13 @@ class TestBasicErrorAnalysis:
     """Tests for _basic_error_analysis() fallback method"""
 
     def test_detects_index_error(self, debugger_tool):
-        """Test IndexError detection and Chinese fix"""
+        """Test IndexError detection and English fix"""
         result = debugger_tool._basic_error_analysis("IndexError: list index out of range")
         assert "IndexError" in result
         assert "Index out of range" in result
 
     def test_detects_key_error(self, debugger_tool):
-        """Test KeyError detection and Chinese fix"""
+        """Test KeyError detection and English fix"""
         result = debugger_tool._basic_error_analysis("KeyError: 'missing_key'")
         assert "KeyError" in result
         assert "Key not found in dictionary" in result
@@ -153,13 +153,13 @@ class TestBasicErrorAnalysis:
         assert "Object has no such attribute or method" in result
 
     def test_detects_type_error(self, debugger_tool):
-        """Test TypeError detection and Chinese fix"""
+        """Test TypeError detection and English fix"""
         result = debugger_tool._basic_error_analysis("TypeError: unsupported operand type(s)")
         assert "TypeError" in result
         assert "Type mismatch" in result
 
     def test_detects_value_error(self, debugger_tool):
-        """Test ValueError detection and Chinese fix"""
+        """Test ValueError detection and English fix"""
         result = debugger_tool._basic_error_analysis("ValueError: invalid literal")
         assert "ValueError" in result
         assert "Invalid value" in result
