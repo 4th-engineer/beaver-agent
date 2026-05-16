@@ -114,7 +114,16 @@ class CodeAnalyzer:
         self._build_call_graph()
 
     def _analyze_file(self, path: Path) -> None:
-        """Analyze a single Python file"""
+        """Analyze a single Python file and populate the module registry.
+
+        Reads the file, splits it into lines, then calls the individual parsers
+        for imports, classes, and functions. Also registers all discovered
+        functions and classes in the global ``all_functions`` and ``all_classes``
+        dictionaries for cross-reference during call-graph building.
+
+        Args:
+            path: Absolute path to the Python source file to analyze.
+        """
         rel_path = str(path.relative_to(self.root_path))
         module_name = self._file_to_module(path)
         module = ModuleInfo(path=rel_path)
@@ -197,8 +206,16 @@ class CodeAnalyzer:
     def _parse_classes(self, lines: List[str]) -> List[ClassInfo]:
         """Parse class definitions from pre-split source lines.
 
+        Scans for lines matching the ``class <Name>`` pattern, extracts
+        base classes from the parenthesized suffix, retrieves the docstring
+        from the lines immediately following the definition, and collects
+        method names by scanning the indented body.
+
         Args:
             lines: Source file lines (already split by newline).
+
+        Returns:
+            List of ClassInfo objects for each class found in the file.
         """
         classes = []
 
@@ -227,8 +244,17 @@ class CodeAnalyzer:
     def _parse_functions(self, lines: List[str]) -> List[FunctionInfo]:
         """Parse function definitions from pre-split source lines.
 
+        Scans for lines starting with ``def `` and extracts the function name,
+        parameters (unused), docstring, decorators, and body content. Also
+        collects function calls found inside the body via ``_find_calls``.
+        Skips methods that appear inside class bodies (those are handled separately
+        by ``_find_class_methods``).
+
         Args:
             lines: Source file lines (already split by newline).
+
+        Returns:
+            List of FunctionInfo objects for each top-level function found.
         """
         functions = []
 
@@ -454,7 +480,19 @@ class CodeAnalyzer:
                             self.call_graph[module_name].add(called_module)
 
     def _get_class_calls(self, module: ModuleInfo, cls: ClassInfo) -> List[str]:
-        """Get all calls made by class methods"""
+        """Get all calls made by class methods.
+
+        Resolves each method name in the class to its corresponding FunctionInfo
+        entry in ``all_functions`` (keyed by ``ClassName.method_name``) and
+        collects all calls recorded in the method body.
+
+        Args:
+            module: ModuleInfo for the module containing this class.
+            cls: ClassInfo for the class whose methods should be scanned.
+
+        Returns:
+            List of function names called by any method in the class.
+        """
         calls = []
         for method_name in cls.methods:
             full_name = f"{cls.name}.{method_name}"
