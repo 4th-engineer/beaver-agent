@@ -133,7 +133,7 @@ class TestHandleCommand:
         assert result is True
         assert mock_config.app.debug is True
         captured = capsys.readouterr()
-        assert "开启" in captured.out
+        assert "on" in captured.out
 
     def test_debug_toggle_off(self, mock_config, mock_agent, capsys):
         """Test /debug toggles debug mode off."""
@@ -142,14 +142,14 @@ class TestHandleCommand:
         assert result is True
         assert mock_config.app.debug is False
         captured = capsys.readouterr()
-        assert "关闭" in captured.out
+        assert "off" in captured.out
 
     def test_unknown_command_returns_true(self, mock_config, mock_agent, capsys):
         """Test unknown command returns True and prints error."""
         result = handle_command("/unknown", mock_config, mock_agent)
         assert result is True
         captured = capsys.readouterr()
-        assert "未知命令" in captured.out
+        assert "Unknown command" in captured.out
 
     def test_browse_command(self, mock_config, mock_agent, capsys):
         """Test /browse <url> opens URL."""
@@ -174,7 +174,7 @@ class TestHandleCommand:
             result = handle_command("/browse https://example.com", mock_config, mock_agent)
             assert result is True
             captured = capsys.readouterr()
-            assert "浏览失败" in captured.out
+            assert "Browse failed" in captured.out
             assert "Network error" in captured.out
 
     def test_model_switch_empty_name(self, mock_config, mock_agent, capsys):
@@ -306,9 +306,9 @@ class TestShowStatus:
         assert "test-session-123" in captured.out
         assert "test-model" in captured.out
         assert "test-provider" in captured.out
-        assert "2 条消息" in captured.out
-        assert "5 条记忆" in captured.out
-        assert "3 个工具" in captured.out
+        assert "2 messages" in captured.out
+        assert "5 entries" in captured.out
+        assert "3 tools" in captured.out
 
 
 class TestCliApp:
@@ -487,7 +487,7 @@ class TestHandleStatsCommand:
             mock_stats.return_value = stats_data
             handle_stats_command(Path("/fake/project"))
             captured = capsys.readouterr()
-            assert "项目统计" in captured.out
+            assert "Project Statistics" in captured.out
             assert "42" in captured.out
             assert "736" in captured.out
             assert "15,000" in captured.out
@@ -499,7 +499,7 @@ class TestHandleStatsCommand:
             mock_stats.side_effect = RuntimeError("stats unavailable")
             handle_stats_command(Path("/fake/project"))
             captured = capsys.readouterr()
-            assert "统计失败" in captured.out
+            assert "Stats failed" in captured.out
             assert "RuntimeError" in captured.out or "stats unavailable" in captured.out
 
 
@@ -520,7 +520,7 @@ class TestHandleSelfCheckCommand:
             mock_check.side_effect = RuntimeError("check failed")
             handle_self_check_command(Path("/fake/project"))
             captured = capsys.readouterr()
-            assert "自检失败" in captured.out
+            assert "Self-check failed" in captured.out
             assert "RuntimeError" in captured.out or "check failed" in captured.out
 
 

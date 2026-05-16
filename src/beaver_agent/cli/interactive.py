@@ -77,7 +77,7 @@ def run_repl(config: BeaverConfig) -> None:
 
             # Process through agent
             with console.status(
-                "[bold green]🦫 思考中...[/bold green]\n[dim]分析意图 → 规划任务 → 执行工具[/dim]"
+                "[bold green]🦫 Thinking...[/bold green]\n[dim]Parsing intent → Planning tasks → Executing tools[/dim]"
             ):
                 response = agent.run(user_input)
 
@@ -86,17 +86,17 @@ def run_repl(config: BeaverConfig) -> None:
                 _print_response(response)
 
         except KeyboardInterrupt:
-            console.print("\n[yellow]退出中...[/yellow]")
+            console.print("\n[yellow]Exiting...[/yellow]")
             break
         except EOFError:
             break
         except Exception as e:
             logger.error("repl_error", exc_info=e)
-            console.print(f"[red]✗ 错误:[/red] {e}")
+            console.print(f"[red]✗ Error:[/red] {e}")
             if config.app.debug:
                 traceback.print_exc()
 
-    console.print("[blue]下次见! 👋[/blue]")
+    console.print("[blue]See you next time! 👋[/blue]")
 
 
 def _print_response(response: str) -> None:
@@ -130,7 +130,7 @@ def print_welcome(config: BeaverConfig) -> None:
     console.print(
         Panel(
             f"[bold cyan]🦫 Beaver Agent[/bold cyan] v{config.app.version}\n\n"
-            f"[dim]输入 [green]/help[/green] 查看帮助    [dim]输入 [red]/exit[/red] 退出[/dim]",
+                f"[dim]Enter [green]/help[/green] for help    [dim]Enter [red]/exit[/red] to quit[/dim]",
             title="Welcome",
             border_style="cyan",
             padding=(1, 2),
