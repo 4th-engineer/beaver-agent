@@ -284,9 +284,13 @@ class MCPManager:
         if not process:
             raise RuntimeError(f"Server {server_name} not connected")
 
-        message = json.dumps(request) + "\n"
-        process.stdin.write(message.encode())
-        await process.stdin.drain()
+        try:
+            message = json.dumps(request) + "\n"
+            process.stdin.write(message.encode())
+            await process.stdin.drain()
+        except AttributeError:
+            logger.error("mcp_send_request_failed", server=server_name, reason="process_attribute_error")
+            raise RuntimeError(f"Server {server_name} disconnected")
 
     async def _send_notification(self, server_name: str, method: str, params: dict) -> None:
         """Send a JSON-RPC notification (no id) to the server.
@@ -306,10 +310,14 @@ class MCPManager:
         if not process:
             raise RuntimeError(f"Server {server_name} not connected")
 
-        notification = {"jsonrpc": "2.0", "method": method, "params": params}
-        message = json.dumps(notification) + "\n"
-        process.stdin.write(message.encode())
-        await process.stdin.drain()
+        try:
+            notification = {"jsonrpc": "2.0", "method": method, "params": params}
+            message = json.dumps(notification) + "\n"
+            process.stdin.write(message.encode())
+            await process.stdin.drain()
+        except AttributeError:
+            logger.error("mcp_send_notification_failed", server=server_name, reason="process_attribute_error")
+            raise RuntimeError(f"Server {server_name} disconnected")
 
     async def _read_response(self, server_name: str) -> dict:
         """Read a JSON-RPC response from the server.
@@ -331,10 +339,14 @@ class MCPManager:
         if not process:
             raise RuntimeError(f"Server {server_name} not connected")
 
-        line = await process.stdout.readline()
-        if not line:
+        try:
+            line = await process.stdout.readline()
+            if not line:
+                raise RuntimeError(f"Server {server_name} disconnected")
+            return json.loads(line.decode())
+        except AttributeError:
+            logger.error("mcp_read_response_failed", server=server_name, reason="process_attribute_error")
             raise RuntimeError(f"Server {server_name} disconnected")
-        return json.loads(line.decode())
 
     async def _discover_tools(self, server_name: str) -> None:
         """Discover available tools from a connected MCP server.
