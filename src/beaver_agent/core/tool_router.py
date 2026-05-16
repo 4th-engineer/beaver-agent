@@ -13,7 +13,31 @@ __all__ = ["ToolRouter"]
 
 
 class ToolRouter:
-    """Route tasks to appropriate tools"""
+    """Route tasks to appropriate tools.
+
+    Maintains a registry of available tools (file_tool, terminal_tool,
+    github_tool, code_gen, code_review, debugger) and dispatches incoming
+    task requests to the correct tool/action pair. Supports graceful
+    degradation when the LLM client is unavailable.
+
+    The routing loop: route() validates the tool/action exists, calls it
+    via getattr, and wraps the result in a success/error dict. All tool
+    execution errors are caught and returned as structured error responses
+    rather than raised, so callers always get a deterministic return value.
+
+    Attributes:
+        config: The BeaverConfig used to initialize tools and the LLM client.
+        ERR_NO_TOOL: Error code when no tool name is provided.
+        ERR_UNKNOWN_TOOL: Error code when the tool name is not in the registry.
+        ERR_NO_ACTION: Error code when the tool has no matching action method.
+        ERR_TOOL_EXECUTION: Error code when tool.action() raises an exception.
+
+    Example:
+        router = ToolRouter(config)
+        result = router.route({"tool": "file_tool", "action": "read", "params": {"path": "README.md"}})
+        if result["success"]:
+            print(result["data"])
+    """
 
     def __init__(self, config: BeaverConfig) -> None:
         """Initialize the ToolRouter with configuration and register all tools and LLM.

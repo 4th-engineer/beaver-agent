@@ -251,6 +251,8 @@
 | 2026-05-16 12:00 | beaver-agent | Add docstrings to _is_typer_app() and _load_manifest() in mapper.py — last two undocumented private methods in tools/mapper.py now have Args/Returns sections | 760 tests passing |
 | 2026-05-16 19:00 | beaver-agent | Translate code_review.py generic issue messages (line length, trailing whitespace) from Chinese to English — consistent with English convention across codebase | 760 tests passing |
 
+| 2026-05-16 23:00 | beaver-agent | Add -> None return type to 3 __init__ methods (ConversationLogger, IntentParser, SessionMemory) — completes __init__ return type consistency sweep across core/ | 760 tests passing |
+
 ## Current Stage
 - 760 tests passing
 - All public functions documented (100% docstring coverage)
