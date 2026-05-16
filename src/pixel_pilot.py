@@ -88,7 +88,7 @@ def connect(url: str = "http://localhost:7777", verbose: bool = True) -> None:
 
 
 def disconnect() -> None:
-    """断开连接，停止事件追踪"""
+    """Disconnect from the PixelPilot server and stop event tracking."""
     global _enabled
     _enabled = False
     _logger.info("disconnected")
@@ -103,18 +103,18 @@ def send(
     status: str = "active",
 ) -> bool:
     """
-    手动发送一个事件到 PixelPilot。
+    Manually send an event to the PixelPilot server.
 
     Args:
-        event_type: 事件类型 (request/thinking/tool/tool_done/done/agent/system)
-        message: 显示消息
-        agent: Agent 名称
-        tool: 工具名称
-        file: 相关文件
-        status: 状态 (active/idle/error)
+        event_type: Event type (request/thinking/tool/tool_done/done/agent/system).
+        message: Display message shown in the viewer.
+        agent: Agent name (default: "beaver").
+        tool: Tool name for tool events.
+        file: Associated file path for file-related events.
+        status: Connection status (active/idle/error).
 
     Returns:
-        发送是否成功
+        True if the event was sent successfully, False otherwise.
     """
     event = {
         "type": event_type,
@@ -130,12 +130,12 @@ def send(
 
 
 def is_enabled() -> bool:
-    """检查是否已连接"""
+    """Check whether the connection to the PixelPilot server is active."""
     return _enabled
 
 
 def _test_connection() -> bool:
-    """测试服务器连接"""
+    """Test connectivity to the PixelPilot server."""
     try:
         req = request.Request(
             f"{_viewer_url}/status",
@@ -149,7 +149,7 @@ def _test_connection() -> bool:
 
 
 def _post_event(event: Dict[str, Any]) -> bool:
-    """发送事件到服务器"""
+    """Send an event to the PixelPilot server."""
     if not _viewer_url:
         return False
 
@@ -170,7 +170,7 @@ def _post_event(event: Dict[str, Any]) -> bool:
 
 
 def _get_agent_name(obj) -> str:
-    """从 ToolRouter 的 config 中获取 agent 名称。"""
+    """Extract the agent name from the ToolRouter's config attribute."""
     try:
         config = getattr(obj, "config", None)
         app = getattr(config, "app", None) if config else None
@@ -181,7 +181,7 @@ def _get_agent_name(obj) -> str:
 
 
 def _get_tool_display_name(tool_name: str, action: str = "") -> str:
-    """获取工具的显示名称"""
+    """Get a human-readable display name for a tool and action combination."""
     # 先尝试精确匹配 (tool_name, action)
     key = (tool_name, action)
     if key in TOOL_ACTION_MAP:
@@ -198,8 +198,9 @@ def _get_tool_display_name(tool_name: str, action: str = "") -> str:
 
 def _patch_tool_router(verbose: bool = True) -> None:
     """
-    动态注入 ToolRouter.route() 方法，自动追踪所有工具调用。
-    这是一个猴子补丁，但非常轻量且完全向后兼容。
+    Dynamically inject the ToolRouter.route() method to auto-emit tool events.
+
+    This is a monkey-patch, but is lightweight and fully backward-compatible.
     """
     try:
         from beaver_agent.core.tool_router import ToolRouter
