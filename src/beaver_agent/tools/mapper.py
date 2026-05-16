@@ -243,6 +243,14 @@ def _parse_file_worker(args: tuple[str, str]) -> dict[str, Any] | None:
 
 
 def _is_typer_app(val: ast.AST) -> bool:
+    """Detect whether an AST node represents a Typer CLI application.
+
+    Args:
+        val: An AST node (typically ast.Call) to check.
+
+    Returns:
+        True if the node is a Typer() call, False otherwise.
+    """
     return (
         isinstance(val, ast.Call)
         and (
@@ -337,6 +345,15 @@ def _manifest_path(beaver_dir: Path) -> Path:
 
 
 def _load_manifest(beaver_dir: Path) -> dict[str, dict]:
+    """Load the manifest fingerprint cache from .beaver/manifest.json.
+
+    Args:
+        beaver_dir: The .beaver directory containing manifest.json.
+
+    Returns:
+        A dict mapping file paths to their cached fingerprints,
+        or an empty dict if the file is missing or unreadable.
+    """
     mf = _manifest_path(beaver_dir)
     if mf.exists():
         try:
