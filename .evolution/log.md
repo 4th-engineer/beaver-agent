@@ -1,6 +1,7 @@
 | 2026-05-16 | beaver-agent | Add missing docstrings to generate_tree(), _file_to_module(), _get_decorators() and enhance existing docstrings in code_analyzer.py — all 6 private methods now have complete Args/Returns documentation | 760 tests passing |
 | 2026-05-16 | beaver-agent | Enhance docstrings for get_tools() and get_tool() in mcp_manager.py — single-line placeholders replaced with Args/Returns/Example sections | 760 tests passing |
 | 2026-05-16 | beaver-agent | Add `-> None` return type annotation to `SkillManager.__init__()` — was the only `__init__` in core modules missing return type annotation, restoring internal consistency | 760 tests passing |
+| 2026-05-16 | beaver-agent | Make `CodeGenTool._normalize_language` public as `normalize_language` with full Args/Returns docstring — general utility useful to external callers | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add precise return type `dict[str, float | int]` to `_file_fingerprint()` in mapper.py | 760 tests passing |
 | 2026-05-15 | beaver-agent | Fix `_get_agent_name(self)` to `_get_agent_name(obj)` in pixel_pilot.py — standalone function incorrectly declared as method, causing potential signature mismatch | 760 tests passing |
 | 2026-05-15 | beaver-agent | Add docstring to `_relative()` in mapper.py | 760 tests passing |
