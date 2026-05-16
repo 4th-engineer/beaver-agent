@@ -11,6 +11,7 @@ __all__ = [
     "DebuggerTool",
     "CodeAnalyzer",
     "MapperTool",
+    "analyze_repository",
 ]
 
 from beaver_agent.tools.file_tool import FileTool
@@ -20,5 +21,5 @@ from beaver_agent.tools.code_review import CodeReviewTool, CodeReviewIssue
 from beaver_agent.tools.github_tool import GitHubTool
 from beaver_agent.tools.browser_tool import BrowserTool
 from beaver_agent.tools.debugger import DebuggerTool
-from beaver_agent.tools.code_analyzer import CodeAnalyzer
+from beaver_agent.tools.code_analyzer import CodeAnalyzer, analyze_repository
 from beaver_agent.tools.mapper import MapperTool

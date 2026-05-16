@@ -137,15 +137,15 @@ class CodeReviewTool:
             if len(line) > 120:
                 issues.append(CodeReviewIssue(
                     severity="minor", line=i,
-                    message=f"行长度 {len(line)} 超过 120 字符",
-                    suggestion="考虑拆分为多行",
+                    message=f"Line length {len(line)} exceeds 120 characters",
+                    suggestion="Consider splitting across multiple lines",
                 ))
 
             if line != line.rstrip():
                 issues.append(CodeReviewIssue(
                     severity="suggestion", line=i,
-                    message="行尾存在多余空格",
-                    suggestion="移除尾随空格",
+                    message="Trailing whitespace found",
+                    suggestion="Remove trailing whitespace",
                 ))
 
             # ── Python-specific checks ──────────────────────────────────────
