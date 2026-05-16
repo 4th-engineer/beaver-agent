@@ -77,7 +77,7 @@ class TestAnalyze:
         result = debugger_tool.analyze("code", error="KeyError: 'x'")
 
         assert "KeyError" in result
-        assert "索引超出序列范围" in result or "字典中不存在该键" in result
+        assert "Index out of range" in result or "Key not found in dictionary" in result
 
     def test_analyze_empty_response_falls_back(self, debugger_tool, mock_llm_client):
         """Test that analyze() falls back to basic when LLM returns empty content"""
@@ -138,33 +138,31 @@ class TestBasicErrorAnalysis:
         """Test IndexError detection and Chinese fix"""
         result = debugger_tool._basic_error_analysis("IndexError: list index out of range")
         assert "IndexError" in result
-        assert "索引超出序列范围" in result
+        assert "Index out of range" in result
 
     def test_detects_key_error(self, debugger_tool):
         """Test KeyError detection and Chinese fix"""
         result = debugger_tool._basic_error_analysis("KeyError: 'missing_key'")
         assert "KeyError" in result
-        assert "字典中不存在该键" in result
+        assert "Key not found in dictionary" in result
 
     def test_detects_attribute_error(self, debugger_tool):
-        """Test AttributeError detection and Chinese fix"""
-        result = debugger_tool._basic_error_analysis(
-            "AttributeError: 'NoneType' has no attribute 'split'"
-        )
+        """Test AttributeError detection and English fix"""
+        result = debugger_tool._basic_error_analysis("AttributeError: 'NoneType' has no attribute 'split'")
         assert "AttributeError" in result
-        assert "对象没有该属性" in result
+        assert "Object has no such attribute or method" in result
 
     def test_detects_type_error(self, debugger_tool):
         """Test TypeError detection and Chinese fix"""
         result = debugger_tool._basic_error_analysis("TypeError: unsupported operand type(s)")
         assert "TypeError" in result
-        assert "类型不匹配" in result
+        assert "Type mismatch" in result
 
     def test_detects_value_error(self, debugger_tool):
         """Test ValueError detection and Chinese fix"""
         result = debugger_tool._basic_error_analysis("ValueError: invalid literal")
         assert "ValueError" in result
-        assert "值不合法" in result
+        assert "Invalid value" in result
 
     def test_detects_file_not_found_error(self, debugger_tool):
         """Test FileNotFoundError detection"""
@@ -209,7 +207,7 @@ class TestBasicErrorAnalysis:
     def test_basic_error_analysis_case_insensitive(self, debugger_tool):
         """Test that error detection is case-insensitive"""
         result = debugger_tool._basic_error_analysis("INDEXERROR: list index out of range")
-        assert "IndexError" in result or "索引超出序列范围" in result
+        assert "IndexError" in result or "Index out of range" in result
 
 
 class TestFormatDebugResponse:
@@ -282,7 +280,7 @@ class TestAnalyzeError:
         result = debugger_tool._analyze_error("code", "KeyError: 'x'", "python")
 
         assert "KeyError" in result
-        assert "字典中不存在该键" in result
+        assert "Key not found in dictionary" in result
 
     def test_analyze_error_empty_response_falls_back_to_basic(self, debugger_tool, mock_llm_client):
         """Test that _analyze_error falls back to basic when LLM returns empty content"""

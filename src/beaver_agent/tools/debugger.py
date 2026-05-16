@@ -11,27 +11,27 @@ __all__ = ["DebuggerTool"]
 # Common Python error patterns — module-level constant, no per-call rebuild
 _COMMON_ERRORS = {
     "indexerror": {
-        "cause": "索引超出序列范围",
-        "fix": "检查索引是否在有效范围内，使用 len() 验证",
+        "cause": "Index out of range",
+        "fix": "Verify the index is within bounds using len() before accessing",
     },
     "keyerror": {
-        "cause": "字典中不存在该键",
-        "fix": "使用 dict.get() 方法或先检查键是否存在",
+        "cause": "Key not found in dictionary",
+        "fix": "Use dict.get() or check if the key exists before accessing",
     },
     "attributeerror": {
-        "cause": "对象没有该属性或方法",
-        "fix": "检查对象类型，确保属性/方法存在",
+        "cause": "Object has no such attribute or method",
+        "fix": "Check the object type and ensure the attribute/method exists",
     },
-    "typeerror": {"cause": "类型不匹配", "fix": "检查变量类型，使用 isinstance() 验证"},
-    "valueerror": {"cause": "值不合法", "fix": "检查输入值的有效范围和格式"},
+    "typeerror": {"cause": "Type mismatch", "fix": "Check variable types and use isinstance() for validation"},
+    "valueerror": {"cause": "Invalid value", "fix": "Check input value range and format"},
     "filenotfounderror": {
-        "cause": "文件路径不存在",
-        "fix": "检查文件路径是否正确，使用 os.path.exists() 验证",
+        "cause": "File path does not exist",
+        "fix": "Verify the file path is correct using os.path.exists()",
     },
-    "permissionerror": {"cause": "权限不足", "fix": "检查文件/目录权限"},
-    "timeout": {"cause": "操作超时", "fix": "增加超时时间或优化操作"},
-    "connectionerror": {"cause": "网络连接失败", "fix": "检查网络连接和目标地址"},
-    "none": {"cause": "对象为 None", "fix": "添加 None 检查，使用 if obj is not None"},
+    "permissionerror": {"cause": "Permission denied", "fix": "Check file/directory permissions"},
+    "timeout": {"cause": "Operation timed out", "fix": "Increase timeout or optimize the operation"},
+    "connectionerror": {"cause": "Network connection failed", "fix": "Check network connection and target address"},
+    "none": {"cause": "Object is None", "fix": "Add None check using 'if obj is not None'"},
 }
 
 
