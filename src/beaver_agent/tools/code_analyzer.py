@@ -369,7 +369,19 @@ class CodeAnalyzer:
         return methods
 
     def _find_calls(self, body: str) -> List[str]:
-        """Find function calls in a code block"""
+        """Find function calls in a code block.
+
+        Scans a function body string for function call patterns using the
+        compiled ``_RE_FUNC_CALLS`` regex. Filters out keywords and builtins
+        that happen to match the call pattern (e.g. ``if``, ``for``).
+
+        Args:
+            body: The raw function body text to scan.
+
+        Returns:
+            A list of unique function call names found, in the form
+            ``"foo"`` (bare) or ``"module.foo"`` (qualified).
+        """
         calls = []
         # Match function calls like foo() or module.foo()
         matches = self._RE_FUNC_CALLS.findall(body)

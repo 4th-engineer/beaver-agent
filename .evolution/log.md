@@ -237,6 +237,7 @@
 | 2026-05-16 03:00 | beaver-agent | Add OSError handling to _save_manifest and _write_json_streaming in mapper.py — completes error handling consistency for all JSON I/O in the module | 760 tests passing |
 | 2026-05-16 07:00 | beaver-agent | Translate pixel_pilot.py Chinese docstrings to English — 7 functions (disconnect, send, is_enabled, _test_connection, _post_event, _get_agent_name, _get_tool_display_name, _patch_tool_router) now consistent with full English docstring convention across codebase | 760 tests passing |
 | 2026-05-16 11:00 | beaver-agent | Translate debugger.py _COMMON_ERRORS dict from Chinese to English — 10 error causes/fixes (indexerror, keyerror, attributeerror, typeerror, valueerror, filenotfounderror, permissionerror, timeout, connectionerror, none) now consistent with English docstring convention across codebase | 760 tests passing |
+| 2026-05-16 12:00 | beaver-agent | Add docstrings to _is_typer_app() and _load_manifest() in mapper.py — last two undocumented private methods in tools/mapper.py now have Args/Returns sections | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing
