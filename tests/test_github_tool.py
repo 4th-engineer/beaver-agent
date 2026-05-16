@@ -227,7 +227,7 @@ class TestGitHubToolGetRepoInfo:
 
         result = tool.get_repo_info("test-owner", "test-repo")
 
-        assert "🐙 GitHub 仓库信息" in result
+        assert "🐙 GitHub Repository Info" in result
         assert "test-owner/test-repo" in result
         assert "⭐ Stars: 100" in result
         assert "🍴 Forks: 20" in result
@@ -299,7 +299,7 @@ class TestGitHubToolCreateIssue:
 
         result = tool.create_issue("o", "r", "Bug Report", "Description")
 
-        assert "✅ Issue 创建成功" in result
+        assert "✅ Issue created" in result
         assert "#42" in result
         assert "Bug Report" in result
 
@@ -521,7 +521,7 @@ class TestGitHubToolCreatePR:
 
         result = tool.create_pr("o", "r", "Feature PR", "Description", "feature-branch", "main")
 
-        assert "✅ PR 创建成功" in result
+        assert "✅ PR created" in result
         assert "#15" in result
         assert "Feature PR" in result
 

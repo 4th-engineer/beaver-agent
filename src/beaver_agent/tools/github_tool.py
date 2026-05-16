@@ -119,7 +119,7 @@ class GitHubTool:
 
             if response.status_code == 200:
                 data = response.json()
-                return f"""🐙 GitHub 仓库信息
+                return f"""🐙 GitHub Repository Info
 
 **{owner}/{repo}**
 
@@ -170,7 +170,7 @@ class GitHubTool:
 
             if response.status_code == 201:
                 issue = response.json()
-                return f"""✅ Issue 创建成功!
+                return f"""✅ Issue created!
 
 **#{issue.get("number")}**: {issue.get("title")}
 🔗 {issue.get("html_url")}
@@ -310,7 +310,7 @@ class GitHubTool:
 
             if response.status_code == 201:
                 pr = response.json()
-                return f"""✅ PR 创建成功!
+                return f"""✅ PR created!
 
 **#{pr.get("number")}**: {pr.get("title")}
 🔗 {pr.get("html_url")}
