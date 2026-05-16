@@ -1,3 +1,5 @@
+| 2026-05-17 00:00 | beaver-agent | Add rich class docstring to ToolRouter — documents routing loop, error handling strategy, attributes, and example usage | 760 tests passing |
+
 | 2026-05-16 22:00 | beaver-agent | Translate _check_python_line issue messages from Chinese to English — completes English consistency sweep for code_review.py (bare except, mutable default arg, print(), TODO findings) | 760 tests passing |
 
 | 2026-05-16 21:00 | beaver-agent | Fix double-slash URL bug in pixel_pilot — _viewer_url default was 'http://localhost:7777' which caused http://localhost:7777//event when concatenated; now uses .rstrip('/') | 760 tests passing |
