@@ -25,7 +25,7 @@ class Runner:
         adapter: ModelAdapter,
         max_workers: int = 4,
         timeout_per_task: int = 120,
-    ):
+    ) -> None:
         """Initialize the Runner with a model adapter and execution settings.
 
         Args:
