@@ -95,7 +95,16 @@ class CodeAnalyzer:
         self.call_graph: Dict[str, Set[str]] = {}  # module -> set of modules it calls
 
     def analyze(self) -> None:
-        """Scan and analyze all Python files."""
+        """Scan and analyze all Python files.
+
+        Walks the ``src/beaver_agent`` directory, finds all ``*.py`` files,
+        parses each one for imports/classes/functions, and builds the
+        cross-module call graph.
+
+        Returns:
+            None. Results are stored in ``self.modules``, ``self.all_functions``,
+            ``self.all_classes``, and ``self.call_graph``.
+        """
         src_path = self.root_path / "src" / "beaver_agent"
         if not src_path.exists():
             logger.warning("code_analyzer_src_path_not_found", path=str(src_path))
