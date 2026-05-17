@@ -102,7 +102,17 @@ class MemoryEntry:
 
 @dataclass
 class MemoryQuery:
-    """Query parameters for memory search."""
+    """Query parameters for memory search.
+
+    Attributes:
+        query: Search query string for keyword matching.
+        categories: Optional filter to search within specific memory categories.
+        tags: Optional filter to search within specific memory tags.
+        limit: Maximum number of results to return (default: 10).
+        recency_weight: Weight for recency in scoring, 0-1 (default: 0.3).
+            Higher values prioritize newer memories; lower values treat all
+            memories equally in relevance scoring.
+    """
 
     query: str
     categories: Optional[list[MemoryCategory]] = None
