@@ -5,6 +5,7 @@
 | 2026-05-17 08:00 | beaver-agent | Enhance CodeAnalyzer.analyze() docstring — add Returns section documenting stored result attributes (modules, all_functions, all_classes, call_graph) | 760 tests passing |
 | 2026-05-17 02:00 | beaver-agent | Replace print() with structlog in ToolRouter docstring example — reinforces logging-first pattern in core module example code | 760 tests passing |
 | 2026-05-17 10:00 | beaver-agent | Enhance MemoryQuery dataclass docstring — expand one-line placeholder to full Attributes section documenting recency_weight scoring behavior and all query parameters | 760 tests passing |
+| 2026-05-17 17:00 | beaver-agent | Expand MCP manager subprocess I/O error handling: _send_request, _send_notification catch (AttributeError, OSError, RuntimeError); _read_response also catches json.JSONDecodeError — prevents uncaught exceptions during server disconnect | 760 tests passing |
 
 | 2026-05-16 22:00 | beaver-agent | Translate _check_python_line issue messages from Chinese to English — completes English consistency sweep for code_review.py (bare except, mutable default arg, print(), TODO findings) | 760 tests passing |
 

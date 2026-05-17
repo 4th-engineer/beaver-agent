@@ -555,7 +555,7 @@ def init_data_store() -> DataStore:
 
     # Run migrations
     if not store.migrate():
-        logger.error("data_migration_failed")
+        logger.error("data_migration_failed", version=str(store.get_version()))
         raise RuntimeError("Data migration failed. Please check logs.")
 
     return store
