@@ -26,8 +26,8 @@ app = typer.Typer(
 
 @app.command()
 def run(
-    model: Optional[str] = typer.Option(None, "--model", "-m", help="指定模型"),
-    debug: bool = typer.Option(False, "--debug", "-d", help="调试模式"),
+    model: Optional[str] = typer.Option(None, "--model", "-m", help="Specify model name"),
+    debug: bool = typer.Option(False, "--debug", "-d", help="Enable debug mode"),
 ) -> None:
     """Start the interactive REPL loop.
 
@@ -54,8 +54,8 @@ def run(
 
 @app.command()
 def chat(
-    query: str = typer.Option(..., "--query", "-q", help="查询内容"),
-    model: Optional[str] = typer.Option(None, "--model", "-m", help="指定模型"),
+    query: str = typer.Option(..., "--query", "-q", help="Query content"),
+    model: Optional[str] = typer.Option(None, "--model", "-m", help="Specify model name"),
 ) -> None:
     """Execute a single query and exit.
 
