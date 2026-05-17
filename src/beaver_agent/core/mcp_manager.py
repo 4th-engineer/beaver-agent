@@ -288,8 +288,8 @@ class MCPManager:
             message = json.dumps(request) + "\n"
             process.stdin.write(message.encode())
             await process.stdin.drain()
-        except AttributeError:
-            logger.error("mcp_send_request_failed", server=server_name, reason="process_attribute_error")
+        except (AttributeError, OSError, RuntimeError) as e:
+            logger.error("mcp_send_request_failed", server=server_name, reason=str(e))
             raise RuntimeError(f"Server {server_name} disconnected")
 
     async def _send_notification(self, server_name: str, method: str, params: dict) -> None:
@@ -315,8 +315,8 @@ class MCPManager:
             message = json.dumps(notification) + "\n"
             process.stdin.write(message.encode())
             await process.stdin.drain()
-        except AttributeError:
-            logger.error("mcp_send_notification_failed", server=server_name, reason="process_attribute_error")
+        except (AttributeError, OSError, RuntimeError) as e:
+            logger.error("mcp_send_notification_failed", server=server_name, reason=str(e))
             raise RuntimeError(f"Server {server_name} disconnected")
 
     async def _read_response(self, server_name: str) -> dict:
@@ -344,8 +344,8 @@ class MCPManager:
             if not line:
                 raise RuntimeError(f"Server {server_name} disconnected")
             return json.loads(line.decode())
-        except AttributeError:
-            logger.error("mcp_read_response_failed", server=server_name, reason="process_attribute_error")
+        except (AttributeError, OSError, RuntimeError, json.JSONDecodeError) as e:
+            logger.error("mcp_read_response_failed", server=server_name, reason=str(e))
             raise RuntimeError(f"Server {server_name} disconnected")
 
     async def _discover_tools(self, server_name: str) -> None:
