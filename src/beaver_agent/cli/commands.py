@@ -316,6 +316,7 @@ def _run_self_check(root: Path) -> None:
             console.print("  [green]✓ Working tree clean[/green]")
     except subprocess.CalledProcessError as e:
         console.print(f"  [red]✗ git status failed[/red] {e}")
+        logger.warning("self_check_git_status_failed", exc_info=e)
 
     # 2. Config integrity check
     console.print("\n[yellow]Config integrity:[/yellow]")

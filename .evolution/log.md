@@ -1,6 +1,7 @@
 | 2026-05-17 00:00 | beaver-agent | Add rich class docstring to ToolRouter — documents routing loop, error handling strategy, attributes, and example usage | 760 tests passing |
 | 2026-05-17 06:00 | beaver-agent | Fix _trim_category failure silent data integrity bug: return bool so add() suppresses memory_added log when trim fails (IOError during file rewrite) | 760 tests passing |
 | 2026-05-17 07:00 | beaver-agent | Full codebase audit: no TODO/FIXME, no bare except, no print without logger, all 760 tests passing, all public functions documented, all modules have structlog and __all__ — project in excellent state | 760 tests passing |
+| 2026-05-17 08:00 | beaver-agent | Enhance CodeAnalyzer.analyze() docstring — add Returns section documenting stored result attributes (modules, all_functions, all_classes, call_graph) | 760 tests passing |
 | 2026-05-17 02:00 | beaver-agent | Replace print() with structlog in ToolRouter docstring example — reinforces logging-first pattern in core module example code | 760 tests passing |
 
 | 2026-05-16 22:00 | beaver-agent | Translate _check_python_line issue messages from Chinese to English — completes English consistency sweep for code_review.py (bare except, mutable default arg, print(), TODO findings) | 760 tests passing |
