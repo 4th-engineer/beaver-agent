@@ -267,8 +267,9 @@
 | 2026-05-17 14:00 | beaver-agent | Add structlog to main.py CLI commands (chat, map) — wrap load_config and command execution with structured error logging for error tracking and observability | 760 tests passing |
 | 2026-05-17 15:00 | beaver-agent | Translate Chinese CLI strings to English in main.py — chat/map/model/version/setup commands and error messages now fully English | 760 tests passing |
 | 2026-05-17 16:00 | beaver-agent | Add structlog to config.py — yaml file load failures and dotenv failures now logged instead of silently swallowed; config.py now fully consistent with logging conventions across all core modules | 760 tests passing |
+| 2026-05-17 17:00 | beaver-agent | Translate Chinese CLI option help strings to English in main.py — 4 Typer option help strings (run --model/-m, run --debug/-d, chat --query/-q) from Chinese to English, completing the CLI help text English consistency sweep | 760 tests passing |
 
-## Current Stage
+|## Current Stage
 - 760 tests passing
 - All public functions documented (100% docstring coverage)
 - All core modules have structlog logging
