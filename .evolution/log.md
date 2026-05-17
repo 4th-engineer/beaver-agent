@@ -240,6 +240,7 @@
 | 2026-05-28 | beaver-agent | Fix SkillManager.reload() — was only clearing cache without re-loading skills; now calls _load_skills() so hot-reload actually works | 760 tests passing |
 | 2026-05-29 | beaver-agent | Add structlog error logging to _run_self_check exception handlers (config load + pytest failures) in commands.py — completes full exc_info consistency sweep for _run_self_check | 760 tests passing |
 | 2026-05-29 | beaver-agent | Add return type annotation `List[Dict[str, Any]]` to patched_route_batch in pixel_pilot.py — consistent with sibling patched_route which already had full type hints | 760 tests passing |
+| 2026-05-29 09:00 | beaver-agent | Add structlog warning to git status failure in _run_self_check — completes logging consistency for all exception handlers in commands.py | 760 tests passing |
 | 2026-05-30 | beaver-agent | Add comprehensive docstring to MCPManager._build_env — Args/Returns documenting platform-aware env baseline (PATH, HOME, TERM, TMPDIR) + user override pattern | 760 tests passing |
 | 2026-05-31 | beaver-agent | Add None return type annotation to CodeGenTool.__init__ for type annotation consistency | 760 tests passing |
 | 2026-05-15 12:00 | beaver-agent | Add comprehensive docstring to LongTermMemory._calculate_relevance — documents 4-signal scoring algorithm (keyword match, tag bonus, recency decay, access frequency) with Args/Returns sections | 760 tests passing |
