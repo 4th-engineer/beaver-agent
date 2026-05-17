@@ -5,6 +5,8 @@ from pathlib import Path
 from rich.console import Console
 from typing import Optional
 
+import structlog
+
 from beaver_agent.cli.interactive import run_repl
 from beaver_agent.cli.commands import chat_command, model_command
 from beaver_agent.core.agent import BeaverAgent
@@ -12,13 +14,14 @@ from beaver_agent.core.config import load_config
 
 __all__ = ["app"]
 
+console = Console()
+logger = structlog.get_logger()
+
 app = typer.Typer(
     name="beaver",
     help="🦫 Beaver Agent - AI Coding Assistant",
     add_completion=False,
 )
-
-console = Console()
 
 
 @app.command()
@@ -69,10 +72,20 @@ def chat(
         beaver chat -q "Explain what a structlog is"
         beaver chat -q "Write a hello world in Python" --model MiniMax
     """
-    config = load_config()
+    try:
+        config = load_config()
+    except Exception as e:
+        logger.error("chat_load_config_failed", exc_info=e)
+        console.print(f"[red]配置加载失败:[/red] {e}")
+        raise typer.Exit(1)
     if model:
         config.model.name = model
-    chat_command(config, query)
+    try:
+        chat_command(config, query)
+    except Exception as e:
+        logger.error("chat_command_failed", query=query, exc_info=e)
+        console.print(f"[red]Chat 执行失败:[/red] {e}")
+        raise typer.Exit(1)
 
 
 @app.command()
@@ -145,7 +158,12 @@ def map(
     """
     from beaver_agent.tools.mapper import generate
 
-    result = generate(Path(path))
+    try:
+        result = generate(Path(path))
+    except Exception as e:
+        logger.error("map_command_failed", path=path, exc_info=e)
+        console.print(f"[red]代码地图生成失败:[/red] {e}")
+        raise typer.Exit(1)
     console.print(
         f"[green]✓[/green] 解析 {result['parsed_files']}/{result['total_files']} 个 Python 文件"
     )
