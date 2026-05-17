@@ -76,7 +76,7 @@ def chat(
         config = load_config()
     except Exception as e:
         logger.error("chat_load_config_failed", exc_info=e)
-        console.print(f"[red]配置加载失败:[/red] {e}")
+        console.print(f"[red]Config load failed:[/red] {e}")
         raise typer.Exit(1)
     if model:
         config.model.name = model
@@ -84,27 +84,27 @@ def chat(
         chat_command(config, query)
     except Exception as e:
         logger.error("chat_command_failed", query=query, exc_info=e)
-        console.print(f"[red]Chat 执行失败:[/red] {e}")
+        console.print(f"[red]Chat command failed:[/red] {e}")
         raise typer.Exit(1)
 
 
 @app.command()
 def model(
-    show: bool = typer.Option(False, "--show", help="显示当前模型配置"),
-    url: Optional[str] = typer.Option(None, "--url", help="设置 API Base URL"),
-    token: Optional[str] = typer.Option(None, "--token", help="设置 API Token"),
-    name: Optional[str] = typer.Option(None, "--name", help="设置模型名称"),
+    show: bool = typer.Option(False, "--show", help="Show current model configuration"),
+    url: Optional[str] = typer.Option(None, "--url", help="Set API Base URL"),
+    token: Optional[str] = typer.Option(None, "--token", help="Set API Token"),
+    name: Optional[str] = typer.Option(None, "--name", help="Set model name"),
 ) -> None:
-    """显示或配置 LLM 模型设置。
+    """Display or configure the LLM model settings.
 
-    支持显示当前配置，或通过选项设置 API URL、Token、模型名称。
-    配置会自动写入 .env 文件。
+    Supports showing the current configuration, or setting API URL, Token, and model name
+    via options. Configuration is automatically written to the .env file.
 
     Examples:
-        beaver model --show              # 显示当前配置
-        beaver model --url <url>        # 设置 API Base URL
-        beaver model --token <token>    # 设置 API Token
-        beaver model --name MiniMax-M2.7 # 设置模型名称
+        beaver model --show              # Show current configuration
+        beaver model --url <url>        # Set API Base URL
+        beaver model --token <token>    # Set API Token
+        beaver model --name MiniMax-M2.7 # Set model name
     """
     from dotenv import load_dotenv, set_key
     from pathlib import Path
@@ -115,19 +115,19 @@ def model(
 
     if url is not None:
         set_key(env_path, "MINIMAX_API_BASE", url)
-        console.print(f"[green]API URL 已设置:[/green] {url}")
+        console.print(f"[green]API URL set:[/green] {url}")
 
     if token is not None:
         set_key(env_path, "MINIMAX_API_KEY", token)
-        console.print(f"[green]API Token 已设置[/green]（已脱敏）")
+        console.print(f"[green]API Token set[/green] (masked)")
 
     if name is not None:
         set_key(env_path, "MINIMAX_MODEL_NAME", name)
-        console.print(f"[green]模型名称已设置:[/green] {name}")
+        console.print(f"[green]Model name set:[/green] {name}")
 
     if show or (url is None and token is None and name is None):
         config = load_config()
-        console.print(f"[green]模型:[/green] {config.model.name}")
+        console.print(f"[green]Model:[/green] {config.model.name}")
         console.print(f"[green]Provider:[/green] {config.model.provider}")
         console.print(f"[green]API Base:[/green] {config.model.api_base}")
         # Mask token in output
@@ -135,26 +135,27 @@ def model(
         if key and len(key) > 8:
             masked = key[:6] + "..." + key[-4:]
         else:
-            masked = "***" if key else "[未设置]"
+            masked = "***" if key else "[not set]"
         console.print(f"[green]API Key:[/green] {masked}")
 
 
 @app.command()
 def map(
-    path: str = typer.Option(".", "--path", help="要扫描的目录路径"),
+    path: str = typer.Option(".", "--path", help="Directory path to scan"),
 ) -> None:
-    """生成代码地图索引 (.beaver/)
+    """Generate code map index (.beaver/).
 
-    对指定目录进行 AST 静态分析，生成机器可读的代码索引：
-    - index.json       文件树 + 模块导入/导出关系
-    - dep_graph.json   依赖图
-    - entry_points.json 入口点 (main 函数等)
+    Performs AST static analysis on the specified directory to produce a machine-readable
+    code index:
+    - index.json       File tree + module import/export relationships
+    - dep_graph.json   Dependency graph
+    - entry_points.json Entry points (main functions, etc.)
 
-    纯静态分析，零 LLM 调用。
+    Pure static analysis, zero LLM calls.
 
     Examples:
-        beaver map                  # 扫描当前目录
-        beaver map --path ./myproject  # 扫描指定目录
+        beaver map                  # Scan current directory
+        beaver map --path ./myproject  # Scan specified directory
     """
     from beaver_agent.tools.mapper import generate
 
@@ -162,18 +163,18 @@ def map(
         result = generate(Path(path))
     except Exception as e:
         logger.error("map_command_failed", path=path, exc_info=e)
-        console.print(f"[red]代码地图生成失败:[/red] {e}")
+        console.print(f"[red]Code map generation failed:[/red] {e}")
         raise typer.Exit(1)
     console.print(
-        f"[green]✓[/green] 解析 {result['parsed_files']}/{result['total_files']} 个 Python 文件"
+        f"[green]✓[/green] Parsed {result['parsed_files']}/{result['total_files']} Python files"
     )
-    console.print(f"[green]✓[/green] 找到 {result['entry_points']} 个入口点")
-    console.print(f"[green]✓[/green] 输出目录: {result['output_dir']}")
+    console.print(f"[green]✓[/green] Found {result['entry_points']} entry points")
+    console.print(f"[green]✓[/green] Output directory: {result['output_dir']}")
 
 
 @app.command()
 def version() -> None:
-    """显示版本信息"""
+    """Display version information"""
     from beaver_agent import __version__
 
     console.print(f"[green]Beaver Agent[/green] v{__version__}")
@@ -181,7 +182,7 @@ def version() -> None:
 
 @app.command()
 def setup(
-    force: bool = typer.Option(False, "--force", "-f", help="强制重新配置，覆盖已有 .env"),
+    force: bool = typer.Option(False, "--force", "-f", help="Force reconfigure, overwrite existing .env"),
 ) -> None:
     """First-time setup — create .env from template and guide user through API Key configuration.
 
@@ -207,37 +208,37 @@ def setup(
     env_example = Path(".env.example")
 
     if env_file.exists() and not force:
-        console.print("[yellow].env 已存在[/yellow]，使用 [bold]--force[/bold] 强制重新配置")
+        console.print("[yellow].env already exists[/yellow], use [bold]--force[/bold] to overwrite")
         return
 
     if not env_example.exists():
-        console.print("[red].env.example 不存在[/red]，无法创建 .env")
+        console.print("[red].env.example not found[/red], cannot create .env")
         raise typer.Exit(1)
 
-    # 复制模板
+    # Copy template
     shutil.copy(env_example, env_file)
 
-    # 读取现有内容
+    # Read existing content
     content = env_file.read_text()
 
-    console.print("\n[bold cyan]🦫 Beaver Agent 首次配置[/bold cyan]\n")
-    console.print("请填入你的 API Key（直接编辑 .env 文件）\n")
+    console.print("\n[bold cyan]🦫 Beaver Agent First-Time Setup[/bold cyan]\n")
+    console.print("Please fill in your API Key (edit the .env file directly)\n")
     console.print(f"[dim]{env_file.absolute()}[/dim]\n")
 
-    # 打开编辑器
+    # Open editor
     editor = os.environ.get("EDITOR")
     if editor:
         import subprocess
 
         subprocess.run([editor, str(env_file)])
     else:
-        console.print("[dim]请手动编辑 .env 文件填入 API Key[/dim]")
+        console.print("[dim]Please manually edit the .env file to add your API Key[/dim]")
         console.print(f"[dim]  nano {env_file.absolute()}[/dim]")
 
-    # 验证
+    # Validate
     new_content = env_file.read_text()
     if "your_" in new_content or "your_" in content:
-        console.print("\n[yellow]⚠️  检测到未填写的字段，请确保以下项已配置:[/yellow]")
+        console.print("\n[yellow]⚠️  Some fields are not filled — please ensure the following are configured:[/yellow]")
         for line in new_content.splitlines():
             if "=" in line and ("your_" in line or line.strip().startswith("#")):
                 pass
@@ -245,11 +246,11 @@ def setup(
                 key = line.split("=")[0]
                 val = line.split("=", 1)[1].strip()
                 if val in ("", "your_...here", "your_g...here"):
-                    console.print(f"  [red]✗[/red] {key} 未填写")
+                    console.print(f"  [red]✗[/red] {key} not filled")
                 else:
                     console.print(f"  [green]✓[/green] {key}")
     else:
-        console.print("\n[green]✅ 配置完成！运行 [bold]beaver run[/bold] 开始使用[/green]")
+        console.print("\n[green]✅ Setup complete! Run [bold]beaver run[/bold] to start[/green]")
 
 
 if __name__ == "__main__":

@@ -97,7 +97,7 @@ class TestSetupCommand:
         monkeypatch.chdir(tmp_path)
         result = runner.invoke(app, ["setup"])
         assert result.exit_code == 1
-        assert ".env.example 不存在" in result.output
+        assert ".env.example not found" in result.output
 
     def test_setup_command_with_env_example(self, runner, tmp_path, monkeypatch):
         """Test 'beaver setup' with .env.example creates .env."""

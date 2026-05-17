@@ -51,7 +51,7 @@ def test_setup_command_already_exists(runner, tmp_path, monkeypatch):
 
     result = runner.invoke(app, ["setup"])
     assert result.exit_code == 0
-    assert ".env 已存在" in result.output
+    assert ".env already exists" in result.output
 
 
 def test_setup_command_missing_env_example(runner, tmp_path, monkeypatch):
@@ -61,4 +61,4 @@ def test_setup_command_missing_env_example(runner, tmp_path, monkeypatch):
 
     result = runner.invoke(app, ["setup"])
     assert result.exit_code == 1
-    assert ".env.example 不存在" in result.output
+    assert ".env.example not found" in result.output
