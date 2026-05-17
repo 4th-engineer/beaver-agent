@@ -265,6 +265,7 @@
 | 2026-05-17 04:00 | beaver-agent | Translate Chinese CLI strings to English in commands.py and interactive.py — completes English consistency sweep for all user-facing output (/help, /status, /debug, /map, /stats, /self-check, REPL welcome banner) | 760 tests passing |
 | 2026-05-17 05:00 | beaver-agent | Translate Chinese strings to English in github_tool.py (get_repo_info, create_issue, create_pr) — completes English consistency for all user-facing tool output | 760 tests passing |
 | 2026-05-17 14:00 | beaver-agent | Add structlog to main.py CLI commands (chat, map) — wrap load_config and command execution with structured error logging for error tracking and observability | 760 tests passing |
+| 2026-05-17 15:00 | beaver-agent | Translate Chinese CLI strings to English in main.py — chat/map/model/version/setup commands and error messages now fully English | 760 tests passing |
 
 ## Current Stage
 - 760 tests passing

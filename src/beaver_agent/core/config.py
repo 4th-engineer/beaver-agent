@@ -8,6 +8,10 @@ import yaml
 from pydantic import BaseModel, Field, field_validator
 from dotenv import load_dotenv
 
+import structlog
+
+logger = structlog.get_logger()
+
 __all__ = ["BeaverConfig", "AppConfig", "ModelConfig", "GitHubConfig", "CLIConfig", "load_config"]
 
 
@@ -149,7 +153,10 @@ def load_config(debug: bool = False) -> BeaverConfig:
         load_dotenv(env_path)
     else:
         # Try current directory as well
-        load_dotenv()
+        try:
+            load_dotenv()
+        except Exception as e:
+            logger.warning("dotenv_load_failed", exc_info=e)
     config_paths = [
         Path("config/settings.yaml"),
         Path(__file__).parent.parent / "config" / "settings.yaml",
@@ -159,8 +166,11 @@ def load_config(debug: bool = False) -> BeaverConfig:
     config_data = {}
     for path in config_paths:
         if path.exists():
-            with open(path) as f:
-                config_data = yaml.safe_load(f) or {}
+            try:
+                with open(path) as f:
+                    config_data = yaml.safe_load(f) or {}
+            except Exception as e:
+                logger.error("config_file_load_failed", path=str(path), exc_info=e)
             break
 
     # Ensure required sections exist even when no config file was found
