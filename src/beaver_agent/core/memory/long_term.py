@@ -596,8 +596,17 @@ class LongTermMemory:
     def clear_category(self, category: MemoryCategory) -> None:
         """Clear all memories in a category.
 
+        Deletes the category file from disk and removes all entries from the
+        in-memory index. Safe to call on an already-empty category.
+
         Args:
             category: The category to clear.
+
+        Returns:
+            None.
+
+        Example:
+            >>> mem.clear_category(MemoryCategory.USER_PREFERENCE)
         """
         category_file = self._get_category_file(category)
         if category_file.exists():
