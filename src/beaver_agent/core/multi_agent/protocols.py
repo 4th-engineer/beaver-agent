@@ -95,3 +95,9 @@ class Message(BaseModel):
     type: str  # task_assigned | task_result | ping | pong | stop
     payload: Dict[str, Any] = Field(default_factory=dict)
     created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+
+# Pydantic needs to resolve forward references before runtime instantiation
+Task.model_rebuild()
+WorkerInfo.model_rebuild()
+Message.model_rebuild()
