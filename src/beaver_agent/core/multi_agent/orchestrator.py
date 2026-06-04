@@ -37,7 +37,7 @@ class MultiAgentOrchestrator:
         inbox: Optional[Inbox] = None,
         bus: Optional[EventBus] = None,
         min_workers: int = 1,
-        max_workers: int = 4,
+        max_workers: Optional[int] = None,
     ) -> None:
         self.inbox = inbox or Inbox()
         self.bus = bus or EventBus()

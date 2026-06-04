@@ -6,6 +6,8 @@ import threading
 import time
 from typing import Any, Dict, List, Optional
 
+import os
+
 import structlog
 
 from beaver_agent.core.multi_agent.agent import WorkerAgent
@@ -29,12 +31,13 @@ class WorkerPool:
         inbox: Optional[Inbox] = None,
         bus: Optional[EventBus] = None,
         min_workers: int = 1,
-        max_workers: int = 4,
+        max_workers: Optional[int] = None,
     ) -> None:
         self.inbox = inbox or Inbox()
         self.bus = bus or EventBus()
         self.min_workers = min_workers
-        self.max_workers = max_workers
+        # Default: scale with CPU cores (no hard cap)
+        self.max_workers = max_workers if max_workers is not None else (os.cpu_count() or 4)
 
         self._workers: Dict[str, WorkerAgent] = {}
         self._lock = threading.Lock()
