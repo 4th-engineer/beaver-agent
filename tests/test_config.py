@@ -212,7 +212,6 @@ class TestLoadConfig:
         monkeypatch.delenv("GITHUB_TOKEN", raising=False)
 
         # Make all config paths appear non-existent except our target
-        real_exists = Path.exists
 
         def fake_exists(self):
             if self.name == "settings.yaml" and self.parent.name == "config":

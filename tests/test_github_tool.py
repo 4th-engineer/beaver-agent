@@ -137,7 +137,7 @@ class TestGitHubToolOperate:
         tool = GitHubTool(config)
 
         with patch.object(tool, "get_repo_info", return_value="mocked") as mock_get:
-            result = tool.operate("info", "other-owner", "other-repo")
+            tool.operate("info", "other-owner", "other-repo")
             mock_get.assert_called_once_with("other-owner", "other-repo")
 
     def test_operate_dispatches_create_issue(self):
@@ -160,7 +160,7 @@ class TestGitHubToolOperate:
         tool = GitHubTool(config)
 
         with patch.object(tool, "list_issues", return_value="mocked") as mock_list:
-            result = tool.operate("list_issues", "o", "r")
+            tool.operate("list_issues", "o", "r")
             # Note: state is NOT passed through operate; list_issues uses its own default
             mock_list.assert_called_once_with("o", "r")
 

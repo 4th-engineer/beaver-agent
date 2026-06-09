@@ -38,7 +38,7 @@ class TestGenerate:
         (tmp_path / "pkg" / "__init__.py").write_text("")
         (tmp_path / "pkg" / "mod.py").write_text("import os\nclass Bar: pass\n")
 
-        result = generate(tmp_path)
+        generate(tmp_path)
 
         index = json.loads((tmp_path / ".beaver" / "index.json").read_text())
         files = index["files"]
@@ -149,7 +149,7 @@ class TestGenerate:
         (tmp_path / ".beaver").mkdir()
         (tmp_path / ".beaver" / "old.json").write_text("{}")
 
-        result = generate(tmp_path)
+        generate(tmp_path)
 
         index = json.loads((tmp_path / ".beaver" / "index.json").read_text())
         files = index["files"]

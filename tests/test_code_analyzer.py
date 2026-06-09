@@ -269,7 +269,7 @@ def test_analyze_handles_read_error(tmp_path):
     src_dir = tmp_path / "src" / "beaver_agent"
     src_dir.mkdir(parents=True)
 
-    analyzer = CodeAnalyzer(tmp_path)
+    CodeAnalyzer(tmp_path)
     # Calling _analyze_file on a file outside project should be handled gracefully
     # Since it uses relative_to on a path that doesn't match, it will raise
     # This is expected behavior - it validates that paths are within the project
@@ -389,11 +389,11 @@ def test_find_class_methods_multiline():
     content = '''
 class MyClass:
     """A class with methods"""
-    
+
     def method_one(self):
         """First method"""
         pass
-    
+
     def method_two(self, x):
         """Second method"""
         return x

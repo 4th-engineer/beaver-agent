@@ -4,13 +4,13 @@ from __future__ import annotations
 
 import uuid
 from datetime import datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from pydantic import BaseModel, Field
 
 
-class TaskStatus(str, Enum):
+class TaskStatus(StrEnum):
     """Task lifecycle status."""
     PENDING = "pending"
     ASSIGNED = "assigned"
@@ -20,7 +20,7 @@ class TaskStatus(str, Enum):
     BLOCKED = "blocked"
 
 
-class TaskType(str, Enum):
+class TaskType(StrEnum):
     """Supported task types for worker agents."""
     CODE_GENERATION = "code_generation"
     CODE_REVIEW = "code_review"

@@ -208,7 +208,7 @@ class MCPManager:
             }
 
             await self._send_request(server_name, init_request)
-            response = await self._read_response(server_name)
+            await self._read_response(server_name)
 
             # Send initialized notification
             await self._send_notification(server_name, "notifications/initialized", {})

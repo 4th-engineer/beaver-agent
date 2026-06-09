@@ -176,9 +176,7 @@ mcp_servers:
             temp_path = f.name
 
         # Patch the config path to use our temp file
-        from beaver_agent.core import config as config_module
 
-        original_find = config_module.load_config
 
         def patched_load():
             import yaml

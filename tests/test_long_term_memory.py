@@ -125,13 +125,13 @@ class TestLongTermMemoryInit:
 
     def test_init_creates_directory(self, temp_memory_dir):
         """Test that init creates the memory directory."""
-        mem = LongTermMemory(temp_memory_dir)
+        LongTermMemory(temp_memory_dir)
         assert temp_memory_dir.exists()
 
     def test_init_nonexistent_dir(self, temp_memory_dir):
         """Test that init creates subdirectories if they don't exist."""
         subdir = temp_memory_dir / "subdir" / "nested"
-        mem = LongTermMemory(subdir)
+        LongTermMemory(subdir)
         assert subdir.exists()
 
 

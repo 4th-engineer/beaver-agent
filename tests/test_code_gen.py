@@ -226,7 +226,7 @@ class TestRefactor:
         mock_llm_client.chat.return_value = mock_response
 
         code = "def foo():\n\tpass"
-        result = code_gen_tool.refactor(code, style="clean", language="python")
+        code_gen_tool.refactor(code, style="clean", language="python")
 
         mock_llm_client.chat.assert_called_once()
         call_arg = mock_llm_client.chat.call_args[0][0]

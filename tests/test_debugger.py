@@ -102,7 +102,7 @@ class TestSuggestFixes:
     def test_suggest_fixes_calls_llm_chat(self, debugger_tool, mock_llm_client):
         """Test that suggest_fixes() calls LLM chat"""
         mock_llm_client.chat.return_value = Mock(content="Root cause: missing null check")
-        result = debugger_tool.suggest_fixes("def foo(x): return x.id", "AttributeError: x is None")
+        debugger_tool.suggest_fixes("def foo(x): return x.id", "AttributeError: x is None")
 
         mock_llm_client.chat.assert_called_once()
         prompt = mock_llm_client.chat.call_args[0][0]

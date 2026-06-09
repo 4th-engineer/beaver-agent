@@ -24,7 +24,6 @@ class TestRunRepl:
     def test_repl_exits_on_keyboard_interrupt(self, mock_config):
         """Test REPL exits cleanly on KeyboardInterrupt."""
         with patch("beaver_agent.cli.interactive.BeaverAgent") as MockAgent:
-            mock_agent = MockAgent.return_value
             with patch("beaver_agent.cli.interactive.Prompt.ask") as mock_prompt:
                 mock_prompt.side_effect = KeyboardInterrupt()
                 # Should not raise — KeyboardInterrupt is caught internally
@@ -35,7 +34,6 @@ class TestRunRepl:
     def test_repl_exits_on_eof_error(self, mock_config):
         """Test REPL exits cleanly on EOFError (Ctrl+D)."""
         with patch("beaver_agent.cli.interactive.BeaverAgent") as MockAgent:
-            mock_agent = MockAgent.return_value
             with patch("beaver_agent.cli.interactive.Prompt.ask") as mock_prompt:
                 mock_prompt.side_effect = EOFError()
                 # Should not raise — EOFError is caught internally
@@ -44,8 +42,7 @@ class TestRunRepl:
 
     def test_repl_handles_empty_input_continues(self, mock_config):
         """Test REPL continues loop when user enters empty input."""
-        with patch("beaver_agent.cli.interactive.BeaverAgent") as MockAgent:
-            mock_agent = MockAgent.return_value
+        with patch("beaver_agent.cli.interactive.BeaverAgent"):
             with patch("beaver_agent.cli.interactive.Prompt.ask") as mock_prompt:
                 # First empty, then Ctrl+C to exit
                 mock_prompt.side_effect = ["", KeyboardInterrupt()]
@@ -107,7 +104,7 @@ class TestRunRepl:
             mock_agent = MockAgent.return_value
             mock_agent.run.side_effect = ValueError("Test error")
             with patch("beaver_agent.cli.interactive.Prompt.ask") as mock_prompt:
-                with patch("beaver_agent.cli.interactive.logger") as mock_logger:
+                with patch("beaver_agent.cli.interactive.logger"):
                     with patch("beaver_agent.cli.interactive.console.status") as mock_status:
                         mock_status.return_value.__enter__ = MagicMock()
                         mock_status.return_value.__exit__ = MagicMock()
@@ -119,7 +116,7 @@ class TestRunRepl:
     def test_repl_welcome_banner_printed(self, mock_config):
         """Test REPL prints welcome banner when configured."""
         mock_config.cli.welcome_banner = "Welcome!"
-        with patch("beaver_agent.cli.interactive.BeaverAgent") as MockAgent:
+        with patch("beaver_agent.cli.interactive.BeaverAgent"):
             with patch("beaver_agent.cli.interactive.console.print") as mock_print:
                 with patch("beaver_agent.cli.interactive.Prompt.ask") as mock_prompt:
                     mock_prompt.side_effect = KeyboardInterrupt()
@@ -130,8 +127,8 @@ class TestRunRepl:
     def test_repl_no_welcome_banner(self, mock_config):
         """Test REPL skips banner when welcome_banner is None."""
         mock_config.cli.welcome_banner = None
-        with patch("beaver_agent.cli.interactive.BeaverAgent") as MockAgent:
-            with patch("beaver_agent.cli.interactive.console.print") as mock_print:
+        with patch("beaver_agent.cli.interactive.BeaverAgent"):
+            with patch("beaver_agent.cli.interactive.console.print"):
                 with patch("beaver_agent.cli.interactive.Prompt.ask") as mock_prompt:
                     mock_prompt.side_effect = KeyboardInterrupt()
                     run_repl(mock_config)
@@ -140,8 +137,7 @@ class TestRunRepl:
 
     def test_repl_handles_exit_command(self, mock_config):
         """Test REPL exits when handle_command returns False (/exit)."""
-        with patch("beaver_agent.cli.interactive.BeaverAgent") as MockAgent:
-            mock_agent = MockAgent.return_value
+        with patch("beaver_agent.cli.interactive.BeaverAgent"):
             with patch("beaver_agent.cli.interactive.Prompt.ask") as mock_prompt:
                 with patch("beaver_agent.cli.interactive.handle_command") as mock_handle:
                     mock_handle.return_value = False  # /exit returns False

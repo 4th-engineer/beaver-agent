@@ -161,7 +161,7 @@ class TestLLMClientChat:
         client._call = mock_call
         client.model = "none"
 
-        response = client.chat("Hello", system="You are helpful")
+        client.chat("Hello", system="You are helpful")
 
         call_args = mock_call.call_args[0][0]
         assert len(call_args) == 2
@@ -181,7 +181,7 @@ class TestLLMClientChat:
             {"role": "user", "content": "Previous message"},
             {"role": "assistant", "content": "Previous response"},
         ]
-        response = client.chat("Hello", context=context)
+        client.chat("Hello", context=context)
 
         call_args = mock_call.call_args[0][0]
         assert len(call_args) == 3
