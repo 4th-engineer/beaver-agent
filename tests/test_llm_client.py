@@ -1,6 +1,5 @@
 """Tests for LLMClient and LLMResponse."""
 
-import pytest
 from unittest.mock import MagicMock, patch
 
 from beaver_agent.core.llm_client import LLMClient, LLMResponse
@@ -98,7 +97,6 @@ class TestLLMClientInit:
 
     def test_init_minimax_provider(self):
         """LLMClient with minimax provider sets _call_minimax."""
-        from beaver_agent.core.config import ModelConfig
 
         config = MagicMock()
         config.provider = "minimax"
@@ -113,7 +111,6 @@ class TestLLMClientInit:
 
     def test_init_openrouter_provider(self):
         """LLMClient with openrouter provider sets _call_openai."""
-        from beaver_agent.core.config import ModelConfig
 
         config = MagicMock()
         config.provider = "openrouter"
@@ -127,7 +124,6 @@ class TestLLMClientInit:
 
     def test_api_key_falls_back_to_env_var(self):
         """LLMClient uses ANTHROPIC_API_KEY when config.api_key is None."""
-        from beaver_agent.core.config import ModelConfig
 
         config = MagicMock()
         config.provider = "anthropic"
@@ -142,7 +138,6 @@ class TestLLMClientInit:
 
     def test_api_key_falls_back_to_openai_env(self):
         """LLMClient uses OPENAI_API_KEY when ANTHROPIC_API_KEY is not set."""
-        from beaver_agent.core.config import ModelConfig
 
         config = MagicMock()
         config.provider = "openai"

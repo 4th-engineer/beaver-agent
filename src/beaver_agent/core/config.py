@@ -2,13 +2,11 @@
 
 import os
 from pathlib import Path
-from typing import Optional
-
-import yaml
-from pydantic import BaseModel, Field, field_validator
-from dotenv import load_dotenv
 
 import structlog
+import yaml
+from dotenv import load_dotenv
+from pydantic import BaseModel, Field, field_validator
 
 logger = structlog.get_logger()
 
@@ -45,8 +43,8 @@ class ModelConfig(BaseModel):
 
     provider: str = "openrouter"
     name: str = Field(default="anthropic/claude-3-haiku", validation_alias="model")
-    api_key: Optional[str] = None
-    api_base: Optional[str] = None
+    api_key: str | None = None
+    api_base: str | None = None
     max_tokens: int = 4096
     temperature: float = 0.7
 
@@ -60,7 +58,7 @@ class GitHubConfig(BaseModel):
         repo: Default repository name.
     """
 
-    token: Optional[str] = None
+    token: str | None = None
     owner: str = "user-YeLei"
     repo: str = "beaver-agent"
 
@@ -98,10 +96,10 @@ class FileToolConfig(BaseModel):
 class MCPServerConfig(BaseModel):
     """Configuration for a single MCP server"""
 
-    command: Optional[str] = None
+    command: str | None = None
     args: list = Field(default_factory=list)
     env: dict = Field(default_factory=dict)
-    url: Optional[str] = None
+    url: str | None = None
     headers: dict = Field(default_factory=dict)
     timeout: int = 120
     connect_timeout: int = 60

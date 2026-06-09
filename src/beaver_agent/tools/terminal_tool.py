@@ -5,7 +5,6 @@ __all__ = ["TerminalTool"]
 import os
 import platform
 import subprocess
-from typing import Optional
 
 import structlog
 
@@ -36,7 +35,7 @@ class TerminalTool:
         self.config = config
 
     def execute(
-        self, command: str, cwd: Optional[str] = None, timeout: int = 60, shell: bool = True
+        self, command: str, cwd: str | None = None, timeout: int = 60, shell: bool = True
     ) -> str:
         """Execute a terminal command.
 
@@ -224,7 +223,7 @@ class TerminalTool:
             or an empty string if no errors are found or on PermissionError.
         """
         try:
-            with open(path, "r", encoding="utf-8", errors="replace") as f:
+            with open(path, encoding="utf-8", errors="replace") as f:
                 all_lines = f.readlines()
             recent = all_lines[-lines:] if len(all_lines) > lines else all_lines
             errors = [
@@ -238,7 +237,7 @@ class TerminalTool:
         except PermissionError:
             return ""
 
-    def run_tests(self, test_command: Optional[str] = None) -> str:
+    def run_tests(self, test_command: str | None = None) -> str:
         """Run tests using auto-detected test framework.
 
         Automatically detects available test frameworks (pytest, npm, cargo, go)

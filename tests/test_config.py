@@ -1,12 +1,8 @@
 """Tests for core/config.py — configuration management and Pydantic models."""
 
-import os
-import tempfile
 from pathlib import Path
 
-import pytest
 import yaml
-from pydantic import ValidationError
 
 from beaver_agent.core.config import (
     AppConfig,
@@ -15,8 +11,8 @@ from beaver_agent.core.config import (
     FileToolConfig,
     GitHubConfig,
     LoggingConfig,
-    MCPServerConfig,
     MCPConfig,
+    MCPServerConfig,
     ModelConfig,
     load_config,
 )

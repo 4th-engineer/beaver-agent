@@ -1,12 +1,13 @@
 """Tests for Beaver Bot File Tool"""
 
-import pytest
-import tempfile
 import os
+import tempfile
 from pathlib import Path
 
+import pytest
+
+from beaver_agent.core.config import AppConfig, BeaverConfig, FileToolConfig
 from beaver_agent.tools.file_tool import FileTool
-from beaver_agent.core.config import BeaverConfig, AppConfig, FileToolConfig
 
 
 @pytest.fixture

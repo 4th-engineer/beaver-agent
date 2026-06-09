@@ -1,11 +1,16 @@
 """Beaver Agent GitHub Tool"""
 
+from __future__ import annotations
+
 __all__ = ["GitHubTool"]
 
-import requests
-from typing import Optional
+from typing import TYPE_CHECKING
 
+import requests
 import structlog
+
+if TYPE_CHECKING:
+    from beaver_agent.core.config import BeaverConfig
 
 logger = structlog.get_logger()
 
@@ -13,7 +18,7 @@ logger = structlog.get_logger()
 class GitHubTool:
     """Tool for GitHub operations"""
 
-    def __init__(self, config: "BeaverConfig") -> None:
+    def __init__(self, config: BeaverConfig) -> None:
         """Initialize GitHubTool with BeaverConfig.
 
         Args:
@@ -33,8 +38,8 @@ class GitHubTool:
     def operate(
         self,
         action: str = "info",
-        owner: Optional[str] = None,
-        repo: Optional[str] = None,
+        owner: str | None = None,
+        repo: str | None = None,
         **kwargs,
     ) -> str:
         """Generic GitHub operation dispatcher.

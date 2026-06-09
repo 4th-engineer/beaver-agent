@@ -1,17 +1,13 @@
 """Tests for DataStore - user/system data separation and migration management."""
 
 import json
-import tempfile
 from pathlib import Path
-from unittest.mock import Mock, patch
 
 import pytest
 
 from beaver_agent.core.data_store import (
     DataStore,
     DataVersion,
-    DataCategory,
-    Migration,
     get_data_store,
 )
 

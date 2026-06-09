@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import structlog
 
@@ -52,7 +52,7 @@ class MemoryEntry:
     created_at: float
     last_accessed: float
     access_count: int
-    session_id: Optional[str] = None
+    session_id: str | None = None
     source: str = "auto"
 
     def to_dict(self) -> dict[str, Any]:
@@ -115,8 +115,8 @@ class MemoryQuery:
     """
 
     query: str
-    categories: Optional[list[MemoryCategory]] = None
-    tags: Optional[list[str]] = None
+    categories: list[MemoryCategory] | None = None
+    tags: list[str] | None = None
     limit: int = 10
     recency_weight: float = 0.3  # Weight for recency in scoring (0-1)
 
@@ -172,7 +172,7 @@ class LongTermMemory:
 
         if category_file.exists():
             try:
-                with open(category_file, "r", encoding="utf-8") as f:
+                with open(category_file, encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if line:
@@ -185,7 +185,7 @@ class LongTermMemory:
                                     category=category.value,
                                     exc_info=e,
                                 )
-            except IOError as e:
+            except OSError as e:
                 logger.error(
                     "memory_file_read_failed",
                     category=category.value,
@@ -202,8 +202,8 @@ class LongTermMemory:
         self,
         content: str,
         category: MemoryCategory,
-        tags: Optional[list[str]] = None,
-        session_id: Optional[str] = None,
+        tags: list[str] | None = None,
+        session_id: str | None = None,
         source: str = "auto",
     ) -> str:
         """Add a new memory entry.
@@ -238,7 +238,7 @@ class LongTermMemory:
         try:
             with open(category_file, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry.to_dict(), ensure_ascii=False) + "\n")
-        except IOError as e:
+        except OSError as e:
             logger.error(
                 "memory_write_failed",
                 category=category.value,
@@ -283,7 +283,7 @@ class LongTermMemory:
             with open(category_file, "w", encoding="utf-8") as f:
                 for entry in trimmed:
                     f.write(json.dumps(entry.to_dict(), ensure_ascii=False) + "\n")
-        except IOError as e:
+        except OSError as e:
             logger.error("memory_trim_failed", category=category.value, exc_info=e)
             return False
 
@@ -399,7 +399,7 @@ class LongTermMemory:
 
     def get_recent(
         self,
-        category: Optional[MemoryCategory] = None,
+        category: MemoryCategory | None = None,
         limit: int = 10,
     ) -> list[MemoryEntry]:
         """Get the most recent memory entries.
@@ -436,7 +436,7 @@ class LongTermMemory:
     def remember_user_preference(
         self,
         preference: str,
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
     ) -> str:
         """Convenience method to store a user preference.
 
@@ -457,8 +457,8 @@ class LongTermMemory:
     def remember_project_fact(
         self,
         fact: str,
-        tags: Optional[list[str]] = None,
-        session_id: Optional[str] = None,
+        tags: list[str] | None = None,
+        session_id: str | None = None,
     ) -> str:
         """Convenience method to store a project-related fact.
 
@@ -481,8 +481,8 @@ class LongTermMemory:
         self,
         problem: str,
         solution: str,
-        tags: Optional[list[str]] = None,
-        session_id: Optional[str] = None,
+        tags: list[str] | None = None,
+        session_id: str | None = None,
     ) -> str:
         """Store a problem-solution pair.
 
@@ -507,7 +507,7 @@ class LongTermMemory:
         self,
         convention: str,
         context: str = "",
-        session_id: Optional[str] = None,
+        session_id: str | None = None,
     ) -> str:
         """Store a project convention or pattern.
 
@@ -529,8 +529,8 @@ class LongTermMemory:
 
     def get_context_for_prompt(
         self,
-        query: Optional[str] = None,
-        categories: Optional[list[MemoryCategory]] = None,
+        query: str | None = None,
+        categories: list[MemoryCategory] | None = None,
         limit: int = 5,
     ) -> str:
         """Get formatted context string for LLM prompt injection.

@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 import structlog
 
 from beaver_agent.core.multi_agent.agent import (
-    Agent,
     ReporterAgent,
     ReviewerAgent,
     SchedulerAgent,
@@ -34,10 +33,10 @@ class MultiAgentOrchestrator:
 
     def __init__(
         self,
-        inbox: Optional[Inbox] = None,
-        bus: Optional[EventBus] = None,
+        inbox: Inbox | None = None,
+        bus: EventBus | None = None,
         min_workers: int = 1,
-        max_workers: Optional[int] = None,
+        max_workers: int | None = None,
     ) -> None:
         self.inbox = inbox or Inbox()
         self.bus = bus or EventBus()
@@ -100,7 +99,7 @@ class MultiAgentOrchestrator:
 
     # ─── Helpers ─────────────────────────────────────────────────────────────
 
-    def _wait_for_completion(self, timeout: float) -> List[Task]:
+    def _wait_for_completion(self, timeout: float) -> list[Task]:
         """Block until all submitted tasks are terminal (done/failed) or timeout."""
         start = time.monotonic()
         last_pending_count = -1
@@ -127,7 +126,7 @@ class MultiAgentOrchestrator:
         """Stop the worker pool and release resources."""
         self.pool.shutdown()
 
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         """Return a snapshot of the entire orchestration state."""
         return {
             "inbox": {

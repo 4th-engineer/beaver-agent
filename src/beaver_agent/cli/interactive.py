@@ -8,10 +8,9 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.prompt import Prompt
 
+from beaver_agent.cli.commands import handle_command
 from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.core.config import BeaverConfig
-from beaver_agent.cli.commands import handle_command
-
 
 console = Console()
 logger = structlog.get_logger()

@@ -1,10 +1,10 @@
 """Tests for beaver_agent.cli.interactive REPL module."""
 
-import pytest
-from unittest.mock import MagicMock, patch, PropertyMock
-from rich.console import Console
+from unittest.mock import MagicMock, patch
 
-from beaver_agent.cli.interactive import run_repl, _print_response, print_welcome
+import pytest
+
+from beaver_agent.cli.interactive import _print_response, print_welcome, run_repl
 
 
 @pytest.fixture

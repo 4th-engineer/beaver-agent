@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from beaver_agent.core.skill_manager import SkillManager, Skill, SkillStep, SkillPhase
+from beaver_agent.core.skill_manager import Skill, SkillManager, SkillPhase, SkillStep
 
 
 @pytest.fixture

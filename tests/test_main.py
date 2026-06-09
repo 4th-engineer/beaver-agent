@@ -1,7 +1,8 @@
 """Tests for main.py CLI entry points (run, chat, model, version, setup)"""
 
-import pytest
 from unittest.mock import MagicMock, patch
+
+import pytest
 from typer.testing import CliRunner
 
 from beaver_agent.main import app

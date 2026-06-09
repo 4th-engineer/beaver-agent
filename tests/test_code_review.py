@@ -1,8 +1,10 @@
 """Tests for Code Review Tool"""
 
+from unittest.mock import Mock
+
 import pytest
-from unittest.mock import Mock, MagicMock
-from beaver_agent.tools.code_review import CodeReviewTool, CodeReviewIssue
+
+from beaver_agent.tools.code_review import CodeReviewIssue, CodeReviewTool
 
 
 @pytest.fixture

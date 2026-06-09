@@ -1,19 +1,20 @@
 """Tests for eval metrics module — scorers and strategy constants."""
 
 import pytest
+
 from beaver_agent.core.eval.metrics import (
-    ExactMatchScorer,
-    SimilarityScorer,
     CodeExecutionScorer,
     CodeReviewScorer,
+    ExactMatchScorer,
+    SimilarityScorer,
     get_scorer,
 )
 from beaver_agent.core.eval.prompting import (
-    STRATEGY_MAP,
-    CODE_GENERATION_STRATEGY,
-    BUG_FIX_STRATEGY,
-    CODE_REVIEW_STRATEGY,
     ARCHITECTURE_STRATEGY,
+    BUG_FIX_STRATEGY,
+    CODE_GENERATION_STRATEGY,
+    CODE_REVIEW_STRATEGY,
+    STRATEGY_MAP,
 )
 
 

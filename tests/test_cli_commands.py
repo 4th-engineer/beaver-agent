@@ -1,23 +1,23 @@
 """Tests for CLI command functions in commands.py"""
 
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
+
+import pytest
 from typer.testing import CliRunner
 
-from beaver_agent.main import app
 from beaver_agent.cli.commands import (
+    chat_command,
     handle_command,
+    handle_self_check_command,
+    handle_stats_command,
+    model_command,
     print_help,
     show_model_info,
     show_status,
-    chat_command,
-    model_command,
-    handle_stats_command,
-    handle_self_check_command,
 )
-from rich.markdown import Markdown
-from beaver_agent.cli.interactive import print_welcome, _print_response
+from beaver_agent.cli.interactive import _print_response, print_welcome
+from beaver_agent.main import app
 
 
 @pytest.fixture
@@ -470,7 +470,6 @@ class TestHandleStatsCommand:
 
     def test_handle_stats_command_success(self, mock_config, capsys):
         """Test /stats displays project statistics."""
-        from beaver_agent.cli.commands import _print_stats, console
 
         stats_data = {
             "total_files": 42,
@@ -508,7 +507,6 @@ class TestHandleSelfCheckCommand:
 
     def test_handle_self_check_command_success(self, mock_config, capsys):
         """Test /self-check runs health checks successfully."""
-        from beaver_agent.cli.commands import _run_self_check
 
         with patch("beaver_agent.cli.commands._run_self_check") as mock_check:
             handle_self_check_command(Path("/fake/project"))

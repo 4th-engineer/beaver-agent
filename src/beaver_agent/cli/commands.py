@@ -1,17 +1,16 @@
 """Beaver Agent CLI Commands"""
 
 import tempfile
-import structlog
 from pathlib import Path
 
+import structlog
 from rich.console import Console
 
-from beaver_agent.core.config import BeaverConfig, load_config
 from beaver_agent.core.agent import BeaverAgent
+from beaver_agent.core.config import BeaverConfig, load_config
 from beaver_agent.tools.browser_tool import BrowserTool
 from beaver_agent.tools.code_analyzer import analyze_repository
 from beaver_agent.tools.mapper import generate
-
 
 logger = structlog.get_logger()
 
@@ -299,8 +298,8 @@ def _run_self_check(root: Path) -> None:
     (git, pytest) are caught and displayed as console errors rather than
     propagating.
     """
-    import subprocess
     import os
+    import subprocess
 
     console.print("\n[bold cyan]🔍 Running self-check...[/bold cyan]\n")
 
@@ -343,10 +342,10 @@ def _run_self_check(root: Path) -> None:
             summary = next((l for l in reversed(lines) if "passed" in l or "error" in l), lines[-1] if lines else "unknown")
             console.print(f"  [green]✓[/green] {summary}")
         elif result.returncode == 2:
-            console.print(f"  [red]✗ Test collection failed[/red]")
+            console.print("  [red]✗ Test collection failed[/red]")
         else:
             # Find failure
-            console.print(f"  [red]✗ Tests failed[/red]")
+            console.print("  [red]✗ Tests failed[/red]")
             for line in result.stdout.splitlines():
                 if "FAILED" in line or "ERROR" in line:
                     console.print(f"    {line.strip()}")

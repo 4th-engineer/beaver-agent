@@ -1,13 +1,12 @@
 """Beaver Agent Skill Manager - Structured skill loading and execution"""
 
-import os
 import re
-import yaml
-from pathlib import Path
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
 
 import structlog
+import yaml
 
 logger = structlog.get_logger()
 
@@ -20,7 +19,7 @@ class SkillStep:
 
     order: int
     instruction: str
-    check: Optional[str] = None  # What to verify after this step
+    check: str | None = None  # What to verify after this step
 
 
 @dataclass
@@ -29,7 +28,7 @@ class SkillPhase:
 
     name: str
     instruction: str
-    steps: List[SkillStep] = field(default_factory=list)
+    steps: list[SkillStep] = field(default_factory=list)
 
 
 @dataclass
@@ -42,14 +41,14 @@ class Skill:
     trigger: str
     content: str
     file_path: Path
-    required_commands: List[str] = field(default_factory=list)
-    required_environment_variables: List[str] = field(default_factory=list)
+    required_commands: list[str] = field(default_factory=list)
+    required_environment_variables: list[str] = field(default_factory=list)
 
     # New structured fields (Matt Pocock style)
     when_to_use: str = ""  # When to invoke this skill
-    phases: List[SkillPhase] = field(default_factory=list)
-    checklist: List[str] = field(default_factory=list)  # Final verification checklist
-    examples: List[str] = field(default_factory=list)  # Usage examples
+    phases: list[SkillPhase] = field(default_factory=list)
+    checklist: list[str] = field(default_factory=list)  # Final verification checklist
+    examples: list[str] = field(default_factory=list)  # Usage examples
 
     # Backward compatibility: if no phases, use the whole content as one phase
     @property
@@ -70,7 +69,7 @@ class Skill:
         input_lower = user_input.lower()
         return trigger_lower in input_lower
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize the skill to a dictionary for JSON export.
 
         Converts the skill's fields (name, category, description, trigger,
@@ -147,7 +146,7 @@ class SkillManager:
 
     SKILL_FILE = "SKILL.md"
 
-    def __init__(self, project_root: Path, skills_dirs: Optional[Dict[str, Path]] = None) -> None:
+    def __init__(self, project_root: Path, skills_dirs: dict[str, Path] | None = None) -> None:
         """Initialize SkillManager and load all skills from disk.
 
         Args:
@@ -161,7 +160,7 @@ class SkillManager:
         same name as builtin skills override them.
         """
         self.project_root = project_root
-        self._skills: Dict[str, Skill] = {}
+        self._skills: dict[str, Skill] = {}
 
         # Default: check new data/ location, fall back to legacy skills/
         if skills_dirs:
@@ -232,7 +231,7 @@ class SkillManager:
 
         logger.info("skills_loaded_total", count=len(self._skills))
 
-    def _parse_skill_file(self, file_path: Path) -> Optional[Skill]:
+    def _parse_skill_file(self, file_path: Path) -> Skill | None:
         """Parse a SKILL.md file and extract metadata and structured content"""
         try:
             content = file_path.read_text(encoding="utf-8")
@@ -269,7 +268,7 @@ class SkillManager:
             logger.error("skill_parse_failed", file=str(file_path), exc_info=e)
             return None
 
-    def _parse_phases(self, frontmatter: Dict[str, Any]) -> List[SkillPhase]:
+    def _parse_phases(self, frontmatter: dict[str, Any]) -> list[SkillPhase]:
         """Parse structured phases from frontmatter"""
         phases = []
         raw_phases = frontmatter.get("phases", [])
@@ -319,7 +318,7 @@ class SkillManager:
 
         return phases
 
-    def _extract_frontmatter(self, content: str) -> Dict[str, Any]:
+    def _extract_frontmatter(self, content: str) -> dict[str, Any]:
         """Extract YAML frontmatter from a SKILL.md file body.
 
         Parses ``---`` delimited YAML frontmatter from the top of a skill
@@ -348,7 +347,7 @@ class SkillManager:
                 logger.warning("yaml_parse_failed", exc_info=e)
         return {}
 
-    def find_matching_skill(self, user_input: str) -> Optional[Skill]:
+    def find_matching_skill(self, user_input: str) -> Skill | None:
         """Find the first skill that matches the user input.
 
         Iterates through all loaded skills in insertion order and returns
@@ -372,7 +371,7 @@ class SkillManager:
                 return skill
         return None
 
-    def get_skill(self, name: str) -> Optional[Skill]:
+    def get_skill(self, name: str) -> Skill | None:
         """Get a skill by exact name.
 
         Args:
@@ -388,7 +387,7 @@ class SkillManager:
         """
         return self._skills.get(name)
 
-    def list_skills(self) -> List[Dict[str, Any]]:
+    def list_skills(self) -> list[dict[str, Any]]:
         """List all available skills as dictionaries.
 
         Returns each skill's metadata (name, category, description, trigger,
@@ -405,7 +404,7 @@ class SkillManager:
         """
         return [skill.to_dict() for skill in self._skills.values()]
 
-    def list_skills_by_category(self, category: str) -> List[Dict[str, Any]]:
+    def list_skills_by_category(self, category: str) -> list[dict[str, Any]]:
         """List all skills belonging to a specific category.
 
         Args:

@@ -1,8 +1,8 @@
 """Component 4: Scoring / Metrics — how to evaluate predictions."""
 
-from abc import ABC, abstractmethod
 import difflib
 import re
+from abc import ABC, abstractmethod
 
 import structlog
 

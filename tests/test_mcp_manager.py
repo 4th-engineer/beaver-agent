@@ -2,12 +2,11 @@
 
 import tempfile
 from pathlib import Path
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-import structlog
 
-from beaver_agent.core.config import BeaverConfig, MCPServerConfig, MCPConfig
+from beaver_agent.core.config import BeaverConfig, MCPServerConfig
 from beaver_agent.core.mcp_manager import MCPManager, MCPTool
 
 
@@ -165,7 +164,6 @@ class TestMCPManager:
     def test_mcp_config_parsing(self):
         """Test that mcp_servers config is parsed correctly"""
         # Create a temporary config file with mcp_servers
-        import tempfile
 
         config_content = """
 mcp_servers:
@@ -198,7 +196,6 @@ mcp_servers:
 
     def test_load_configs_from_directory(self):
         """Test loading MCP server configs from a directory of YAML files"""
-        import tempfile
         import os
 
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -232,7 +229,6 @@ headers:
 
     def test_load_configs_from_directory_empty(self):
         """Test _load_configs_from_directory handles empty directory"""
-        import tempfile
 
         with tempfile.TemporaryDirectory() as tmpdir:
             config = BeaverConfig()
@@ -243,7 +239,6 @@ headers:
 
     def test_load_configs_from_directory_malformed_yaml(self):
         """Test _load_configs_from_directory handles malformed YAML gracefully"""
-        import tempfile
         import os
 
         with tempfile.TemporaryDirectory() as tmpdir:

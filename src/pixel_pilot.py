@@ -21,11 +21,11 @@ PixelPilot - 一行代码接入 beaver-agent 可视化观测
     python your_agent.py  # 自动连接
 """
 
-import json
 import functools
+import json
 from datetime import datetime
-from urllib import request, error
-from typing import Optional, Dict, Any, List
+from typing import Any
+from urllib import request
 
 __all__ = [
     "connect",
@@ -98,8 +98,8 @@ def send(
     event_type: str,
     message: str = "",
     agent: str = "beaver",
-    tool: Optional[str] = None,
-    file: Optional[str] = None,
+    tool: str | None = None,
+    file: str | None = None,
     status: str = "active",
 ) -> bool:
     """
@@ -148,7 +148,7 @@ def _test_connection() -> bool:
         return False
 
 
-def _post_event(event: Dict[str, Any]) -> bool:
+def _post_event(event: dict[str, Any]) -> bool:
     """Send an event to the PixelPilot server."""
     if not _viewer_url:
         return False
@@ -213,7 +213,7 @@ def _patch_tool_router(verbose: bool = True) -> None:
         original_route_batch = getattr(ToolRouter, "route_batch", None)
 
         @functools.wraps(original_route)
-        def patched_route(self, task: Dict[str, Any]) -> Dict[str, Any]:
+        def patched_route(self, task: dict[str, Any]) -> dict[str, Any]:
             """Monkey-patched ToolRouter.route() that emits tool events to PixelPilot.
 
             Wraps the original route() call to send tool_start and tool_done
@@ -276,7 +276,7 @@ def _patch_tool_router(verbose: bool = True) -> None:
         if original_route_batch:
 
             @functools.wraps(original_route_batch)
-            def patched_route_batch(self, tasks: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+            def patched_route_batch(self, tasks: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 """Monkey-patched ToolRouter.route_batch() for batch tool routing.
 
                 Routes each task through patched_route() individually so every

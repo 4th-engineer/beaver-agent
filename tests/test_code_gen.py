@@ -1,7 +1,9 @@
 """Tests for Code Generation Tool"""
 
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import Mock, MagicMock, patch
+
 from beaver_agent.tools.code_gen import CodeGenTool
 
 

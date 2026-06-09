@@ -1,16 +1,15 @@
 """Tests for Code Analyzer Tool"""
 
-import pytest
-import tempfile
-import os
 from pathlib import Path
 
+import pytest
+
 from beaver_agent.tools.code_analyzer import (
-    CodeAnalyzer,
-    analyze_repository,
-    ModuleInfo,
     ClassInfo,
+    CodeAnalyzer,
     FunctionInfo,
+    ModuleInfo,
+    analyze_repository,
 )
 
 

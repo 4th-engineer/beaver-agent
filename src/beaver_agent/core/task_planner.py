@@ -1,7 +1,7 @@
 """Beaver Agent Task Planner - LLM-powered task decomposition."""
 
 import re
-from typing import List, Dict, Any
+from typing import Any
 
 import structlog
 
@@ -55,7 +55,7 @@ class TaskPlanner:
         r"pr\s*#?(\d+)",  # explicit PR
     ]
 
-    def plan(self, user_input: str, intent: str) -> List[Dict[str, Any]]:
+    def plan(self, user_input: str, intent: str) -> list[dict[str, Any]]:
         """Plan tasks for a given intent and user input.
 
         Uses the intent type to look up predefined task templates, then
@@ -100,7 +100,7 @@ class TaskPlanner:
 
         return planned_tasks
 
-    def _extract_params(self, user_input: str, intent: str) -> Dict[str, Any]:
+    def _extract_params(self, user_input: str, intent: str) -> dict[str, Any]:
         """Extract structured parameters from user input for task planning.
 
         Parses the user input to extract actionable parameters based on the
@@ -130,7 +130,7 @@ class TaskPlanner:
             ... )
             {'description': '帮我写一个 Python 函数来处理文件', 'language': 'python'}
         """
-        params: Dict[str, Any] = {}
+        params: dict[str, Any] = {}
 
         # For code generation, save the full description
         if intent == "code_generation":
@@ -175,7 +175,7 @@ class TaskPlanner:
 
         return params
 
-    def validate_plan(self, tasks: List[Dict[str, Any]]) -> bool:
+    def validate_plan(self, tasks: list[dict[str, Any]]) -> bool:
         """Validate that a task plan is executable.
 
         Checks that the task list is non-empty and that each task dict

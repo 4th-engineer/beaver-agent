@@ -1,6 +1,5 @@
 """Beaver Agent Code Review Tool"""
 
-from typing import Optional, List
 
 import structlog
 
@@ -23,9 +22,9 @@ class CodeReviewIssue:
     def __init__(
         self,
         severity: str,  # critical, major, minor, suggestion
-        line: Optional[int],
+        line: int | None,
         message: str,
-        suggestion: Optional[str] = None,
+        suggestion: str | None = None,
     ):
         """Initialize a code review issue.
 
@@ -69,8 +68,8 @@ class CodeReviewTool:
         self,
         code: str,
         language: str = "python",
-        file_path: Optional[str] = None,
-        context: Optional[str] = None,
+        file_path: str | None = None,
+        context: str | None = None,
     ) -> str:
         """Review code and return findings.
 
@@ -104,7 +103,7 @@ class CodeReviewTool:
     # ── Single-pass static analysis ───────────────────────────────────────────
 
     def _basic_review(
-        self, code: str, language: str, file_path: Optional[str]
+        self, code: str, language: str, file_path: str | None
     ) -> str:
         """Perform basic static analysis when LLM is unavailable.
 
@@ -123,7 +122,7 @@ class CodeReviewTool:
         is_python = lang in ("python", "py")
         is_js = lang in ("javascript", "js", "typescript", "ts")
 
-        issues: List[CodeReviewIssue] = []
+        issues: list[CodeReviewIssue] = []
         code_lines = code.split("\n")
 
         for i, line in enumerate(code_lines, 1):
@@ -174,7 +173,7 @@ class CodeReviewTool:
         return header + "\n".join(issue.format() for issue in issues)
 
     def _check_python_line(
-        self, lineno: int, line: str, issues: List[CodeReviewIssue]
+        self, lineno: int, line: str, issues: list[CodeReviewIssue]
     ) -> None:
         """Detect Python-specific issues on a single stripped line."""
         if "TODO" in line or "FIXME" in line:
@@ -203,7 +202,7 @@ class CodeReviewTool:
             ))
 
     def _check_js_line(
-        self, lineno: int, line: str, issues: List[CodeReviewIssue]
+        self, lineno: int, line: str, issues: list[CodeReviewIssue]
     ) -> None:
         """Detect JavaScript/TypeScript-specific issues on a single stripped line."""
         if "console.log" in line:
@@ -227,7 +226,7 @@ class CodeReviewTool:
             ))
 
     def _format_review_response(
-        self, llm_response: str, file_path: Optional[str]
+        self, llm_response: str, file_path: str | None
     ) -> str:
         """Format a full LLM-based code review response with header."""
         return (

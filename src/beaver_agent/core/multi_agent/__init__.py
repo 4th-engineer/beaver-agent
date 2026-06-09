@@ -10,6 +10,17 @@ pool      : Worker pool manager
 orchestrator : End-to-end multi-agent pipeline coordinator
 """
 
+from beaver_agent.core.multi_agent.agent import (
+    Agent,
+    ReporterAgent,
+    ReviewerAgent,
+    SchedulerAgent,
+    WorkerAgent,
+)
+from beaver_agent.core.multi_agent.bus import EventBus
+from beaver_agent.core.multi_agent.inbox import Inbox
+from beaver_agent.core.multi_agent.orchestrator import MultiAgentOrchestrator
+from beaver_agent.core.multi_agent.pool import WorkerPool
 from beaver_agent.core.multi_agent.protocols import (
     Message,
     Task,
@@ -17,17 +28,6 @@ from beaver_agent.core.multi_agent.protocols import (
     TaskType,
     WorkerInfo,
 )
-from beaver_agent.core.multi_agent.inbox import Inbox
-from beaver_agent.core.multi_agent.bus import EventBus
-from beaver_agent.core.multi_agent.agent import (
-    Agent,
-    SchedulerAgent,
-    WorkerAgent,
-    ReviewerAgent,
-    ReporterAgent,
-)
-from beaver_agent.core.multi_agent.pool import WorkerPool
-from beaver_agent.core.multi_agent.orchestrator import MultiAgentOrchestrator
 
 __all__ = [
     # Protocols

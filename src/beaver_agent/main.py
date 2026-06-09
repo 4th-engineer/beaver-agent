@@ -1,15 +1,13 @@
 """Beaver Agent CLI - Main Entry Point"""
 
-import typer
 from pathlib import Path
-from rich.console import Console
-from typing import Optional
 
 import structlog
+import typer
+from rich.console import Console
 
+from beaver_agent.cli.commands import chat_command
 from beaver_agent.cli.interactive import run_repl
-from beaver_agent.cli.commands import chat_command, model_command
-from beaver_agent.core.agent import BeaverAgent
 from beaver_agent.core.config import load_config
 
 __all__ = ["app"]
@@ -26,7 +24,7 @@ app = typer.Typer(
 
 @app.command()
 def run(
-    model: Optional[str] = typer.Option(None, "--model", "-m", help="Specify model name"),
+    model: str | None = typer.Option(None, "--model", "-m", help="Specify model name"),
     debug: bool = typer.Option(False, "--debug", "-d", help="Enable debug mode"),
 ) -> None:
     """Start the interactive REPL loop.
@@ -55,7 +53,7 @@ def run(
 @app.command()
 def chat(
     query: str = typer.Option(..., "--query", "-q", help="Query content"),
-    model: Optional[str] = typer.Option(None, "--model", "-m", help="Specify model name"),
+    model: str | None = typer.Option(None, "--model", "-m", help="Specify model name"),
 ) -> None:
     """Execute a single query and exit.
 
@@ -91,9 +89,9 @@ def chat(
 @app.command()
 def model(
     show: bool = typer.Option(False, "--show", help="Show current model configuration"),
-    url: Optional[str] = typer.Option(None, "--url", help="Set API Base URL"),
-    token: Optional[str] = typer.Option(None, "--token", help="Set API Token"),
-    name: Optional[str] = typer.Option(None, "--name", help="Set model name"),
+    url: str | None = typer.Option(None, "--url", help="Set API Base URL"),
+    token: str | None = typer.Option(None, "--token", help="Set API Token"),
+    name: str | None = typer.Option(None, "--name", help="Set model name"),
 ) -> None:
     """Display or configure the LLM model settings.
 
@@ -106,8 +104,9 @@ def model(
         beaver model --token <token>    # Set API Token
         beaver model --name MiniMax-M2.7 # Set model name
     """
-    from dotenv import load_dotenv, set_key
     from pathlib import Path
+
+    from dotenv import load_dotenv, set_key
 
     project_root = Path(__file__).parent.parent.parent
     env_path = project_root / ".env"
@@ -119,7 +118,7 @@ def model(
 
     if token is not None:
         set_key(env_path, "MINIMAX_API_KEY", token)
-        console.print(f"[green]API Token set[/green] (masked)")
+        console.print("[green]API Token set[/green] (masked)")
 
     if name is not None:
         set_key(env_path, "MINIMAX_MODEL_NAME", name)

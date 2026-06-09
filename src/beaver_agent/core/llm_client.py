@@ -1,7 +1,6 @@
 """Beaver Agent LLM Client - Unified interface for OpenRouter/Claude/OpenAI"""
 
 import os
-from typing import Optional, List, Dict
 
 import httpx
 import structlog
@@ -26,7 +25,7 @@ class LLMResponse:
             completion_tokens, total_tokens). Empty dict if usage info unavailable.
     """
 
-    def __init__(self, content: str, model: str, usage: Optional[Dict] = None):
+    def __init__(self, content: str, model: str, usage: dict | None = None):
         """Initialize an LLM response wrapper.
 
         Args:
@@ -104,7 +103,7 @@ class LLMClient:
             logger.error("llm_client_import_failed", exc_info=e)
             self._call = self._call_fallback
 
-    def _call_anthropic(self, messages: List[Dict], **kwargs) -> LLMResponse:
+    def _call_anthropic(self, messages: list[dict], **kwargs) -> LLMResponse:
         """Call Anthropic Claude API.
 
         Args:
@@ -134,7 +133,7 @@ class LLMClient:
             },
         )
 
-    def _call_openai(self, messages: List[Dict], **kwargs) -> LLMResponse:
+    def _call_openai(self, messages: list[dict], **kwargs) -> LLMResponse:
         """Call OpenAI / OpenRouter API.
 
         Args:
@@ -164,7 +163,7 @@ class LLMClient:
             },
         )
 
-    def _call_minimax(self, messages: List[Dict], **kwargs) -> LLMResponse:
+    def _call_minimax(self, messages: list[dict], **kwargs) -> LLMResponse:
         """Call MiniMax API (Anthropic-compatible /messages endpoint).
 
         Args:
@@ -256,7 +255,7 @@ class LLMClient:
             logger.error("minimax_unknown_error", exc_info=e)
             return LLMResponse(content=f"Unexpected error: {e}", model=self.model)
 
-    def _call_fallback(self, messages: List[Dict], **kwargs) -> LLMResponse:
+    def _call_fallback(self, messages: list[dict], **kwargs) -> LLMResponse:
         """Fallback when no API key is available.
 
         Returns an LLMResponse indicating that no LLM provider is configured.
@@ -279,8 +278,8 @@ class LLMClient:
     def chat(
         self,
         prompt: str,
-        system: Optional[str] = None,
-        context: Optional[List[Dict]] = None,
+        system: str | None = None,
+        context: list[dict] | None = None,
         **kwargs,
     ) -> LLMResponse:
         """Simple chat interface for direct LLM communication.
@@ -323,7 +322,7 @@ class LLMClient:
         return self._call(messages, **kwargs)
 
     def generate_code(
-        self, description: str, language: str = "python", context: Optional[str] = None
+        self, description: str, language: str = "python", context: str | None = None
     ) -> LLMResponse:
         """Generate code from a natural language description.
 
@@ -339,7 +338,7 @@ class LLMClient:
             triple backticks), the model name, and token usage.
         """
 
-        system = f"""You are Beaver Agent, an expert coding assistant.
+        system = """You are Beaver Agent, an expert coding assistant.
 Generate clean, well-documented code based on the user's request.
 Always wrap code blocks with triple backticks and specify the language.
 If you need more context, ask clarifying questions."""
@@ -352,7 +351,7 @@ If you need more context, ask clarifying questions."""
         return self.chat(prompt, system=system)
 
     def review_code(
-        self, code: str, language: str = "python", file_path: Optional[str] = None
+        self, code: str, language: str = "python", file_path: str | None = None
     ) -> LLMResponse:
         """Review code and provide improvement suggestions.
 

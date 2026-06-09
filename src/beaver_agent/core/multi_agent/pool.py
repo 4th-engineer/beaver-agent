@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import threading
-import time
-from typing import Any, Dict, List, Optional
-
 import os
+import threading
+from typing import Any
 
 import structlog
 
@@ -28,10 +26,10 @@ class WorkerPool:
 
     def __init__(
         self,
-        inbox: Optional[Inbox] = None,
-        bus: Optional[EventBus] = None,
+        inbox: Inbox | None = None,
+        bus: EventBus | None = None,
         min_workers: int = 1,
-        max_workers: Optional[int] = None,
+        max_workers: int | None = None,
     ) -> None:
         self.inbox = inbox or Inbox()
         self.bus = bus or EventBus()
@@ -39,7 +37,7 @@ class WorkerPool:
         # Default: scale with CPU cores (no hard cap)
         self.max_workers = max_workers if max_workers is not None else (os.cpu_count() or 4)
 
-        self._workers: Dict[str, WorkerAgent] = {}
+        self._workers: dict[str, WorkerAgent] = {}
         self._lock = threading.Lock()
         self._stop_event = threading.Event()
 
@@ -52,9 +50,9 @@ class WorkerPool:
         """Ensure at least min_workers are running."""
         self._ensure_count(self.min_workers)
 
-    def _ensure_count(self, target: int) -> List[WorkerAgent]:
+    def _ensure_count(self, target: int) -> list[WorkerAgent]:
         """Grow the pool to ``target`` workers if below the limit."""
-        started: List[WorkerAgent] = []
+        started: list[WorkerAgent] = []
         with self._lock:
             while len(self._workers) < target:
                 worker = WorkerAgent(inbox=self.inbox, bus=self.bus)
@@ -67,7 +65,7 @@ class WorkerPool:
 
         return started
 
-    def _add_worker(self) -> Optional[WorkerAgent]:
+    def _add_worker(self) -> WorkerAgent | None:
         """Add one worker if below max_workers. Returns the new worker or None."""
         with self._lock:
             if len(self._workers) >= self.max_workers:
@@ -127,7 +125,7 @@ class WorkerPool:
 
     # ─── Status ─────────────────────────────────────────────────────────────
 
-    def status(self) -> Dict[str, Any]:
+    def status(self) -> dict[str, Any]:
         """Return a snapshot of pool health."""
         with self._lock:
             return {
@@ -146,7 +144,7 @@ class WorkerPool:
                 ],
             }
 
-    def stats(self) -> Dict[str, int]:
+    def stats(self) -> dict[str, int]:
         """Return aggregate stats across all workers."""
         with self._lock:
             return {

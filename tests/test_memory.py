@@ -1,7 +1,7 @@
 """Tests for Beaver Bot Session Memory"""
 
+
 import pytest
-import time
 
 from beaver_agent.core.memory.session import SessionMemory
 

@@ -1,10 +1,11 @@
 """Component 5: Data Loader — loading and parsing benchmark datasets."""
 
 import json
-import structlog
 from pathlib import Path
 
-from .task import Task, Benchmark
+import structlog
+
+from .task import Benchmark, Task
 
 logger = structlog.get_logger()
 

@@ -1,7 +1,9 @@
 """Tests for Debugger Tool"""
 
+from unittest.mock import Mock
+
 import pytest
-from unittest.mock import Mock, MagicMock
+
 from beaver_agent.tools.debugger import DebuggerTool
 
 
@@ -125,7 +127,7 @@ class TestSuggestFixes:
 
     def test_suggest_fixes_exception_returns_error_string(self, debugger_tool, mock_llm_client):
         """Test that suggest_fixes() returns error string on exception"""
-        mock_llm_client.chat.side_effect = IOError("Network failure")
+        mock_llm_client.chat.side_effect = OSError("Network failure")
         result = debugger_tool.suggest_fixes("code", "issue")
 
         assert "❌" in result or "failed" in result.lower()

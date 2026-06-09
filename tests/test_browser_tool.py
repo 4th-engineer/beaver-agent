@@ -1,32 +1,32 @@
 """Tests for Browser Tool"""
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
+
 from beaver_agent.tools.browser_tool import (
-    BrowserTool,
     BrowserResult,
+    BrowserTool,
     _resolve_browser_binary,
-    _validate_browser_binary,
     _run_browser_cmd,
-    navigate,
-    snapshot,
-    screenshot,
-    get_text,
+    _validate_browser_binary,
+    back,
+    click,
+    close,
+    fill,
+    find_elements,
+    forward,
     get_html,
+    get_text,
     get_title,
     get_url,
-    click,
-    fill,
-    type_text,
+    navigate,
     press,
+    reload,
+    screenshot,
     scroll,
     scroll_into_view,
+    snapshot,
+    type_text,
     wait,
-    find_elements,
-    back,
-    forward,
-    reload,
-    close,
 )
 
 

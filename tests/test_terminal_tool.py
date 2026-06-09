@@ -1,7 +1,9 @@
 """Tests for Terminal Tool"""
 
-import pytest
 from unittest.mock import Mock, patch
+
+import pytest
+
 from beaver_agent.tools.terminal_tool import TerminalTool
 
 

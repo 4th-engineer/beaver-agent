@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import os
-import signal
-import subprocess
-import sys
 import threading
 import time
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import TYPE_CHECKING, Any
 
 import structlog
 
-from beaver_agent.core.multi_agent.protocols import Task, TaskStatus, WorkerInfo
+from beaver_agent.core.multi_agent.protocols import Task, WorkerInfo
+
+if TYPE_CHECKING:
+    from beaver_agent.core.multi_agent.bus import EventBus
+    from beaver_agent.core.multi_agent.inbox import Inbox
 
 logger = structlog.get_logger()
 
@@ -31,12 +32,12 @@ class Agent(ABC):
 
     def __init__(
         self,
-        agent_id: Optional[str] = None,
-        inbox: Optional["Inbox"] = None,  # type: ignore[name-defined]
-        bus: Optional["EventBus"] = None,  # type: ignore[name-defined]
+        agent_id: str | None = None,
+        inbox: Inbox | None = None,  # type: ignore[name-defined]  noqa: F821
+        bus: EventBus | None = None,  # type: ignore[name-defined]  noqa: F821
     ) -> None:
-        from beaver_agent.core.multi_agent.inbox import Inbox
         from beaver_agent.core.multi_agent.bus import EventBus
+        from beaver_agent.core.multi_agent.inbox import Inbox
 
         self.agent_id = agent_id or f"{self.role}_{os.getpid()}"
         self.inbox = inbox or Inbox()
@@ -70,10 +71,10 @@ class Agent(ABC):
     # ─── Task handling ──────────────────────────────────────────────────────
 
     @abstractmethod
-    def execute(self, task: Task) -> Dict[str, Any]:
+    def execute(self, task: Task) -> dict[str, Any]:
         """Execute a single task and return a result dict."""
 
-    def execute_batch(self, tasks: List[Task]) -> List[Dict[str, Any]]:
+    def execute_batch(self, tasks: list[Task]) -> list[dict[str, Any]]:
         """Execute multiple tasks sequentially."""
         return [self.execute(t) for t in tasks]
 
@@ -114,7 +115,7 @@ class SchedulerAgent(Agent):
         from beaver_agent.core.task_planner import TaskPlanner
         return TaskPlanner()
 
-    def decompose(self, user_input: str) -> List[Task]:
+    def decompose(self, user_input: str) -> list[Task]:
         """Turn a user request into a list of executable tasks.
 
         1. Parse intent
@@ -124,7 +125,7 @@ class SchedulerAgent(Agent):
         intent = self._intent_parser.parse(user_input)
         planned = self._task_planner.plan(user_input, intent)
 
-        tasks: List[Task] = []
+        tasks: list[Task] = []
         for p in planned:
             from beaver_agent.core.multi_agent.protocols import TaskType
 
@@ -144,7 +145,7 @@ class SchedulerAgent(Agent):
         logger.info("decomposed", agent_id=self.agent_id, intent=intent, task_count=len(tasks))
         return tasks
 
-    def execute(self, task: Task) -> Dict[str, Any]:
+    def execute(self, task: Task) -> dict[str, Any]:
         """Scheduler doesn't execute tasks — it only decomposes them."""
         raise NotImplementedError("Scheduler.execute is not used; call decompose() instead")
 
@@ -164,11 +165,11 @@ class WorkerAgent(Agent):
 
     role = "worker"
 
-    def __init__(self, tool_router: Optional[Any] = None, **kwargs: Any) -> None:
+    def __init__(self, tool_router: Any | None = None, **kwargs: Any) -> None:
         super().__init__(**kwargs)
         self._tool_router = tool_router
         self._poll_interval = 1.0  # seconds between inbox polls
-        self._poll_thread: Optional[threading.Thread] = None
+        self._poll_thread: threading.Thread | None = None
 
     def _get_tool_router(self) -> Any:
         """Lazily build tool router (needs config)."""
@@ -240,7 +241,7 @@ class WorkerAgent(Agent):
 
     # ─── Task execution interface (required by ABC) ─────────────────────────
 
-    def execute(self, task: Task) -> Dict[str, Any]:
+    def execute(self, task: Task) -> dict[str, Any]:
         """Synchronously execute a single task (used for direct dispatch)."""
         self._run_task(task)
         return task.result or {"error": task.error}
@@ -266,7 +267,7 @@ class ReviewerAgent(Agent):
         super().__init__(**kwargs)
         self._min_success_rate = min_success_rate
 
-    def execute(self, task: Task) -> Dict[str, Any]:
+    def execute(self, task: Task) -> dict[str, Any]:
         """Review task outcomes and return a decision."""
         done = self.inbox.list_done()
         failed = self.inbox.list_failed()
@@ -311,12 +312,12 @@ class ReporterAgent(Agent):
 
     role = "reporter"
 
-    def execute(self, task: Task) -> Dict[str, Any]:
+    def execute(self, task: Task) -> dict[str, Any]:
         """Build a user-facing report from all completed tasks."""
         done = self.inbox.list_done()
         failed = self.inbox.list_failed()
 
-        lines = [f"## 📋 任务执行报告\n"]
+        lines = ["## 📋 任务执行报告\n"]
         lines.append(f"**完成**: {len(done)} | **失败**: {len(failed)}\n")
 
         if done:

@@ -6,11 +6,11 @@ from typing import Any
 
 import structlog
 
-from .task import Task, TaskResult
 from .adapter import ModelAdapter
-from .prompting import get_strategy
-from .metrics import get_scorer
 from .loader import get_benchmark_registry
+from .metrics import get_scorer
+from .prompting import get_strategy
+from .task import Task, TaskResult
 
 logger = structlog.get_logger()
 

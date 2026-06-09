@@ -1,12 +1,10 @@
 """Tests for tools/mapper.py"""
 
 import json
-import shutil
-from pathlib import Path
 
 import pytest
 
-from beaver_agent.tools.mapper import generate, _should_reparse, _chunked, _file_fingerprint
+from beaver_agent.tools.mapper import _chunked, _file_fingerprint, _should_reparse, generate
 
 
 @pytest.fixture(autouse=True)

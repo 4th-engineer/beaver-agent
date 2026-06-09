@@ -1,6 +1,5 @@
 """Beaver Agent Debugger Tool"""
 
-from typing import Optional
 
 import structlog
 
@@ -51,9 +50,9 @@ class DebuggerTool:
     def analyze(
         self,
         code: str,
-        error: Optional[str] = None,
+        error: str | None = None,
         language: str = "python",
-        stack_trace: Optional[str] = None,
+        stack_trace: str | None = None,
     ) -> str:
         """Analyze code and/or error to provide debugging assistance.
 
@@ -81,7 +80,7 @@ class DebuggerTool:
         code: str,
         error: str,
         language: str,
-        stack_trace: Optional[str] = None,
+        stack_trace: str | None = None,
     ) -> str:
         """Analyze a specific error using LLM or fallback to basic analysis."""
         try:
@@ -114,7 +113,7 @@ class DebuggerTool:
             return f"❌ Code health analysis failed: {e}"
 
     def _basic_error_analysis(
-        self, error: str, stack_trace: Optional[str] = None
+        self, error: str, stack_trace: str | None = None
     ) -> str:
         """Perform basic error analysis without LLM by pattern-matching common errors.
 
@@ -163,7 +162,7 @@ class DebuggerTool:
         )
 
     def _format_debug_response(
-        self, llm_response: str, error: Optional[str]
+        self, llm_response: str, error: str | None
     ) -> str:
         """Format LLM debug response with consistent header."""
         if error:

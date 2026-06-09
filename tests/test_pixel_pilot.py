@@ -1,10 +1,9 @@
 """Tests for pixel_pilot.py — WebSocket visualization for agent activity tracking."""
 
-import pytest
-from unittest.mock import patch, MagicMock
 import json
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 # Add src/ to path for pixel_pilot import
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -17,6 +16,7 @@ class TestPixelPilotPublicAPI:
         """is_enabled() returns False before any connection."""
         # Re-import to reset module state (pixel_pilot is module-level global state)
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -26,6 +26,7 @@ class TestPixelPilotPublicAPI:
     def test_send_returns_false_when_disabled(self):
         """send() returns False when not connected."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -36,6 +37,7 @@ class TestPixelPilotPublicAPI:
     def test_send_returns_false_when_disabled_no_url(self):
         """send() returns False when _viewer_url is empty."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -48,6 +50,7 @@ class TestPixelPilotPublicAPI:
     def test_connect_enables_on_successful_test(self, mock_urlopen):
         """connect() sets _enabled=True when server responds 200."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -68,6 +71,7 @@ class TestPixelPilotPublicAPI:
     def test_connect_leaves_disabled_on_failed_test(self, mock_urlopen):
         """connect() leaves _enabled=False when server unreachable."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -82,6 +86,7 @@ class TestPixelPilotPublicAPI:
     def test_disconnect_sets_enabled_false(self, mock_urlopen):
         """disconnect() sets _enabled=False."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -104,6 +109,7 @@ class TestPixelPilotPublicAPI:
     def test_connect_strips_trailing_slash(self, mock_urlopen):
         """connect() strips trailing slash from URL."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -126,6 +132,7 @@ class TestPixelPilotGetToolDisplayName:
     def test_exact_match(self):
         """Exact (tool, action) match returns mapped name."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -137,6 +144,7 @@ class TestPixelPilotGetToolDisplayName:
     def test_wildcard_match(self):
         """Wildcard (tool, *) match returns mapped name."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -147,6 +155,7 @@ class TestPixelPilotGetToolDisplayName:
     def test_no_match_defaults(self):
         """No match returns title-cased tool/action."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -158,6 +167,7 @@ class TestPixelPilotGetToolDisplayName:
     def test_action_without_tool(self):
         """Action only returns title-cased action."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -174,6 +184,7 @@ class TestPixelPilotPostEvent:
     def test_post_event_returns_true_on_200(self, mock_urlopen):
         """_post_event returns True when server responds 200."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -206,6 +217,7 @@ class TestPixelPilotPostEvent:
     def test_post_event_returns_false_on_other_exception(self, mock_urlopen):
         """_post_event returns False on other exceptions."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -219,6 +231,7 @@ class TestPixelPilotPostEvent:
     def test_test_connection_returns_true_on_200(self, mock_urlopen):
         """_test_connection returns True when server responds 200."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -236,6 +249,7 @@ class TestPixelPilotPostEvent:
     def test_test_connection_returns_false_on_exception(self, mock_urlopen):
         """_test_connection returns False when connection fails."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -253,6 +267,7 @@ class TestPixelPilotSendEvent:
     def test_send_builds_correct_event(self, mock_urlopen):
         """send() builds event with all fields and calls _post_event."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -287,6 +302,7 @@ class TestPixelPilotSendEvent:
     def test_send_uses_defaults(self, mock_urlopen):
         """send() uses default values for optional fields."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -313,6 +329,7 @@ class TestPixelPilotPatchToolRouter:
     def test_patch_avoids_duplicate(self):
         """_patch_tool_router skips if already patched."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -327,6 +344,7 @@ class TestPixelPilotPatchToolRouter:
     def test_get_agent_name_returns_beaver_on_config_none(self):
         """_get_agent_name returns 'beaver' when config is None."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -340,6 +358,7 @@ class TestPixelPilotPatchToolRouter:
     def test_get_agent_name_returns_app_name(self):
         """_get_agent_name returns app name from config."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)
@@ -355,6 +374,7 @@ class TestPixelPilotPatchToolRouter:
     def test_get_agent_name_returns_beaver_when_no_app(self):
         """_get_agent_name returns 'beaver' when config.app is None."""
         import importlib
+
         import pixel_pilot
 
         importlib.reload(pixel_pilot)

@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import threading
 from pathlib import Path
-from typing import Dict, List, Optional
 
 import structlog
 
@@ -26,13 +25,13 @@ class Inbox:
     guards the in-memory copy).
     """
 
-    def __init__(self, inbox_path: Optional[Path] = None) -> None:
+    def __init__(self, inbox_path: Path | None = None) -> None:
         if inbox_path is None:
             inbox_path = Path.home() / ".beaver" / "inbox" / "tasks.json"
 
         self._path = inbox_path
         self._lock = threading.Lock()
-        self._tasks: Dict[str, Task] = {}
+        self._tasks: dict[str, Task] = {}
         self._load()
 
     # ─── Persistence ────────────────────────────────────────────────────────
@@ -73,7 +72,7 @@ class Inbox:
         logger.debug("task_submitted", task_id=task.id, type=task.type.value)
         return task
 
-    def submit_batch(self, tasks: List[Task]) -> List[Task]:
+    def submit_batch(self, tasks: list[Task]) -> list[Task]:
         """Submit multiple tasks at once."""
         with self._lock:
             for t in tasks:
@@ -82,11 +81,11 @@ class Inbox:
         logger.debug("batch_submitted", count=len(tasks))
         return tasks
 
-    def get(self, task_id: str) -> Optional[Task]:
+    def get(self, task_id: str) -> Task | None:
         """Retrieve a task by ID."""
         return self._tasks.get(task_id)
 
-    def list_pending(self) -> List[Task]:
+    def list_pending(self) -> list[Task]:
         """Return all pending (unassigned) tasks in FIFO order."""
         with self._lock:
             return [
@@ -95,7 +94,7 @@ class Inbox:
                 if t.status == TaskStatus.PENDING
             ]
 
-    def list_assigned(self) -> List[Task]:
+    def list_assigned(self) -> list[Task]:
         """Return all tasks assigned to any worker."""
         with self._lock:
             return [
@@ -104,17 +103,17 @@ class Inbox:
                 if t.status == TaskStatus.ASSIGNED
             ]
 
-    def list_done(self) -> List[Task]:
+    def list_done(self) -> list[Task]:
         """Return all completed tasks."""
         with self._lock:
             return [t for t in self._tasks.values() if t.status == TaskStatus.DONE]
 
-    def list_failed(self) -> List[Task]:
+    def list_failed(self) -> list[Task]:
         """Return all failed tasks."""
         with self._lock:
             return [t for t in self._tasks.values() if t.status == TaskStatus.FAILED]
 
-    def claim_next(self, worker_id: str) -> Optional[Task]:
+    def claim_next(self, worker_id: str) -> Task | None:
         """Atomically claim the oldest pending task for a worker.
 
         Returns the claimed Task, or None if the queue is empty.

@@ -1,9 +1,11 @@
 """Tests for BeaverAgent core class."""
 
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import MagicMock, patch, AsyncMock
+
 from beaver_agent.core.agent import BeaverAgent
-from beaver_agent.core.config import BeaverConfig, AppConfig, ModelConfig
+from beaver_agent.core.config import AppConfig, BeaverConfig, ModelConfig
 
 
 @pytest.fixture

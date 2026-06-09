@@ -1,11 +1,16 @@
 """Beaver Agent File Tool"""
 
+from __future__ import annotations
+
 __all__ = ["FileTool"]
 
 from pathlib import Path
-from typing import Optional
+from typing import TYPE_CHECKING
 
 import structlog
+
+if TYPE_CHECKING:
+    from beaver_agent.core.config import BeaverConfig
 
 logger = structlog.get_logger()
 
@@ -16,7 +21,7 @@ class FileTool:
     # Compiled pattern cache for file search (avoids repeated import/compilation)
     _FN_MATCH = __import__("fnmatch")
 
-    def __init__(self, config: "BeaverConfig") -> None:
+    def __init__(self, config: BeaverConfig) -> None:
         """Initialize FileTool with BeaverConfig.
 
         Args:
@@ -26,7 +31,7 @@ class FileTool:
         """
         self.config = config
 
-    def read_file(self, file_path: str, limit: Optional[int] = None) -> str:
+    def read_file(self, file_path: str, limit: int | None = None) -> str:
         """Read the contents of a file.
 
         Args:
@@ -54,7 +59,7 @@ class FileTool:
             except ValueError:
                 return "Access denied: path is outside current directory"
 
-            with open(path, "r", encoding="utf-8") as f:
+            with open(path, encoding="utf-8") as f:
                 if limit:
                     lines = [f.readline() for _ in range(limit)]
                     return f"📄 {path} (前{limit}行):\n" + "".join(lines)
@@ -173,7 +178,7 @@ class FileTool:
             for item in search_path.rglob(file_pattern):
                 if item.is_file():
                     try:
-                        with open(item, "r", encoding="utf-8") as f:
+                        with open(item, encoding="utf-8") as f:
                             for i, line in enumerate(f, 1):
                                 if query_lower in line.lower():
                                     matches.append(f"{item}:{i}: {line.rstrip()}")

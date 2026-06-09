@@ -1,13 +1,14 @@
 """Tests for ModelAdapter implementations."""
 
-import pytest
 from unittest.mock import MagicMock
 
+import pytest
+
 from beaver_agent.core.eval.adapter import (
-    ModelAdapter,
     BeaverAdapter,
-    OpenAIAdapter,
     MiniMaxAdapter,
+    ModelAdapter,
+    OpenAIAdapter,
 )
 
 

@@ -3,21 +3,20 @@
 import re
 import uuid
 from io import StringIO
-from typing import Optional, Dict, Any, List
+from typing import Any
 
 import structlog
 from rich.console import Console
 from rich.table import Table
 
 from beaver_agent.core.config import BeaverConfig
-
-from beaver_agent.core.intent_parser import IntentParser
-from beaver_agent.core.task_planner import TaskPlanner
-from beaver_agent.core.tool_router import ToolRouter
-from beaver_agent.core.memory.session import SessionMemory
-from beaver_agent.core.memory.long_term import LongTermMemory
 from beaver_agent.core.conversation_logger import ConversationLogger
 from beaver_agent.core.data_store import init_data_store
+from beaver_agent.core.intent_parser import IntentParser
+from beaver_agent.core.memory.long_term import LongTermMemory
+from beaver_agent.core.memory.session import SessionMemory
+from beaver_agent.core.task_planner import TaskPlanner
+from beaver_agent.core.tool_router import ToolRouter
 
 logger = structlog.get_logger()
 
@@ -56,7 +55,7 @@ class BeaverAgent:
         self.intent_parser = IntentParser()
         self.task_planner = TaskPlanner()
         self.tool_router = ToolRouter(config)
-        self.conversation_history: List[Dict[str, str]] = []
+        self.conversation_history: list[dict[str, str]] = []
         self.logger = ConversationLogger()
 
         # Initialize LLM
@@ -213,7 +212,7 @@ class BeaverAgent:
         )
 
     def _generate_response(
-        self, user_input: str, intent: str, tool_results: List[Dict[str, Any]]
+        self, user_input: str, intent: str, tool_results: list[dict[str, Any]]
     ) -> str:
         """Generate final response using LLM with tool results.
 
@@ -298,7 +297,7 @@ Always provide actionable suggestions."""
 
             return self._generate_fallback_response(intent, context)
 
-    def _build_context(self, tool_results: List[Dict[str, Any]]) -> str:
+    def _build_context(self, tool_results: list[dict[str, Any]]) -> str:
         """Build context string from tool results — tool-specific summarization.
 
         Args:

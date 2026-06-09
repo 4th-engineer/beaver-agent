@@ -1,6 +1,5 @@
 """Beaver Agent Intent Parser - Skill-based intent routing."""
 
-from typing import List, Optional, Tuple
 
 import structlog
 
@@ -97,7 +96,7 @@ class IntentParser:
         "skill_invocation": ["/skill"],
     }
 
-    def __init__(self, skill_manager: Optional[SkillManager] = None) -> None:
+    def __init__(self, skill_manager: SkillManager | None = None) -> None:
         """Initialize IntentParser with optional SkillManager.
 
         Args:
@@ -152,7 +151,7 @@ class IntentParser:
 
         return "general_chat"
 
-    def parse_with_confidence(self, user_input: str) -> Tuple[str, float]:
+    def parse_with_confidence(self, user_input: str) -> tuple[str, float]:
         """Parse user input and return intent with confidence score.
 
         Args:
@@ -183,7 +182,7 @@ class IntentParser:
         confidence = min(0.5 + (match_count * 0.1), 1.0)
         return intent, confidence
 
-    def get_supported_intents(self) -> List[str]:
+    def get_supported_intents(self) -> list[str]:
         """Return all supported intent names.
 
         Returns the union of built-in INTENT_PATTERNS keys and any

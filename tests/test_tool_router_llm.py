@@ -1,6 +1,5 @@
 """Tests for ToolRouter LLM client integration."""
 
-import pytest
 from unittest.mock import MagicMock, patch
 
 from beaver_agent.core.tool_router import ToolRouter

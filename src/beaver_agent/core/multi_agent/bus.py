@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import threading
-from typing import Any, Callable, Dict, List
+from collections.abc import Callable
+from typing import Any
+
 import structlog
 
 logger = structlog.get_logger()
@@ -17,16 +19,16 @@ class EventBus:
     """
 
     def __init__(self) -> None:
-        self._handlers: Dict[str, List[Callable[[Dict[str, Any]], None]]] = {}
+        self._handlers: dict[str, list[Callable[[dict[str, Any]], None]]] = {}
         self._lock = threading.Lock()
 
-    def subscribe(self, event_type: str, handler: Callable[[Dict[str, Any]], None]) -> None:
+    def subscribe(self, event_type: str, handler: Callable[[dict[str, Any]], None]) -> None:
         """Register a handler for ``event_type``."""
         with self._lock:
             self._handlers.setdefault(event_type, []).append(handler)
         logger.debug("bus_subscribe", event_type=event_type, handler=handler.__name__)
 
-    def unsubscribe(self, event_type: str, handler: Callable[[Dict[str, Any]], None]) -> None:
+    def unsubscribe(self, event_type: str, handler: Callable[[dict[str, Any]], None]) -> None:
         """Remove a previously registered handler."""
         with self._lock:
             if event_type in self._handlers:
@@ -34,7 +36,7 @@ class EventBus:
                     h for h in self._handlers[event_type] if h != handler
                 ]
 
-    def publish(self, event_type: str, data: Dict[str, Any]) -> None:
+    def publish(self, event_type: str, data: dict[str, Any]) -> None:
         """Synchronously invoke all handlers registered for ``event_type``."""
         with self._lock:
             handlers = list(self._handlers.get(event_type, []))

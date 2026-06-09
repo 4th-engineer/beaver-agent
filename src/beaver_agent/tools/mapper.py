@@ -23,6 +23,7 @@ __all__ = ["generate", "MapperTool"]
 import ast
 import json
 import os
+from collections.abc import Iterator
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any
@@ -406,7 +407,7 @@ def _should_reparse(cached: dict, current: dict) -> bool:
 # Chunk-based parallel dispatch
 # --------------------------------------------------------------------------
 
-def _chunked(lst: list, size: int) -> Iterator[List[Any]]:
+def _chunked(lst: list, size: int) -> Iterator[list[Any]]:
     """Split a list into chunks of at most `size` elements each.
 
     Yields consecutive slices of lst, each with at most `size` items.

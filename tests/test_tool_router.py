@@ -1,7 +1,8 @@
 """Tests for ToolRouter — execute() error paths and tool registry."""
 
-import pytest
 from unittest.mock import MagicMock
+
+import pytest
 
 from beaver_agent.core.tool_router import ToolRouter
 
@@ -105,7 +106,6 @@ class TestToolRouterRegistry:
 
     def test_get_llm_client_returns_client(self):
         """get_llm_client() returns the LLM client when it was initialized."""
-        from unittest.mock import MagicMock
         from beaver_agent.core.tool_router import ToolRouter
 
         r = ToolRouter.__new__(ToolRouter)

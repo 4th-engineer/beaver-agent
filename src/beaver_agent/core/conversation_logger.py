@@ -3,8 +3,8 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, List, Dict, Any
 from threading import RLock
+from typing import Any
 
 import structlog
 
@@ -32,8 +32,8 @@ class ConversationLogger:
         self.log_dir.mkdir(parents=True, exist_ok=True)
 
         self._lock = RLock()
-        self._session_file: Optional[Path] = None
-        self._session_id: Optional[str] = None
+        self._session_file: Path | None = None
+        self._session_id: str | None = None
 
     def start_session(self, session_id: str) -> None:
         """Start a new logging session.
@@ -82,7 +82,7 @@ class ConversationLogger:
             }
         )
 
-    def log_llm_request(self, messages: List[Dict[str, Any]], model: str, provider: str) -> None:
+    def log_llm_request(self, messages: list[dict[str, Any]], model: str, provider: str) -> None:
         """Log an LLM API request to the current session.
 
         Args:
@@ -115,7 +115,7 @@ class ConversationLogger:
         )
 
     def log_llm_response(
-        self, content: str, model: str, usage: Dict = None, error: str = None
+        self, content: str, model: str, usage: dict = None, error: str = None
     ) -> None:
         """Log an LLM API response to the current session.
 
@@ -150,7 +150,7 @@ class ConversationLogger:
         self,
         tool_name: str,
         action: str,
-        params: Dict = None,
+        params: dict = None,
         result: Any = None,
         success: bool = True,
         error: str = None,
@@ -237,7 +237,7 @@ class ConversationLogger:
         self._session_file = None
         self._session_id = None
 
-    def _write_entry(self, entry: Dict) -> None:
+    def _write_entry(self, entry: dict) -> None:
         """Write a log entry to the session file as a JSONL line.
 
         Args:
@@ -255,7 +255,7 @@ class ConversationLogger:
             except Exception as e:
                 logger.error("conversation_log_write_failed", exc_info=e)
 
-    def get_recent_logs(self, limit: int = 10) -> List[Dict]:
+    def get_recent_logs(self, limit: int = 10) -> list[dict]:
         """Read the most recent log entries from the current session file.
 
         Args:
@@ -272,7 +272,7 @@ class ConversationLogger:
 
         entries = []
         try:
-            with open(self._session_file, "r", encoding="utf-8") as f:
+            with open(self._session_file, encoding="utf-8") as f:
                 lines = f.readlines()
                 for line in lines[-limit:]:
                     try:
@@ -285,7 +285,7 @@ class ConversationLogger:
         return entries
 
     @staticmethod
-    def list_log_files(log_dir: str = None) -> List[Path]:
+    def list_log_files(log_dir: str = None) -> list[Path]:
         """List all conversation log files on disk.
 
         Args:

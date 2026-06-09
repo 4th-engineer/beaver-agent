@@ -1,6 +1,6 @@
 """Beaver Agent Tool Router - LLM-integrated tool dispatch."""
 
-from typing import Dict, Any, Optional
+from typing import Any
 
 import structlog
 
@@ -51,8 +51,8 @@ class ToolRouter:
         AI-powered tools. Logs registration count and LLM provider on success.
         """
         self.config = config
-        self._tool_registry: Dict[str, Any] = {}
-        self._llm_client: Optional[LLMClient] = None
+        self._tool_registry: dict[str, Any] = {}
+        self._llm_client: LLMClient | None = None
         self._register_llm()
         self._register_tools()
 
@@ -79,12 +79,12 @@ class ToolRouter:
         of registered tools. If a tool fails to initialize, logs the error
         and continues with remaining tools — partial registration is acceptable.
         """
-        from beaver_agent.tools.file_tool import FileTool
-        from beaver_agent.tools.terminal_tool import TerminalTool
-        from beaver_agent.tools.github_tool import GitHubTool
         from beaver_agent.tools.code_gen import CodeGenTool
         from beaver_agent.tools.code_review import CodeReviewTool
         from beaver_agent.tools.debugger import DebuggerTool
+        from beaver_agent.tools.file_tool import FileTool
+        from beaver_agent.tools.github_tool import GitHubTool
+        from beaver_agent.tools.terminal_tool import TerminalTool
 
         self._tool_registry = {}
         for name, tool_cls, args in [
@@ -108,7 +108,7 @@ class ToolRouter:
     ERR_NO_ACTION = "ERR_NO_ACTION"
     ERR_TOOL_EXECUTION = "ERR_TOOL_EXECUTION"
 
-    def route(self, task: Dict[str, Any]) -> Dict[str, Any]:
+    def route(self, task: dict[str, Any]) -> dict[str, Any]:
         """Route a task to the appropriate tool.
 
         Takes a task dictionary with 'tool', 'action', and optional 'params' keys,
@@ -174,7 +174,7 @@ class ToolRouter:
         """
         return list(self._tool_registry.keys())
 
-    def get_tool(self, name: str) -> Optional[Any]:
+    def get_tool(self, name: str) -> Any | None:
         """Get a specific tool by name.
 
         Args:
@@ -185,7 +185,7 @@ class ToolRouter:
         """
         return self._tool_registry.get(name)
 
-    def get_llm_client(self) -> Optional[LLMClient]:
+    def get_llm_client(self) -> LLMClient | None:
         """Get the LLM client used for AI-powered tools.
 
         Returns:

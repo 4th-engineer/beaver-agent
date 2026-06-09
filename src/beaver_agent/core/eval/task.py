@@ -1,7 +1,6 @@
 """Component 1: Task / Benchmark Definition."""
 
 from dataclasses import dataclass, field
-from typing import Optional
 
 __all__ = ["Task", "TaskResult", "Benchmark"]
 
@@ -47,7 +46,7 @@ class TaskResult:
     prediction: str
     score: float
     metrics: dict = field(default_factory=dict)
-    error: Optional[str] = None
+    error: str | None = None
     duration_ms: float = 0.0
 
 
@@ -87,7 +86,7 @@ class Benchmark:
         """
         return len(self.tasks)
 
-    def get_task(self, task_id: str) -> Optional[Task]:
+    def get_task(self, task_id: str) -> Task | None:
         """Retrieve a task by its ID.
 
         Args:

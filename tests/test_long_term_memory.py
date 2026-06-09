@@ -157,7 +157,7 @@ class TestMemoryAdd:
         fact_file = temp_memory_dir / "fact.jsonl"
         assert fact_file.exists()
 
-        with open(fact_file, "r") as f:
+        with open(fact_file) as f:
             lines = f.readlines()
         assert len(lines) == 1
 

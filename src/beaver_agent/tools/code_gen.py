@@ -1,6 +1,5 @@
 """Beaver Agent Code Generation Tool"""
 
-from typing import Optional
 
 import structlog
 
@@ -48,8 +47,8 @@ class CodeGenTool:
         self,
         description: str,
         language: str = "python",
-        file_path: Optional[str] = None,
-        context: Optional[str] = None,
+        file_path: str | None = None,
+        context: str | None = None,
     ) -> str:
         """Generate code based on a description.
 
@@ -197,9 +196,7 @@ main "$@"
         if language in templates:
             return templates[language].format(description=description)
 
-        return "// Code for: {description}\n// Configure MINIMAX_API_KEY in .env for full generation".format(
-            description=description
-        )
+        return f"// Code for: {description}\n// Configure MINIMAX_API_KEY in .env for full generation"
 
     def complete_code(
         self, partial_code: str, description: str, language: str = "python"

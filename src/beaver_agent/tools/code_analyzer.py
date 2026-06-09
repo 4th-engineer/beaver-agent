@@ -1,9 +1,8 @@
 """Code Analyzer Tool - Analyze repository structure and generate dependency graph"""
 
 import re
-from pathlib import Path
-from typing import Dict, List, Set, Tuple, Optional
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import structlog
 
@@ -26,9 +25,9 @@ class FunctionInfo:
 
     name: str
     line: int
-    docstring: Optional[str] = None
-    calls: List[str] = field(default_factory=list)
-    decorators: List[str] = field(default_factory=list)
+    docstring: str | None = None
+    calls: list[str] = field(default_factory=list)
+    decorators: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -45,9 +44,9 @@ class ClassInfo:
 
     name: str
     line: int
-    docstring: Optional[str] = None
-    methods: List[str] = field(default_factory=list)
-    bases: List[str] = field(default_factory=list)
+    docstring: str | None = None
+    methods: list[str] = field(default_factory=list)
+    bases: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -64,11 +63,11 @@ class ModuleInfo:
     """
 
     path: str
-    imports: List[str] = field(default_factory=list)
-    from_imports: Dict[str, List[str]] = field(default_factory=dict)
-    classes: List[ClassInfo] = field(default_factory=list)
-    functions: List[FunctionInfo] = field(default_factory=list)
-    calls_module: List[str] = field(default_factory=list)  # modules this module calls
+    imports: list[str] = field(default_factory=list)
+    from_imports: dict[str, list[str]] = field(default_factory=dict)
+    classes: list[ClassInfo] = field(default_factory=list)
+    functions: list[FunctionInfo] = field(default_factory=list)
+    calls_module: list[str] = field(default_factory=list)  # modules this module calls
 
 
 class CodeAnalyzer:
@@ -89,10 +88,10 @@ class CodeAnalyzer:
                    The analyzer will scan `root_path/src/beaver_agent` for Python files.
         """
         self.root_path = Path(root_path)
-        self.modules: Dict[str, ModuleInfo] = {}
-        self.all_functions: Dict[str, Tuple[str, FunctionInfo]] = {}  # name -> (module, func)
-        self.all_classes: Dict[str, Tuple[str, ClassInfo]] = {}  # name -> (module, class)
-        self.call_graph: Dict[str, Set[str]] = {}  # module -> set of modules it calls
+        self.modules: dict[str, ModuleInfo] = {}
+        self.all_functions: dict[str, tuple[str, FunctionInfo]] = {}  # name -> (module, func)
+        self.all_classes: dict[str, tuple[str, ClassInfo]] = {}  # name -> (module, class)
+        self.call_graph: dict[str, set[str]] = {}  # module -> set of modules it calls
 
     def analyze(self) -> None:
         """Scan and analyze all Python files.
@@ -189,7 +188,7 @@ class CodeAnalyzer:
             parts[-1] = parts[-1][:-3]  # Remove .py
         return ".".join(parts) if parts else "root"
 
-    def _parse_imports(self, lines: List[str]) -> Tuple[List[str], Dict[str, List[str]]]:
+    def _parse_imports(self, lines: list[str]) -> tuple[list[str], dict[str, list[str]]]:
         """Parse import statements from pre-split source lines.
 
         Args:
@@ -212,7 +211,7 @@ class CodeAnalyzer:
 
         return imports, from_imports
 
-    def _parse_classes(self, lines: List[str]) -> List[ClassInfo]:
+    def _parse_classes(self, lines: list[str]) -> list[ClassInfo]:
         """Parse class definitions from pre-split source lines.
 
         Scans for lines matching the ``class <Name>`` pattern, extracts
@@ -250,7 +249,7 @@ class CodeAnalyzer:
 
         return classes
 
-    def _parse_functions(self, lines: List[str]) -> List[FunctionInfo]:
+    def _parse_functions(self, lines: list[str]) -> list[FunctionInfo]:
         """Parse function definitions from pre-split source lines.
 
         Scans for lines starting with ``def `` and extracts the function name,
@@ -297,7 +296,7 @@ class CodeAnalyzer:
 
         return functions
 
-    def _get_docstring(self, lines: List[str], start: int) -> Optional[str]:
+    def _get_docstring(self, lines: list[str], start: int) -> str | None:
         """Extract the docstring from a class or function definition.
 
         Scans lines starting at ``start`` (the def/class line) for a triple-quoted
@@ -333,7 +332,7 @@ class CodeAnalyzer:
             return " ".join(doc_parts).strip()[:100]
         return None
 
-    def _get_decorators(self, lines: List[str], start: int) -> List[str]:
+    def _get_decorators(self, lines: list[str], start: int) -> list[str]:
         """Extract decorator names for a function definition.
 
         Scans backwards from the function ``def`` line, collecting any lines
@@ -355,7 +354,7 @@ class CodeAnalyzer:
                 break
         return decorators
 
-    def _get_function_body(self, lines: List[str], start: int) -> str:
+    def _get_function_body(self, lines: list[str], start: int) -> str:
         """Get the body of a function from pre-split source lines.
 
         Args:
@@ -377,7 +376,7 @@ class CodeAnalyzer:
             body_lines.append(line)
         return "\n".join(body_lines)
 
-    def _find_class_methods(self, lines: List[str], class_start: int) -> List[str]:
+    def _find_class_methods(self, lines: list[str], class_start: int) -> list[str]:
         """Find method names defined inside a class body.
 
         Scans forward from the class definition line, collecting all ``def`` lines
@@ -408,7 +407,7 @@ class CodeAnalyzer:
 
         return methods
 
-    def _find_calls(self, body: str) -> List[str]:
+    def _find_calls(self, body: str) -> list[str]:
         """Find function calls in a code block.
 
         Scans a function body string for function call patterns using the
@@ -493,7 +492,7 @@ class CodeAnalyzer:
                         if called_module != module_name:
                             self.call_graph[module_name].add(called_module)
 
-    def _get_class_calls(self, module: ModuleInfo, cls: ClassInfo) -> List[str]:
+    def _get_class_calls(self, module: ModuleInfo, cls: ClassInfo) -> list[str]:
         """Get all calls made by class methods.
 
         Resolves each method name in the class to its corresponding FunctionInfo
@@ -570,7 +569,7 @@ class CodeAnalyzer:
                     dirs["_root"] = []
                 dirs["_root"].append(module_name)
 
-        def print_tree(items: List[str], prefix: str = "", is_last: bool = True) -> None:
+        def print_tree(items: list[str], prefix: str = "", is_last: bool = True) -> None:
             """Recursively build ASCII tree lines for module hierarchy display.
 
             Args:

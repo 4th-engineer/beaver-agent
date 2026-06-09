@@ -5,7 +5,8 @@ from __future__ import annotations
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, Optional
+from typing import Any
+
 from pydantic import BaseModel, Field
 
 
@@ -37,10 +38,10 @@ class Task(BaseModel):
     id: str = Field(default_factory=lambda: f"task_{uuid.uuid4().hex[:8]}")
     type: TaskType = TaskType.UNKNOWN
     status: TaskStatus = TaskStatus.PENDING
-    assignee: Optional[str] = None  # worker id
-    input: Dict[str, Any] = Field(default_factory=dict)
-    result: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
+    assignee: str | None = None  # worker id
+    input: dict[str, Any] = Field(default_factory=dict)
+    result: dict[str, Any] | None = None
+    error: str | None = None
     created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     updated_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     attempt: int = 0
@@ -61,7 +62,7 @@ class Task(BaseModel):
         self.attempt += 1
         self.touch()
 
-    def complete(self, result: Dict[str, Any]) -> None:
+    def complete(self, result: dict[str, Any]) -> None:
         """Mark task as done with result."""
         self.result = result
         self.status = TaskStatus.DONE
@@ -80,7 +81,7 @@ class WorkerInfo(BaseModel):
     id: str = Field(default_factory=lambda: f"worker_{uuid.uuid4().hex[:8]}")
     role: str = "worker"  # scheduler | worker | reviewer | reporter
     status: str = "idle"  # idle | busy | stopped
-    current_task_id: Optional[str] = None
+    current_task_id: str | None = None
     started_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     tasks_completed: int = 0
     tasks_failed: int = 0
@@ -93,7 +94,7 @@ class Message(BaseModel):
     from_agent: str
     to_agent: str  # "*" means broadcast
     type: str  # task_assigned | task_result | ping | pong | stop
-    payload: Dict[str, Any] = Field(default_factory=dict)
+    payload: dict[str, Any] = Field(default_factory=dict)
     created_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
 

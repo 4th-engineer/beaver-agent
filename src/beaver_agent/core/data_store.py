@@ -2,12 +2,13 @@
 
 import json
 import shutil
-from pathlib import Path
-from typing import Optional, List, Dict, Any, Callable
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from packaging import version as pkg_version
+from pathlib import Path
+from typing import Any
 
 import structlog
+from packaging import version as pkg_version
 
 logger = structlog.get_logger()
 
@@ -146,7 +147,7 @@ class DataStore:
         self._ensure_dirs()
 
         # Migration registry
-        self._migrations: Dict[str, Migration] = {}
+        self._migrations: dict[str, Migration] = {}
         self._register_builtin_migrations()
 
     def _ensure_dirs(self) -> None:
@@ -195,7 +196,7 @@ class DataStore:
         self.version_file.write_text(ver.strip())
         logger.info("data_version_set", version=ver)
 
-    def get_applied_migrations(self) -> List[str]:
+    def get_applied_migrations(self) -> list[str]:
         """Get list of applied migration names.
 
         Reads the applied migrations file and returns the list of
@@ -214,13 +215,13 @@ class DataStore:
         try:
             content = self.applied_file.read_text().strip()
             return json.loads(content) if content else []
-        except (json.JSONDecodeError, IOError) as e:
+        except (OSError, json.JSONDecodeError) as e:
             logger.warning(
                 "applied_migrations_read_failed", exc_info=e, path=str(self.applied_file)
             )
             return []
 
-    def _save_applied(self, names: List[str]) -> None:
+    def _save_applied(self, names: list[str]) -> None:
         """Save applied migration list.
 
         Writes the list of applied migration names to the applied migrations
@@ -267,7 +268,7 @@ class DataStore:
         """Register a new migration (for extensions)"""
         self._migrations[version] = Migration(DataVersion(version), name, description, fn)
 
-    def get_pending_migrations(self) -> List[Migration]:
+    def get_pending_migrations(self) -> list[Migration]:
         """Get migrations that need to run.
 
         Compares the current data version against all registered migrations
@@ -434,14 +435,14 @@ class DataStore:
     # Data Access
     # ─────────────────────────────────────────────────────────
 
-    def get_skills_dirs(self) -> Dict[str, Path]:
+    def get_skills_dirs(self) -> dict[str, Path]:
         """Get all skills directories"""
         return {
             "builtin": self.skills_builtin,
             "user": self.skills_user,
         }
 
-    def get_log_files(self) -> List[Path]:
+    def get_log_files(self) -> list[Path]:
         """Get all log files sorted by modification time (newest first).
 
         Searches the logs directory for conversation log files matching
@@ -463,7 +464,7 @@ class DataStore:
             reverse=True,
         )
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get data store statistics.
 
         Scans log files to count total conversation entries, then counts
@@ -481,7 +482,7 @@ class DataStore:
             try:
                 with open(f) as fh:
                     total_entries += sum(1 for _ in fh if _.strip())
-            except IOError as e:
+            except OSError as e:
                 logger.warning("log_file_read_failed_for_stats", path=str(f), exc_info=e)
 
         builtin_skills = 0
@@ -538,7 +539,7 @@ class DataStore:
 # Global Singleton
 # ─────────────────────────────────────────────────────────────────
 
-_instance: Optional[DataStore] = None
+_instance: DataStore | None = None
 
 
 def get_data_store() -> DataStore:

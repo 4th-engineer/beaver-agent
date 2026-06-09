@@ -1,6 +1,7 @@
 """Standalone component tests for multi_agent package — no full Beaver deps needed."""
 
-import sys, tempfile, os
+import sys
+import tempfile
 from pathlib import Path
 
 # Add src to path so beaver_agent packages resolve normally
@@ -15,12 +16,17 @@ class FakeLogger:
     def error(self, *a, **kw): pass
 
 import structlog
+
 structlog.get_logger = lambda: FakeLogger()
 
 from beaver_agent.core.multi_agent import (
-    Task, TaskStatus, TaskType, WorkerInfo,
-    Inbox, EventBus,
-    WorkerPool, MultiAgentOrchestrator,
+    EventBus,
+    Inbox,
+    Task,
+    TaskStatus,
+    TaskType,
+    WorkerInfo,
+    WorkerPool,
 )
 
 

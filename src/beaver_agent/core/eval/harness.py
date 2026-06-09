@@ -1,13 +1,13 @@
 """BeaverHarness — orchestrates all 6 components into a unified evaluation API."""
 
-from typing import Any, Optional
+from typing import Any
 
 import structlog
 
-from .task import Task, Benchmark, TaskResult
 from .adapter import ModelAdapter
-from .runner import Runner
 from .loader import get_benchmark_registry
+from .runner import Runner
+from .task import Benchmark, Task, TaskResult
 
 logger = structlog.get_logger()
 
@@ -29,7 +29,7 @@ class BeaverHarness:
         self,
         adapter: ModelAdapter,
         max_workers: int = 4,
-        benchmark_dir: Optional[str] = None,
+        benchmark_dir: str | None = None,
     ):
         """Initialize the BeaverHarness evaluation runner.
 

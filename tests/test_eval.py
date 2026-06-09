@@ -3,27 +3,26 @@
 import pytest
 
 from beaver_agent.core.eval.harness import BeaverHarness
-from beaver_agent.core.eval.runner import Runner
-from beaver_agent.core.eval.task import Task, Benchmark, TaskResult
 from beaver_agent.core.eval.loader import (
     BenchmarkRegistry,
     TaskLoader,
     get_benchmark_registry,
-    register_benchmark,
     list_benchmarks,
+    register_benchmark,
+)
+from beaver_agent.core.eval.metrics import (
+    CodeExecutionScorer,
+    CodeReviewScorer,
+    ExactMatchScorer,
+    SimilarityScorer,
+    get_scorer,
 )
 from beaver_agent.core.eval.prompting import (
     PromptStrategy,
     get_strategy,
-    CODE_GENERATION_STRATEGY,
 )
-from beaver_agent.core.eval.metrics import (
-    ExactMatchScorer,
-    SimilarityScorer,
-    CodeExecutionScorer,
-    CodeReviewScorer,
-    get_scorer,
-)
+from beaver_agent.core.eval.runner import Runner
+from beaver_agent.core.eval.task import Benchmark, Task, TaskResult
 
 
 class TestTaskAndBenchmark:

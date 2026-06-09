@@ -1,7 +1,7 @@
 """Beaver Agent Session Memory"""
 
-from typing import List, Dict, Any, Optional
 import time
+from typing import Any
 
 import structlog
 
@@ -30,13 +30,13 @@ class SessionMemory:
                 When exceeded, oldest messages are trimmed automatically.
         """
         self.max_history = max_history
-        self.messages: List[Dict[str, Any]] = []
-        self.metadata: Dict[str, Any] = {
+        self.messages: list[dict[str, Any]] = []
+        self.metadata: dict[str, Any] = {
             "created_at": time.time(),
             "last_updated": time.time(),
         }
 
-    def add_message(self, role: str, content: str, metadata: Optional[Dict] = None) -> None:
+    def add_message(self, role: str, content: str, metadata: dict | None = None) -> None:
         """Add a message to session history.
 
         Args:
@@ -49,7 +49,7 @@ class SessionMemory:
             >>> mem.add_message("user", "Hello, world!")
             >>> mem.add_message("assistant", "Hi there!", metadata={"model": "gpt-4"})
         """
-        message: Dict[str, Any] = {
+        message: dict[str, Any] = {
             "role": role,
             "content": content,
             "timestamp": time.time(),
@@ -65,7 +65,7 @@ class SessionMemory:
         if len(self.messages) > self.max_history:
             self.messages = self.messages[-self.max_history :]
 
-    def get_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    def get_history(self, limit: int | None = None) -> list[dict[str, Any]]:
         """Get conversation history.
 
         Args:
@@ -102,7 +102,7 @@ class SessionMemory:
         self.metadata["last_updated"] = time.time()
         logger.debug("session_cleared")
 
-    def search(self, query: str) -> List[Dict[str, Any]]:
+    def search(self, query: str) -> list[dict[str, Any]]:
         """Search through session history by content keyword.
 
         Performs a case-insensitive substring match against message content.

@@ -4,10 +4,10 @@ import os
 import platform
 import subprocess
 import tempfile
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
-from typing import Optional, Dict, Any
-from dataclasses import dataclass
+from typing import Any
 
 import structlog
 
@@ -56,7 +56,7 @@ class BrowserResult:
 
 
 @lru_cache(maxsize=1)
-def _resolve_browser_binary() -> Optional[str]:
+def _resolve_browser_binary() -> str | None:
     """Locate agent-browser binary, cached after first call.
 
     Searches in order:
@@ -137,7 +137,7 @@ def _resolve_browser_binary() -> Optional[str]:
     return None
 
 
-def _validate_browser_binary() -> Optional[str]:
+def _validate_browser_binary() -> str | None:
     """Check if agent-browser binary exists. Returns error message if not."""
     bin_path = _resolve_browser_binary()
 
@@ -221,7 +221,7 @@ def snapshot(interactive_only: bool = True, compact: bool = True, depth: int = 1
 
 
 def screenshot(
-    path: Optional[str] = None, full_page: bool = False, annotate: bool = False
+    path: str | None = None, full_page: bool = False, annotate: bool = False
 ) -> BrowserResult:
     """Take screenshot of current page.
 
@@ -274,7 +274,7 @@ def get_text(selector: str = None) -> BrowserResult:
         >>> result = get_text()  # all page text
         >>> result = get_text("h1.title")  # text of h1 with class title
     """
-    cmd = f"get text" if selector is None else f"get text {selector}"
+    cmd = "get text" if selector is None else f"get text {selector}"
     return _run_browser_cmd(cmd)
 
 
@@ -293,7 +293,7 @@ def get_html(selector: str = None) -> BrowserResult:
         >>> result = get_html()  # full page HTML
         >>> result = get_html("div.content")  # element HTML
     """
-    cmd = f"get html" if selector is None else f"get html {selector}"
+    cmd = "get html" if selector is None else f"get html {selector}"
     return _run_browser_cmd(cmd)
 
 
@@ -528,7 +528,7 @@ def close() -> BrowserResult:
     return _run_browser_cmd("close")
 
 
-def fetch_content(url: str, timeout: int = 30) -> Dict[str, Any]:
+def fetch_content(url: str, timeout: int = 30) -> dict[str, Any]:
     """Fetch URL and return structured content including title, snapshot, and page state.
 
     Args:
@@ -568,7 +568,7 @@ def fetch_content(url: str, timeout: int = 30) -> Dict[str, Any]:
 
 def take_screenshot(
     url: str, output_path: str = None, full_page: bool = False, timeout: int = 30
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Navigate to URL and take a screenshot.
 
     Combines navigation, waiting for page load, and screenshot capture into a single operation.
@@ -641,8 +641,8 @@ class BrowserTool:
         set to None. Callers must invoke browser binary separately via
         _run_browser_cmd for actual browser automation.
         """
-        self.current_url: Optional[str] = None
-        self.last_snapshot: Optional[str] = None
+        self.current_url: str | None = None
+        self.last_snapshot: str | None = None
 
     def open(self, url: str) -> str:
         """Open a URL in the browser and return the page snapshot.
@@ -761,7 +761,7 @@ class BrowserTool:
             return snap.content or "Scrolled"
         return f"Error: {result.message}"
 
-    def get_page_info(self) -> Dict[str, str]:
+    def get_page_info(self) -> dict[str, str]:
         """Get the current page title and URL.
 
         Returns:

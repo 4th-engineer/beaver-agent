@@ -6,7 +6,7 @@ import os
 import platform
 import re
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 import structlog
 
@@ -78,7 +78,7 @@ class MCPManager:
         mcp_configs_dir: Optional directory path to load additional MCP configs.
     """
 
-    def __init__(self, config: BeaverConfig, mcp_configs_dir: Optional[str] = None) -> None:
+    def __init__(self, config: BeaverConfig, mcp_configs_dir: str | None = None) -> None:
         """Initialize MCP manager and load server configurations.
 
         Args:
@@ -442,7 +442,7 @@ class MCPManager:
         """
         return [tool.to_dict() for tool in self._tools.values()]
 
-    def get_tool(self, full_name: str) -> Optional[MCPTool]:
+    def get_tool(self, full_name: str) -> MCPTool | None:
         """Get a specific MCP tool by full name.
 
         Args:
