@@ -17,6 +17,20 @@ from beaver_agent.core.tool_router import ToolRouter
 
 logger = structlog.get_logger(__name__)
 
+
+def _read_file_safe(file_path: str, limit: int = 500) -> str:
+    """Read a file, returning content or an error string. Never raises."""
+    try:
+        from pathlib import Path
+        content = Path(file_path).expanduser().read_text(encoding="utf-8")
+        lines = content.splitlines()
+        if len(lines) > limit:
+            return "\n".join(lines[:limit]) + f"\n... [{len(lines) - limit} more lines]"
+        return content
+    except Exception as exc:
+        return f"[read error: {exc}]"
+
+
 # ─── Intent → TaskType mapping (mirrors old SchedulerAgent) ────────────────────
 
 _INTENT_TO_TT: dict[str, TaskType] = {
@@ -112,6 +126,16 @@ def executor_node(state: AgentState) -> AgentState:
                 "action": task.input.get("action"),
                 "params": task.input.get("params", {}),
             }
+
+            # ── Hack: inject file content into code_review when missing ─────────
+            # The TaskPlanner only extracts file_path; we must read the file
+            # content ourselves before handing the task off to the router.
+            tool_name = tool_task["tool"]
+            params = tool_task["params"]
+            if tool_name == "code_review" and "code" not in params and "file_path" in params:
+                params["code"] = _read_file_safe(params["file_path"])
+            # ─────────────────────────────────────────────────────────────────
+
             result = router.route(tool_task)
             task.complete({"result": result, "tool": tool_task["tool"]})
             done.append(task)

@@ -37,10 +37,11 @@ class TaskPlanner:
     }
 
     # Compiled regex patterns for _extract_params (class-level, compiled once)
+    # File-extraction patterns — must be anchored after whitespace or line start
+    # to avoid partial-word matches.  Use a capture group; leading whitespace
+    # (if any) is stripped by the group so we get the clean path.
     _FILE_PATTERNS = [
-        r"/[\w/.-]+\.(py|js|ts|go|rs|java|cpp|c|h)",  # Unix paths
-        r"[A-Za-z]:\\[\w\\.-]+\.(py|js|ts|go|rs|java)",  # Windows paths
-        r"[\w-]+/[\w/-]+\.(py|js|ts|go|rs|java)",  # Relative paths
+        r"(?:^|\s)([^\s,;]*\/[^\s,;]*\.[a-z]+)",   # relative or absolute, anchored
     ]
     _ERROR_PATTERNS = [
         r"Error:\s*(.+?)(?:\n|$)",
@@ -54,6 +55,26 @@ class TaskPlanner:
         r"issue\s*#?(\d+)",  # explicit issue
         r"pr\s*#?(\d+)",  # explicit PR
     ]
+
+    # Tool → which param names this tool actually consumes
+    _TOOL_ACCEPTS: dict[str, set[str]] = {
+        "file_tool": {"file_path", "limit"},
+        "code_gen": {"description", "language", "file_path"},
+        "code_review": {"path"},
+        "debugger": {"error", "file_path"},
+        "github_tool": {"repo", "number", "operation"},
+        "terminal_tool": {"command", "timeout", "workdir"},
+        "code_analyzer": {"path", "depth"},
+    }
+
+    # Map extracted "path" key to the actual param name each tool uses
+    _PATH_PARAM: dict[str, str] = {
+        "file_tool": "file_path",
+        "code_review": "file_path",
+        "code_analyzer": "path",
+        "debugger": "file_path",
+        "code_gen": "file_path",
+    }
 
     def plan(self, user_input: str, intent: str) -> list[dict[str, Any]]:
         """Plan tasks for a given intent and user input.
@@ -86,13 +107,12 @@ class TaskPlanner:
 
         tasks = self.INTENT_TASKS.get(intent, [])
 
-        # Extract parameters from user input
-        params = self._extract_params(user_input, intent)
-
-        # Build task list with extracted parameters
+        # Build task list — params are tool-specific, not global
         planned_tasks = []
         for task in tasks:
             task_copy = task.copy()
+            tool_name = task_copy.get("tool", "")
+            params = self._extract_params(user_input, intent, tool_name)
             task_copy["params"].update(params)
             planned_tasks.append(task_copy)
 
@@ -100,78 +120,71 @@ class TaskPlanner:
 
         return planned_tasks
 
-    def _extract_params(self, user_input: str, intent: str) -> dict[str, Any]:
-        """Extract structured parameters from user input for task planning.
+    def _extract_params(
+        self, user_input: str, intent: str, tool: str = ""
+    ) -> dict[str, Any]:
+        """Extract structured parameters from user input for a specific tool.
 
-        Parses the user input to extract actionable parameters based on the
-        detected intent — file paths, language hints, error messages, and
-        GitHub references. Falls back to sensible defaults (e.g., Python)
-        when specific values are not found.
+        Unlike the old implementation that returned a global dict of all possible
+        parameters for the intent, this version is tool-aware: it only returns
+        the parameters relevant to the named tool, avoiding spurious kwarg errors.
 
         Args:
             user_input: Raw user input string to parse.
-            intent: The intent type detected by parse() (e.g., "code_generation",
-                "code_refactor", "debug"). Different intents extract different
-                parameter sets — code_generation saves the full description.
+            intent:     The intent type (e.g. "code_generation", "code_review").
+            tool:       The tool name this params dict is being prepared for
+                        (e.g. "file_tool", "code_review"). Controls which keys
+                        are included in the returned dict.
 
         Returns:
-            A dictionary of extracted parameters. Common keys include:
-            - description (str): Full user input, set for code_generation intent.
-            - file_path (str): First matched file path from input.
-            - language (str): Detected programming language, defaults to "python".
-            - error (str): First matched error message from input.
-            - repo (str): GitHub repository in "owner/repo" format.
-
-        Example:
-            >>> planner = TaskPlanner()
-            >>> planner._extract_params(
-            ...     "帮我写一个 Python 函数来处理文件",
-            ...     "code_generation"
-            ... )
-            {'description': '帮我写一个 Python 函数来处理文件', 'language': 'python'}
+            A dict containing only the parameters accepted by ``tool``.
         """
         params: dict[str, Any] = {}
+        accepts = self._TOOL_ACCEPTS.get(tool, set())
 
-        # For code generation, save the full description
-        if intent == "code_generation":
+        if "description" in accepts or "error" in accepts:
             params["description"] = user_input
 
-        # Extract file paths
-        for pattern in self._FILE_PATTERNS:
-            matches = re.findall(pattern, user_input)
-            if matches:
-                params["file_path"] = matches[0]
-                break
+        # File path — extract raw, then map to the tool's actual param name
+        if {"path", "file_path"} & accepts:
+            for pattern in self._FILE_PATTERNS:
+                matches = re.findall(pattern, user_input)
+                if matches:
+                    raw_path = matches[0]
+                    actual_key = self._PATH_PARAM.get(tool, "path")
+                    params[actual_key] = raw_path
+                    break
 
-        # Extract language hints
-        languages = ["python", "javascript", "typescript", "go", "rust", "java", "c++", "c"]
-        for lang in languages:
-            if lang in user_input.lower():
-                params["language"] = lang
-                break
+        # Language — only for code_gen
+        if "language" in accepts:
+            languages = ["python", "javascript", "typescript", "go", "rust", "java", "c++", "c"]
+            for lang in languages:
+                if lang in user_input.lower():
+                    params["language"] = lang
+                    break
+            if "language" not in params:
+                params["language"] = "python"
 
-        # Default to python if no language detected
-        if "language" not in params:
-            params["language"] = "python"
+        # Error message — only for debugger
+        if "error" in accepts:
+            for pattern in self._ERROR_PATTERNS:
+                matches = re.findall(pattern, user_input, re.DOTALL)
+                if matches:
+                    params["error"] = matches[0].strip()
+                    break
 
-        # Extract error messages
-        for pattern in self._ERROR_PATTERNS:
-            matches = re.findall(pattern, user_input, re.DOTALL)
-            if matches:
-                params["error"] = matches[0].strip()
-                break
-
-        # Extract GitHub references
-        for pattern in self._GH_PATTERNS:
-            matches = re.findall(pattern, user_input, re.IGNORECASE)
-            if matches:
-                if "/" in pattern and isinstance(matches[0], tuple):
-                    params["repo"] = f"{matches[0][0]}/{matches[0][1]}"
-                elif "#" in pattern:
-                    params["number"] = int(
-                        matches[0][0] if isinstance(matches[0], tuple) else matches[0]
-                    )
-                break
+        # GitHub references — only for github_tool
+        if {"repo", "number"} & accepts:
+            for pattern in self._GH_PATTERNS:
+                matches = re.findall(pattern, user_input, re.IGNORECASE)
+                if matches:
+                    if "/" in pattern and isinstance(matches[0], tuple):
+                        params["repo"] = f"{matches[0][0]}/{matches[0][1]}"
+                    elif "#" in pattern:
+                        params["number"] = int(
+                            matches[0][0] if isinstance(matches[0], tuple) else matches[0]
+                        )
+                    break
 
         return params
 
