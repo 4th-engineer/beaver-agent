@@ -140,6 +140,24 @@ class BeaverConfig(BaseModel):
     file_tool: FileToolConfig = Field(default_factory=FileToolConfig)
     mcp: MCPConfig = Field(default_factory=MCPConfig)
 
+    @classmethod
+    def from_env(cls) -> "BeaverConfig":
+        """Load configuration from ``settings.yaml`` and environment variables.
+
+        This is a convenience alias for ``load_config()`` that returns a
+        fully-initialised ``BeaverConfig`` instance rather than a bare dict.
+
+        Priority order for config sources (highest → lowest):
+          1. Environment variables (``MINIMAX_API_KEY``, ``MINIMAX_API_BASE``, …)
+          2. ``~/.beaver/config.yaml``
+          3. ``{project_root}/config/settings.yaml``
+          4. ``./config/settings.yaml``
+
+        Returns:
+            A ``BeaverConfig`` instance ready for use.
+        """
+        return load_config()
+
 
 def load_config(debug: bool = False) -> BeaverConfig:
     """Load configuration from settings.yaml and environment variables"""
